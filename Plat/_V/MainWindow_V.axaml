@@ -13,6 +13,33 @@
         <vm:MainWindow_VM/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="23"/>
+      <RowDefinition Height="100*"/>
+    </Grid.RowDefinitions>
+
+    <Menu Grid.Row="0" MinHeight="23" Background="LightGray">
+      <MenuItem Header="File">
+        
+      </MenuItem>
+      <MenuItem Header="Help">
+        
+      </MenuItem>
+    </Menu>
+
+    <TabControl Grid.Row="1">
+      <TabItem Header="Meta Info">
+        
+      </TabItem>
+      <TabItem Header="Proc Graph">
+
+      </TabItem>
+      <TabItem Header="Topo Graph">
+        
+      </TabItem>
+    </TabControl>
+    
+  </Grid>
 
 </Window>

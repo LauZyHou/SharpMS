@@ -10,9 +10,9 @@
         WindowStartupLocation="CenterScreen"
         Title="SharpMS">
 
-    <Design.DataContext>
-        <vm:MainWindow_VM/>
-    </Design.DataContext>
+  <Design.DataContext>
+    <vm:MainWindow_VM/>
+  </Design.DataContext>
 
   <Grid>
     <Grid.RowDefinitions>
@@ -22,25 +22,25 @@
 
     <Menu Grid.Row="0" MinHeight="23" Background="LightGray">
       <MenuItem Header="File">
-        
+
       </MenuItem>
       <MenuItem Header="Help">
-        
+
       </MenuItem>
     </Menu>
 
     <TabControl Grid.Row="1">
       <TabItem Header="Meta Info">
-        <v:MetaInfo_V DataContext="{Binding MetaInfo_VM}" Background="AliceBlue"/>
+        <v:MetaInfo_V DataContext="{Binding MetaInfo_VM}"/>
       </TabItem>
       <TabItem Header="Proc Graph">
-
+        <v:ProcGraph_V DataContext="{Binding ProcGraph_VM}"/>
       </TabItem>
       <TabItem Header="Topo Graph">
-        
+
       </TabItem>
     </TabControl>
-    
+
   </Grid>
 
 </Window>

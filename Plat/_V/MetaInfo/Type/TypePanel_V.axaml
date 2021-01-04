@@ -8,12 +8,23 @@
     <!--Type List-->
     <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" RowDefinitions="8*, 84*, 8*">
       <TextBlock Grid.Row="0" Text="Type List" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-      <ListBox Grid.Row="1">
-        
+      <ListBox Name="TypeList" Grid.Row="1" Items="{Binding TypeList}" SelectedItem="{Binding CurrentType, Mode=OneWayToSource}">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock>
+              <TextBlock.Text>
+                <MultiBinding StringFormat=" {0} : {1}">
+                  <Binding Path="Identifier"/>
+                  <Binding Path="Parent.Identifier"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
       </ListBox>
       <Grid Grid.Row="2" ColumnDefinitions="50*, 50*">
-        <Button Grid.Column="0" Content="Create New Type"/>
-        <Button Grid.Column="1" Content="Delete Selected Type"/>
+        <Button Grid.Column="0" Content="Create New Type" Command="{Binding CreateType}"/>
+        <Button Grid.Column="1" Content="Delete Selected Type" Command="{Binding DeleteType}" CommandParameter="{Binding #TypeList.SelectedItem}"/>
       </Grid>
     </Grid>
     <!--Type Detail-->
@@ -21,15 +32,22 @@
       <TextBlock Grid.Row="0" Text="Type Detail" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
       <Grid Grid.Row="1" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
         <TextBlock Grid.Column="0" Text="Type Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Grid.Column="1"/>
+        <TextBox Grid.Column="1" Text="{Binding CurrentType.Identifier, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
       </Grid>
       <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
         <TextBlock Grid.Column="0" Text="Type Desc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Grid.Column="1"/>
+        <TextBox Grid.Column="1" Text="{Binding CurrentType.Description, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
       </Grid>
       <Grid Grid.Row="3" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
-        <TextBlock Grid.Column="0" Text="Extend From:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"/>
+        <TextBlock Grid.Column="0" Text="Parent Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Items="{Binding TypeList}"
+                  SelectedItem="{Binding CurrentType.Parent, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
       </Grid>
       <ListBox Grid.Row="4">
         

@@ -28,6 +28,10 @@ namespace Plat._VM
 
         private void DeleteType(Type type)
         {
+            if (type is null || type.IsBase)
+            {
+                return;
+            }
             this.typeList.Remove(type);
         }
 

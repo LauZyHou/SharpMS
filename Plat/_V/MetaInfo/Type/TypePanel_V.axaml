@@ -24,7 +24,8 @@
       </ListBox>
       <Grid Grid.Row="2" ColumnDefinitions="50*, 50*">
         <Button Grid.Column="0" Content="Create New Type" Command="{Binding CreateType}"/>
-        <Button Grid.Column="1" Content="Delete Selected Type" Command="{Binding DeleteType}" CommandParameter="{Binding #TypeList.SelectedItem}"/>
+        <Button Grid.Column="1" Content="Delete Selected Type" Command="{Binding DeleteType}" 
+                CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
       </Grid>
     </Grid>
     <!--Type Detail-->

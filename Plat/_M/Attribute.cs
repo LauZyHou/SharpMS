@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,18 +7,21 @@ using System.Threading.Tasks;
 
 namespace Plat._M
 {
-    public class Attribute
+    public class Attribute : ReactiveObject
     {
         private string identifier;
         private Type type;
+        private string description;
 
-        public Attribute(string identifier, Type type)
+        public Attribute(string identifier, Type type, string description = "")
         {
             this.identifier = identifier;
             this.type = type;
+            this.description = description;
         }
 
-        public Type Type { get => type; set => type = value; }
-        public string Identifier { get => identifier; set => identifier = value; }
+        public Type Type { get => type; set => this.RaiseAndSetIfChanged(ref type, value); }
+        public string Identifier { get => identifier; set => this.RaiseAndSetIfChanged(ref identifier, value); }
+        public string Description { get => description; set => this.RaiseAndSetIfChanged(ref description, value); }
     }
 }

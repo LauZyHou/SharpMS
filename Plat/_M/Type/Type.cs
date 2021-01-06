@@ -27,7 +27,7 @@ namespace Plat._M
 
         public string Identifier { get => identifier; set => this.RaiseAndSetIfChanged(ref identifier, value); }
         public string Description { get => description; set => this.RaiseAndSetIfChanged(ref description, value); }
-        public Type? Parent { get => parent; set => parent = value; }
+        public Type? Parent { get => parent; set => this.RaiseAndSetIfChanged(ref parent, value); }
         public ObservableCollection<Attribute> Attributes { get => attributes; set => attributes = value; }
         public bool IsBase => isBase;
 

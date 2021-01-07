@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Plat._C;
 using Plat._M;
 using ReactiveUI;
 
@@ -37,6 +38,7 @@ namespace Plat._VM
                 return;
             }
             this.typeList.Remove(type);
+            ResourceManager.UpdateTip($"Delete type [{type.Identifier}].");
         }
 
         /// <summary>
@@ -45,6 +47,7 @@ namespace Plat._VM
         private void CreateType()
         {
             this.typeList.Add(new Type("NewType"));
+            ResourceManager.UpdateTip("Create a new type.");
         }
 
         /// <summary>
@@ -70,6 +73,7 @@ namespace Plat._VM
                 return;
             }
             type.Attributes.Add(new Attribute("newAttr", Type.TYPE_INT));
+            ResourceManager.UpdateTip($"Create a new attribute for type [{type.Identifier}].");
         }
 
         /// <summary>
@@ -83,6 +87,7 @@ namespace Plat._VM
                 return;
             }
             currentType.Attributes.Remove(attribute);
+            ResourceManager.UpdateTip($"Delete attribute [{attribute.Identifier}] for type [{currentType.Identifier}].");
         }
 
         #endregion

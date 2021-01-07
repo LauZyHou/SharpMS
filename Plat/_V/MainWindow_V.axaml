@@ -18,6 +18,7 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="23"/>
       <RowDefinition Height="100*"/>
+      <RowDefinition Height="23"/>
     </Grid.RowDefinitions>
 
     <Menu Grid.Row="0" MinHeight="23" Background="LightGray">
@@ -40,6 +41,9 @@
 
       </TabItem>
     </TabControl>
+    
+    <TextBlock Grid.Row="2" Text="{Binding Tip}" Background="LightGray" FontSize="18"
+               HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="20, 0"/>
 
   </Grid>
 

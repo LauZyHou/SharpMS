@@ -9,6 +9,9 @@ using ReactiveUI;
 
 namespace Plat._VM
 {
+    /// <summary>
+    /// 数据类型面板VM
+    /// </summary>
     public class TypePanel_VM : ViewModelBase
     {
 

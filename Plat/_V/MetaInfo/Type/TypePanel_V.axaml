@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Plat._V.TypePanel_V">
-  <Grid ColumnDefinitions="48*, 2*, 48*" RowDefinitions="65*, 35*">
+  <Grid ColumnDefinitions="49*, 2*, 49*" RowDefinitions="65*, 35*">
     <!--Type List-->
     <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" RowDefinitions="8*, 84*, 8*">
       <TextBlock Grid.Row="0" Text="Type List" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -25,7 +25,7 @@
       </ListBox>
       <Grid Grid.Row="2" ColumnDefinitions="50*, 50*">
         <Button Grid.Column="0" Content="Create New Type" Command="{Binding CreateType}"/>
-        <Button Grid.Column="1" Content="Delete Selected Type" Command="{Binding DeleteType}" 
+        <Button Grid.Column="1" Content="Delete Selected Type" Command="{Binding DeleteType}" HorizontalAlignment="Right"
                 CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
       </Grid>
     </Grid>
@@ -71,7 +71,7 @@
       <Grid Grid.Row="5" ColumnDefinitions="50*, 50*">
         <Button Grid.Column="0" Content="Create New Attribute" Command="{Binding CreateAttribute}" 
                 CommandParameter="{Binding CurrentType}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-        <Button Grid.Column="1" Content="Delete Selected Attribute" Command="{Binding DeleteAttribute}"
+        <Button Grid.Column="1" Content="Delete Selected Attribute" Command="{Binding DeleteAttribute}" HorizontalAlignment="Right"
                 CommandParameter="{Binding #AttrList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
       </Grid>
     </Grid>

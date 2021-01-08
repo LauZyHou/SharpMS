@@ -5,10 +5,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Plat._V.MetaInfo_V">
-  <TabControl TabStripPlacement="Left">
-    <TabItem Header="Type">
-      <v:TypePanel_V DataContext="{Binding TypePanel_VM}"/>
-    </TabItem>
-    <TabItem Header="Process"/>
-  </TabControl>
+	<TabControl TabStripPlacement="Left">
+		<TabItem Header="Type">
+			<v:TypePanel_V DataContext="{Binding TypePanel_VM}"/>
+		</TabItem>
+		<TabItem Header="Proc">
+			<v:ProcPanel_V DataContext="{Binding ProcPanel_VM}"/>
+		</TabItem>
+		<TabItem Header="Chan" DataContext="{Binding ChanPanel_VM}">
+			<v:ChanPanel_V/>
+		</TabItem>
+	</TabControl>
 </UserControl>

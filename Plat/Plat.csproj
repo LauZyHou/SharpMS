@@ -18,7 +18,4 @@
       <DependentUpon>MainWindow_V.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="_M\Chan\" />
-  </ItemGroup>
 </Project>

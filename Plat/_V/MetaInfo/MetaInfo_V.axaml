@@ -12,8 +12,8 @@
 		<TabItem Header="Proc">
 			<v:ProcPanel_V DataContext="{Binding ProcPanel_VM}"/>
 		</TabItem>
-		<TabItem Header="Chan" DataContext="{Binding ChanPanel_VM}">
-			<v:ChanPanel_V/>
+		<TabItem Header="Chan">
+			<v:ChanPanel_V DataContext="{Binding ChanPanel_VM}"/>
 		</TabItem>
 	</TabControl>
 </UserControl>

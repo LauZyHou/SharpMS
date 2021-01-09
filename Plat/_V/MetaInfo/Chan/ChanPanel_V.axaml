@@ -4,5 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Plat._V.ChanPanel_V">
-  Welcome to Avalonia!
+	<Grid ColumnDefinitions="49*, 2*, 49*">
+		<!--Channel List-->
+		<Grid Grid.Column="0" RowDefinitions="8*, 84*, 8*">
+			<TextBlock Grid.Row="0" Text="Logic Channel Group List" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<ListBox Name="LogicChanGroupList" Grid.Row="1" Items="{Binding LogicChanGroupList}" SelectedItem="{Binding CurrentLogicChanGroup, Mode=OneWayToSource}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding StringFormat=" {0} -> {1}">
+									<Binding Path="Source.Identifier"/>
+									<Binding Path="Dest.Indentifier"/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+			<Grid Grid.Row="2" ColumnDefinitions="50*, 50*">
+				<Button Grid.Column="0" Content="Create New Group" Command="{Binding CreateLogicChanGroup}"/>
+				<Button Grid.Column="1" Content="Delete Selected Group" Command="{Binding DeleteLogicChanGroup}" HorizontalAlignment="Right"
+						CommandParameter="{Binding #LogicChanGroupList.SelectedItem}" IsEnabled="{Binding !!CurrentLogicChanGroup}"/>
+			</Grid>
+		</Grid>
+	</Grid>
 </UserControl>

@@ -20,8 +20,8 @@ namespace Plat._VM
 
         public ProcPanel_VM()
         {
-            this.procList = new ObservableCollection<Proc>();
-            this.procList.Add(new Proc("test", "desc test"));
+            this.procList = ResourceManager.procs;
+            this.procList.Add(new Proc("test", "desc test")); // test
         }
 
         public Proc? CurrentProc { get => currentProc; set => this.RaiseAndSetIfChanged(ref currentProc, value); }

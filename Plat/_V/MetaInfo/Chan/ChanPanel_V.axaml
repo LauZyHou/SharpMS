@@ -15,7 +15,7 @@
 							<TextBlock.Text>
 								<MultiBinding StringFormat=" {0} -> {1}">
 									<Binding Path="Source.Identifier"/>
-									<Binding Path="Dest.Indentifier"/>
+									<Binding Path="Dest.Identifier"/>
 								</MultiBinding>
 							</TextBlock.Text>
 						</TextBlock>
@@ -32,15 +32,25 @@
 		<Grid Grid.Column="2" RowDefinitions="8*, 8*, 8*, 60*, 8*, 8*">
 			<TextBlock Grid.Row="0" Text="Logic Channel Group Detail" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 			<Grid Grid.Row="1" ColumnDefinitions="30*, 70*" Margin="6, 0">
-				<TextBlock Grid.Column="0" Text="Source:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-				<ComboBox Grid.Column="1" HorizontalAlignment="Stretch">
-					
+				<TextBlock Grid.Column="0" Text="Source Proc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<ComboBox Grid.Column="1" Items="{Binding Procs}" SelectedItem="{Binding CurrentLogicChanGroup.Source, Mode=TwoWay}"
+						  HorizontalAlignment="Stretch">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
 				</ComboBox>
 			</Grid>
 			<Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6, 0">
-				<TextBlock Grid.Column="0" Text="Destination:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-				<ComboBox Grid.Column="1" HorizontalAlignment="Stretch">
-
+				<TextBlock Grid.Column="0" Text="Dest Proc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<ComboBox Grid.Column="1" Items="{Binding Procs}" SelectedItem="{Binding CurrentLogicChanGroup.Dest, Mode=TwoWay}"
+						  HorizontalAlignment="Stretch">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
 				</ComboBox>
 			</Grid>
 			<ListBox Grid.Row="3">

@@ -16,8 +16,12 @@ namespace Plat._C
     {
         // 主窗体VM
         public static MainWindow_VM? mainWindow_VM;
-        // 系统中存在的进程模板
+        // 系统中所有的类型
+        public static ObservableCollection<_M.Type> types = new ObservableCollection<_M.Type>();
+        // 系统中所有的进程模板
         public static ObservableCollection<Proc> procs = new ObservableCollection<Proc>();
+        // 系统中所有的逻辑Channel组
+        public static ObservableCollection<LogicChanGroup> logicChanGroups = new ObservableCollection<LogicChanGroup>();
 
         /// <summary>
         /// 更新主页最下方的提示内容

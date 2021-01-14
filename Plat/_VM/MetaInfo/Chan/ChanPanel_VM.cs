@@ -23,7 +23,7 @@ namespace Plat._VM
         public ChanPanel_VM()
         {
             this.procs = ResourceManager.procs;
-            this.logicChanGroupList = new ObservableCollection<LogicChanGroup>();
+            this.logicChanGroupList = ResourceManager.logicChanGroups;
         }
 
         // 引用系统中所有的进程模板，这里只作读取用
@@ -45,7 +45,7 @@ namespace Plat._VM
                 return;
             }
             this.logicChanGroupList.Remove(logicChanGroup);
-            ResourceManager.UpdateTip($"Delete logic channel group [{logicChanGroup.Source} -> {logicChanGroup.Dest}].");
+            ResourceManager.UpdateTip($"Delete logic channel group [{logicChanGroup.Source.Identifier} -> {logicChanGroup.Dest.Identifier}].");
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Plat._VM
                 return;
             }
             this.currentLogicChanGroup.LogicChanList.Add(new LogicChan("NewLogicChan", this.currentLogicChanGroup));
-            ResourceManager.UpdateTip($"Create a new logic channel in group [{this.currentLogicChanGroup.Source} -> {this.currentLogicChanGroup.Dest}].");
+            ResourceManager.UpdateTip($"Create a new logic channel in group [{this.currentLogicChanGroup.Source.Identifier} -> {this.currentLogicChanGroup.Dest.Identifier}].");
         }
 
         #endregion

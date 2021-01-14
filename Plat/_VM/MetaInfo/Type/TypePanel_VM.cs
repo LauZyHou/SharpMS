@@ -20,7 +20,7 @@ namespace Plat._VM
 
         public TypePanel_VM()
         {
-            this.typeList = new ObservableCollection<Type>();
+            this.typeList = ResourceManager.types;
             this.typeList.Add(Type.TYPE_INT);
             this.typeList.Add(Type.TYPE_MSG);
         }

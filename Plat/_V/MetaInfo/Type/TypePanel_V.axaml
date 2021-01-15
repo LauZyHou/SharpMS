@@ -4,99 +4,95 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Plat._V.TypePanel_V">
-  <Grid ColumnDefinitions="49*, 2*, 49*" RowDefinitions="65*, 35*">
-    <!--Type List-->
-    <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" RowDefinitions="8*, 84*, 8*">
-      <TextBlock Grid.Row="0" Text="Type List" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-      <ListBox Name="TypeList" Grid.Row="1" Items="{Binding TypeList}" SelectedItem="{Binding CurrentType, Mode=OneWayToSource}">
-        <ListBox.ItemTemplate>
-          <DataTemplate>
-            <TextBlock>
-              <TextBlock.Text>
-                <MultiBinding StringFormat=" {0} : {1} // {2}">
-                  <Binding Path="Identifier"/>
-                  <Binding Path="Parent.Identifier"/>
-                  <Binding Path="Description"/>
-                </MultiBinding>
-              </TextBlock.Text>
-            </TextBlock>
-          </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
-      <Grid Grid.Row="2" ColumnDefinitions="50*, 50*">
-        <Button Grid.Column="0" Content="Create New Type" Command="{Binding CreateType}"/>
-        <Button Grid.Column="1" Content="Delete Selected Type" Command="{Binding DeleteType}" HorizontalAlignment="Right"
-                CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-      </Grid>
-    </Grid>
-    <!--Type Detail-->
-    <Grid Grid.Column="2" Grid.Row="0" RowDefinitions="14*, 14*, 14*, 14*, 30*, 14*">
-      <TextBlock Grid.Row="0" Text="Type Detail" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-      <Grid Grid.Row="1" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
-        <TextBlock Grid.Column="0" Text="Type Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Grid.Column="1" Text="{Binding CurrentType.Identifier, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-      </Grid>
-      <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
-        <TextBlock Grid.Column="0" Text="Type Desc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Grid.Column="1" Text="{Binding CurrentType.Description, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-      </Grid>
-      <Grid Grid.Row="3" ColumnDefinitions="30*, 55*, 15*" Margin="6,0" VerticalAlignment="Center">
-        <TextBlock Grid.Column="0" Text="Parent Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Items="{Binding TypeList}"
-                  SelectedItem="{Binding CurrentType.Parent, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}">
-          <ComboBox.ItemTemplate>
-            <DataTemplate>
-              <TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
-        </ComboBox>
-        <Button Grid.Column="2" HorizontalAlignment="Right" Content="Clear" Command="{Binding ClearParentType}"
-                CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-      </Grid>
-      <ListBox Grid.Row="4" Name="AttrList" Items="{Binding CurrentType.Attributes}">
-        <ListBox.ItemTemplate>
-          <DataTemplate>
-            <TextBlock>
-              <TextBlock.Text>
-                <MultiBinding StringFormat=" {0} {1}; // {2}">
-                  <Binding Path="Type.Identifier"/>
-                  <Binding Path="Identifier"/>
-                  <Binding Path="Description"/>
-                </MultiBinding>
-              </TextBlock.Text>
-            </TextBlock>
-          </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
-      <Grid Grid.Row="5" ColumnDefinitions="50*, 50*">
-        <Button Grid.Column="0" Content="Create New Attribute" Command="{Binding CreateAttribute}" 
-                CommandParameter="{Binding CurrentType}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-        <Button Grid.Column="1" Content="Delete Selected Attribute" Command="{Binding DeleteAttribute}" HorizontalAlignment="Right"
-                CommandParameter="{Binding #AttrList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-      </Grid>
-    </Grid>
-    <!--Edit Attribute-->
-    <Grid Grid.Column="2" Grid.Row="1" RowDefinitions="25*, 25*, 25*, 25*">
-      <TextBlock Grid.Row="0" Text="Edit Attribute" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-      <Grid Grid.Row="1" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
-        <TextBlock Grid.Column="0" Text="Attr Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Items="{Binding TypeList}" 
-                  SelectedItem="{Binding #AttrList.SelectedItem.Type, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}">
-          <ComboBox.ItemTemplate>
-            <DataTemplate>
-              <TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
-        </ComboBox>
-      </Grid>
-      <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
-        <TextBlock Grid.Column="0" Text="Attr Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Identifier, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-      </Grid>
-      <Grid Grid.Row="3" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
-        <TextBlock Grid.Column="0" Text="Attr Desc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Description, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-      </Grid>
-    </Grid>
-  </Grid>
+	<Grid ColumnDefinitions="49*, 2*, 49*">
+		<!--Type List-->
+		<Grid Grid.Column="0" RowDefinitions="8*, 84*, 8*">
+			<TextBlock Grid.Row="0" Text="Type List" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<ListBox Name="TypeList" Grid.Row="1" Items="{Binding TypeList}" SelectedItem="{Binding CurrentType, Mode=OneWayToSource}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding StringFormat=" {0} : {1} // {2}">
+									<Binding Path="Identifier"/>
+									<Binding Path="Parent.Identifier"/>
+									<Binding Path="Description"/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+			<Grid Grid.Row="2" ColumnDefinitions="50*, 50*">
+				<Button Grid.Column="0" Content="Create New Type" Command="{Binding CreateType}"/>
+				<Button Grid.Column="1" Content="Delete Selected Type" Command="{Binding DeleteType}" HorizontalAlignment="Right"
+						CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+			</Grid>
+		</Grid>
+		<!--Type Detail-->
+		<Grid Grid.Column="2" RowDefinitions="8*, 8*, 8*, 8*, 36*, 8*, 8*, 8*, 8*">
+			<TextBlock Grid.Row="0" Text="Type Detail" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<Grid Grid.Row="1" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
+				<TextBlock Grid.Column="0" Text="Type Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<TextBox Grid.Column="1" Text="{Binding CurrentType.Identifier, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+			</Grid>
+			<Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
+				<TextBlock Grid.Column="0" Text="Type Desc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<TextBox Grid.Column="1" Text="{Binding CurrentType.Description, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+			</Grid>
+			<Grid Grid.Row="3" ColumnDefinitions="30*, 55*, 15*" Margin="6,0" VerticalAlignment="Center">
+				<TextBlock Grid.Column="0" Text="Parent Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Items="{Binding TypeList}"
+						  SelectedItem="{Binding CurrentType.Parent, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+				<Button Grid.Column="2" HorizontalAlignment="Right" Content="Clear" Command="{Binding ClearParentType}"
+						CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+			</Grid>
+			<ListBox Grid.Row="4" Name="AttrList" Items="{Binding CurrentType.Attributes}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding StringFormat=" {0} {1}; // {2}">
+									<Binding Path="Type.Identifier"/>
+									<Binding Path="Identifier"/>
+									<Binding Path="Description"/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+			<Grid Grid.Row="5" ColumnDefinitions="50*, 50*">
+				<Button Grid.Column="0" Content="Create New Attribute" Command="{Binding CreateAttribute}"
+						CommandParameter="{Binding CurrentType}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+				<Button Grid.Column="1" Content="Delete Selected Attribute" Command="{Binding DeleteAttribute}" HorizontalAlignment="Right"
+						CommandParameter="{Binding #AttrList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+			</Grid>
+			<Grid Grid.Row="6" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
+				<TextBlock Grid.Column="0" Text="Attr Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Items="{Binding TypeList}"
+						  SelectedItem="{Binding #AttrList.SelectedItem.Type, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+			</Grid>
+			<Grid Grid.Row="7" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
+				<TextBlock Grid.Column="0" Text="Attr Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Identifier, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+			</Grid>
+			<Grid Grid.Row="8" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
+				<TextBlock Grid.Column="0" Text="Attr Desc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Description, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+			</Grid>
+		</Grid>
+	</Grid>
 </UserControl>

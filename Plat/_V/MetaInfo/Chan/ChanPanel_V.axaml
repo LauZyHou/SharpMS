@@ -60,14 +60,14 @@
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
-			<Grid Grid.Row="4" ColumnDefinitions="30*, 70*" Margin="6, 0">
-				<TextBlock Grid.Column="0" Text="Channel Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-				<TextBox Grid.Column="1" Text="{Binding CurrentLogicChan.Identifier, Mode=TwoWay}"/>
-			</Grid>
-			<Grid Grid.Row="5" ColumnDefinitions="50*, 50*">
+			<Grid Grid.Row="4" ColumnDefinitions="50*, 50*">
 				<Button Grid.Column="0" Content="Create New Logic Channel" Command="{Binding CreateLogicChan}" IsEnabled="{Binding !!CurrentLogicChanGroup}"/>
 				<Button Grid.Column="1" Content="Delete Selected Channel" Command="{Binding DeleteLogicChan}" IsEnabled="{Binding !!CurrentLogicChan}"
 						CommandParameter="{Binding #LogicChanList.SelectedItem}" HorizontalAlignment="Right"/>
+			</Grid>
+			<Grid Grid.Row="5" ColumnDefinitions="30*, 70*" Margin="6, 0">
+				<TextBlock Grid.Column="0" Text="Channel Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<TextBox Grid.Column="1" Text="{Binding CurrentLogicChan.Identifier, Mode=TwoWay}"/>
 			</Grid>
 		</Grid>
 	</Grid>

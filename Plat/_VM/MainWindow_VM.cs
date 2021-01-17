@@ -9,7 +9,7 @@ namespace Plat._VM
     public class MainWindow_VM : ViewModelBase
     {
         private readonly MetaInfo_VM metaInfo_VM = new MetaInfo_VM();
-        private readonly ProcGraph_VM procGraph_VM = new ProcGraph_VM();
+        private readonly ProcGraphPanel_VM procGraphPanel_VM = new ProcGraphPanel_VM();
         private string? tip = "Welcome to SharpMS!";
 
         public MainWindow_VM()
@@ -19,6 +19,6 @@ namespace Plat._VM
 
         public string? Tip { get => tip; set => this.RaiseAndSetIfChanged(ref tip, value); }
         public MetaInfo_VM MetaInfo_VM => metaInfo_VM;
-        public ProcGraph_VM ProcGraph_VM => procGraph_VM;
+        public ProcGraphPanel_VM ProcGraphPanel_VM => procGraphPanel_VM;
     }
 }

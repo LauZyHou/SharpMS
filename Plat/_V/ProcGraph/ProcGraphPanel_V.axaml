@@ -3,6 +3,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Plat._V.ProcGraph_V">
-  <TextBlock Text="{Binding Test}"/>
+             x:Class="Plat._V.ProcGraphPanel_V">
+	<TabControl Items="{Binding Procs}">
+		<TabControl.ItemTemplate>
+			<DataTemplate>
+				<TextBlock Text="{Binding Identifier}"/>
+			</DataTemplate>
+		</TabControl.ItemTemplate>
+	</TabControl>
 </UserControl>

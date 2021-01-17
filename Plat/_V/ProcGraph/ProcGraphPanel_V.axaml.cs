@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace Plat._V
 {
-    public partial class ProcGraph_V : UserControl
+    public partial class ProcGraphPanel_V : UserControl
     {
-        public ProcGraph_V()
+        public ProcGraphPanel_V()
         {
             InitializeComponent();
         }

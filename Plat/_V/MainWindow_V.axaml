@@ -35,7 +35,7 @@
         <v:MetaInfo_V DataContext="{Binding MetaInfo_VM}"/>
       </TabItem>
       <TabItem Header="Proc Graph">
-        <v:ProcGraph_V DataContext="{Binding ProcGraph_VM}"/>
+        <v:ProcGraphPanel_V DataContext="{Binding ProcGraphPanel_VM}"/>
       </TabItem>
       <TabItem Header="Topo Graph">
 

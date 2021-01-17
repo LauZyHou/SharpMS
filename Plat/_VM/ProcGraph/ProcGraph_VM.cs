@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Plat._VM
 {
-    public class ProcGraph_VM
+    public class ProcGraph_VM : ViewModelBase
     {
-        public string Test => "Welcome to Proc Graph!";
     }
 }

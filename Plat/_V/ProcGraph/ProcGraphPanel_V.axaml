@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Plat._V.ProcGraphPanel_V">
-	<TabControl Items="{Binding Procs}">
+	<TabControl Items="{Binding ProcGraph_VMs}">
 		<TabControl.ItemTemplate>
 			<DataTemplate>
-				<TextBlock Text="{Binding Identifier}"/>
+				<TextBlock Text="{Binding ProcGraph.Proc.Identifier}"/>
 			</DataTemplate>
 		</TabControl.ItemTemplate>
 	</TabControl>

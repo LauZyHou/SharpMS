@@ -11,15 +11,13 @@ namespace Plat._VM
 {
     public class ProcGraphPanel_VM : ViewModelBase
     {
-        private readonly ObservableCollection<Proc> procs;
-
-        public string Test => "Welcome to Proc Graph!";
+        private readonly ObservableCollection<ProcGraph_VM> procGraph_VMs;
 
         public ProcGraphPanel_VM()
         {
-            this.procs = ResourceManager.procs;
+            this.procGraph_VMs = ResourceManager.procGraph_VMs;
         }
 
-        public ObservableCollection<Proc> Procs => procs;
+        public ObservableCollection<ProcGraph_VM> ProcGraph_VMs => procGraph_VMs;
     }
 }

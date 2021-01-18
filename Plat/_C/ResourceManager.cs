@@ -22,6 +22,9 @@ namespace Plat._C
         public static ObservableCollection<Proc> procs = new ObservableCollection<Proc>();
         // 系统中所有的逻辑Channel组
         public static ObservableCollection<LogicChanGroup> logicChanGroups = new ObservableCollection<LogicChanGroup>();
+        // 系统中所有的Process Graph的VM（在创建Proc时同步创建）
+        public static ObservableCollection<ProcGraph_VM> procGraph_VMs = new ObservableCollection<ProcGraph_VM>();
+
 
         /// <summary>
         /// 更新主页最下方的提示内容

@@ -10,7 +10,7 @@ namespace Plat._VM
     /// <summary>
     /// Process Graph View Model
     /// </summary>
-    public class ProcGraph_VM : ViewModelBase
+    public class ProcGraph_VM : DragDrop_P_VM
     {
         private readonly ProcGraph procGraph;
 

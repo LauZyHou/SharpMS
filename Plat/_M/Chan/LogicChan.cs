@@ -13,6 +13,9 @@ namespace Plat._M
     public class LogicChan : ReactiveObject
     {
         private string identifier;
+        /// <summary>
+        /// 反引该LogicChan所在的LogicChanGroup
+        /// </summary>
         private LogicChanGroup? logicChanGroup;
 
         public LogicChan(string identifier, LogicChanGroup logicChanGroup)

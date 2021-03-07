@@ -48,4 +48,50 @@ namespace Plat._T
             return string.Empty;
         }
     }
+
+    /// <summary>
+    /// UPPAAL process instance concurrency statement, which is used at the end of the model declaration.
+    /// </summary>
+    public class UpConcurrency : UpStatement
+    {
+        private readonly List<string> processInstances;
+
+        public UpConcurrency(params string[] insts)
+        {
+            this.processInstances = new List<string>();
+            foreach (string inst in insts)
+            {
+                this.processInstances.Add(inst);
+            }
+        }
+
+        public List<string> ProcessInstances => processInstances;
+        public override string ToString()
+        {
+            return $"system {(string.Join(", ", processInstances))}";
+        }
+    }
+
+    /// <summary>
+    /// UPPAAL new variable declaration statement.
+    /// </summary>
+    public class UpNewVar : UpStatement
+    {
+        private readonly UpType type;
+        private readonly string name;
+
+        public UpNewVar(UpType type, string name)
+        {
+            this.type = type;
+            this.name = name;
+        }
+
+        public UpType Type => type;
+        public string Name => name;
+
+        public override string ToString()
+        {
+            return $"{type.Name} {name}";
+        }
+    }
 }

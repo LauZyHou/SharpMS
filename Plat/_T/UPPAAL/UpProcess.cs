@@ -34,8 +34,8 @@ namespace Plat._T
         {
             string res = $"<template>\n<name x=\"0\" y=\"0\">{name}</name>\n";
             res += $"<parameter>{(string.Join(", ", parameters))}</parameter>\n";
-            res += $"{localDeclaration}\n";
-            res += $"{ProgGraph}\n";
+            res += localDeclaration;
+            res += progGraph;
             res += "</template>\n";
             return res;
         }

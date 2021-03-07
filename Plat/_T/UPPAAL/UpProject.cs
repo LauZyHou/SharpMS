@@ -14,10 +14,10 @@ namespace Plat._T
     {
         private readonly UpDeclaration globalDeclaration;
         private readonly List<UpProcess> processes;
-        private readonly UpDeclaration modelDeclaration;
+        private readonly UpInstantiation modelDeclaration;
         private readonly List<UpQuery> queries;
 
-        public UpProject(UpDeclaration globalDeclaration, UpDeclaration modelDeclaration)
+        public UpProject(UpDeclaration globalDeclaration, UpInstantiation modelDeclaration)
         {
             this.globalDeclaration = globalDeclaration;
             this.processes = new List<UpProcess>();
@@ -27,7 +27,7 @@ namespace Plat._T
 
         public UpDeclaration GlobalDeclaration => globalDeclaration;
         public List<UpProcess> Processes => processes;
-        public UpDeclaration ModelDeclaration => modelDeclaration;
+        public UpInstantiation ModelDeclaration => modelDeclaration;
         public List<UpQuery> Queries => queries;
 
         public override string ToString()

@@ -23,7 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="_M\DragDrop\" />
-    <Folder Include="_T\ProVerif\" />
     <Folder Include="_V\DragDrop\" />
   </ItemGroup>
 </Project>

@@ -54,8 +54,74 @@ namespace Plat._T
     /// </summary>
     public class PvNewLocalVarOp : PvOperation
     {
-        // todo
+        private readonly PvParam param;
+
+        public PvNewLocalVarOp(PvParam param)
+        {
+            this.param = param;
+        }
+
+        public PvParam Param => param;
+
+        public override string ToString()
+        {
+            return $"new {param};";
+        }
     }
 
-    // todo
+    /// <summary>
+    /// ProVerif send message operation.
+    /// e.g. out(SN2HN, (suci, idHN));
+    /// </summary>
+    public class PvSendMsgOp : PvOperation
+    {
+        private readonly PvChannel channel;
+        private readonly List<string> vars;
+
+        public PvSendMsgOp(PvChannel channel, List<string> vars)
+        {
+            this.channel = channel;
+            this.vars = vars;
+        }
+
+        public PvChannel Channel => channel;
+        public List<string> Vars => vars;
+
+        public override string ToString()
+        {
+            if (vars.Count == 1)
+            {
+                return $"out({channel.Name}, {vars[0]});";
+            }
+            return $"out({channel.Name}, ({(string.Join(", ", vars))}));";
+        }
+    }
+
+    /// <summary>
+    /// ProVerif receive message operation.
+    /// e.g. in(SN2HN, (suci: SUCI, idHN: int));
+    /// </summary>
+    public class PvRecvMsgOp : PvOperation
+    {
+        private readonly PvChannel channel;
+        private readonly List<PvParam> pattern;
+
+        public PvRecvMsgOp(PvChannel channel, List<PvParam> pattern)
+        {
+            this.channel = channel;
+            this.pattern = pattern;
+        }
+
+        public PvChannel Channel => channel;
+        public List<PvParam> Pattern => pattern;
+
+        public override string ToString()
+        {
+            if (pattern.Count == 1)
+            {
+                return $"in({channel.Name}, {pattern[0]});";
+            }
+            return $"in({channel.Name}, ({string.Join(", ", pattern)}));";
+        }
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -122,6 +123,49 @@ namespace Plat._T
                 return $"in({channel.Name}, {pattern[0]});";
             }
             return $"in({channel.Name}, ({string.Join(", ", pattern)}));";
+        }
+    }
+
+    /// <summary>
+    /// ProVerif process instantiation operation.
+    /// e.g. Proc__UE(id_UE_1, supi, rs, pk_HN_2) | Proc__SN(id_SN_1) | Proc__HN(id_HN_1, sk_HN_1) | Proc__HN(id_HN_2, sk_HN_2)
+    /// </summary>
+    public class PvInstantiateOp : PvOperation
+    {
+        /// <summary>
+        /// e.g. {Proc__UE, Proc__SN, Proc__HN, Proc__HN}
+        /// </summary>
+        private readonly List<PvProcess> processes;
+        /// <summary>
+        /// e.g. {{id_UE_1, supi, rs, pk_HN_2}, {id_SN_1}, {id_HN_1, sk_HN_1}, {id_HN_2, sk_HN_2}}
+        /// </summary>
+        private readonly List<List<string>> procVars;
+
+        public PvInstantiateOp(List<PvProcess> processes, List<List<string>> procParams)
+        {
+            Debug.Assert(processes.Count == procParams.Count);
+            int procCnt = processes.Count;
+            for (int i = 0; i < procCnt; i ++ )
+            {
+                Debug.Assert(processes[i].Parameters.Count == procParams[i].Count);
+                // todo: type check
+            }
+            this.processes = processes;
+            this.procVars = procParams;
+        }
+
+        public List<PvProcess> Processes => processes;
+        public List<List<string>> ProcParams => procVars;
+
+        public override string ToString()
+        {
+            List<string> resList = new List<string>();
+            int procCnt = processes.Count;
+            for (int i = 0; i < procCnt; i ++ )
+            {
+                resList.Add($"{processes[i].Name}({string.Join(", ", procVars[i])})");
+            }
+            return string.Join(" | ", resList);
         }
     }
 }

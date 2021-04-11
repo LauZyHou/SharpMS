@@ -17,12 +17,12 @@ namespace Plat._T
         private readonly UpInstantiation modelDeclaration;
         private readonly List<UpQuery> queries;
 
-        public UpProject(UpDeclaration globalDeclaration, UpInstantiation modelDeclaration)
+        public UpProject(UpDeclaration globalDeclaration, List<UpProcess> processes, UpInstantiation modelDeclaration, List<UpQuery> queries)
         {
             this.globalDeclaration = globalDeclaration;
-            this.processes = new List<UpProcess>();
+            this.processes = processes;
             this.modelDeclaration = modelDeclaration;
-            this.queries = new List<UpQuery>();
+            this.queries = queries;
         }
 
         public UpDeclaration GlobalDeclaration => globalDeclaration;

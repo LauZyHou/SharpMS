@@ -12,5 +12,22 @@ namespace Plat._T
     /// </summary>
     public class PvProject
     {
+        private readonly PvDeclaration globalDeclaration;
+        private readonly List<PvProcess> processes;
+        private readonly List<PvQuery> queries;
+        private readonly PvInstantiation instantiation;
+
+        public PvProject(PvDeclaration globalDeclaration, List<PvProcess> processes, List<PvQuery> queries, PvInstantiation instantiation)
+        {
+            this.globalDeclaration = globalDeclaration;
+            this.processes = processes;
+            this.queries = queries;
+            this.instantiation = instantiation;
+        }
+
+        public PvDeclaration GlobalDeclaration => globalDeclaration;
+        public List<PvProcess> Processes => processes;
+        public List<PvQuery> Queries => queries;
+        public PvInstantiation Instantiation => instantiation;
     }
 }

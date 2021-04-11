@@ -25,9 +25,6 @@ namespace Test
             UpInstantiation modelDeclaration = new UpInstantiation();
             modelDeclaration.Statements.Add(new UpConcurrency("p1", "p2", "p3"));
 
-            // Root Project
-            UpProject upProject = new UpProject(globalDeclaration, modelDeclaration);
-
             // Process: UE
             UpDeclaration UEDeclaration = new UpDeclaration();
             UEDeclaration.Statements.Add(new UpNewVar(ByteVec, "__bytevec__encrypted"));
@@ -42,7 +39,11 @@ namespace Test
             UEPG.Transitions.Add(new UpTransition(UE_init, UE_Sended));
 
             UpProcess UEProc = new UpProcess("UE", UEDeclaration, UEPG);
-            upProject.Processes.Add(UEProc);
+
+            // Root Project
+            List<UpProcess> processes = new List<UpProcess>();
+            processes.Add(UEProc);
+            UpProject upProject = new UpProject(globalDeclaration, processes, modelDeclaration, new List<UpQuery>());
 
             // Take a look
             Console.WriteLine(upProject);

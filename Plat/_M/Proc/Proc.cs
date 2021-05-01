@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Plat._M
 {
     /// <summary>
-    /// 进程模板
+    /// Process，进程模板
     /// </summary>
     public class Proc : ReactiveObject
     {
@@ -21,7 +21,13 @@ namespace Plat._M
             this.description = description;
         }
 
+        /// <summary>
+        /// 进程的标识符，就是进程的唯一名字
+        /// </summary>
         public string Identifier { get => identifier; set => this.RaiseAndSetIfChanged(ref identifier, value); }
+        /// <summary>
+        /// 进程的描述，就是一些注释文字
+        /// </summary>
         public string Description { get => description; set => this.RaiseAndSetIfChanged(ref description, value); }
     }
 }

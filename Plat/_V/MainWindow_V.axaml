@@ -41,7 +41,7 @@
 
       </TabItem>
     </TabControl>
-    
+
     <TextBlock Grid.Row="2" Text="{Binding Tip}" Background="LightGray" FontSize="18"
                HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="20, 0"/>
 

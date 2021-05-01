@@ -24,8 +24,17 @@ namespace Plat._M
             this.logicChanList = new ObservableCollection<LogicChan>();
         }
 
+        /// <summary>
+        /// 源Process
+        /// </summary>
         public Proc Source { get => source; set => this.RaiseAndSetIfChanged(ref source, value); }
+        /// <summary>
+        /// 目标Process
+        /// </summary>
         public Proc Dest { get => dest; set => this.RaiseAndSetIfChanged(ref dest, value); }
+        /// <summary>
+        /// 逻辑Channel组中的所有LogicChan，形成一个列表
+        /// </summary>
         public ObservableCollection<LogicChan> LogicChanList => logicChanList;
     }
 }

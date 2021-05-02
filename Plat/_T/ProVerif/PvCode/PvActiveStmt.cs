@@ -57,7 +57,7 @@ namespace Plat._T
     {
         private readonly PvParam param;
 
-        public PvNewVar(PvParam param)
+        public PvNewVar(PvParam param) // todo: passed type & name
         {
             this.param = param;
         }
@@ -165,7 +165,7 @@ namespace Plat._T
             {
                 resList.Add($"{processes[i].Name}({string.Join(", ", procVars[i])})");
             }
-            return string.Join(" | ", resList);
+            return string.Join(" |\n\t", resList);
         }
     }
 }

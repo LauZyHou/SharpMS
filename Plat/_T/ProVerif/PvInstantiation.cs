@@ -11,19 +11,19 @@ namespace Plat._T
     /// </summary>
     public class PvInstantiation
     {
-        private readonly List<PvStatement> statements;
+        private readonly List<PvActiveStmt> statements;
 
-        public PvInstantiation(List<PvStatement> statements)
+        public PvInstantiation(List<PvActiveStmt> statements)
         {
             this.statements = statements;
         }
 
-        public List<PvStatement> Statements => statements;
+        public List<PvActiveStmt> Statements => statements;
 
         public override string ToString()
         {
             string res = "process\n";
-            foreach (PvStatement statement in statements)
+            foreach (PvActiveStmt statement in statements)
             {
                 res += $"\t{statement}\n";
             }

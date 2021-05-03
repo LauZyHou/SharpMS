@@ -29,10 +29,6 @@ namespace Plat._T
 
         public override string ToString()
         {
-            if (isInit)
-            {
-                return $"<init ref=\"id{id}\"/>\n";
-            }
             return $"<location id=\"id{id}\" x=\"0\" y=\"0\">\n<name x=\"0\" y=\"0\">{name}</name>\n</location>\n";
         }
     }

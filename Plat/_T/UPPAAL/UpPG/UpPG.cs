@@ -26,10 +26,16 @@ namespace Plat._T
         public override string ToString()
         {
             string res = "";
+            int initId = 0; // init location的id号
             foreach (UpLocation location in locations)
             {
                 res += location;
+                if (location.IsInit)
+                {
+                    initId = location.Id;
+                }
             }
+            res += $"\n<init ref=\"id{initId}\"/>\n";
             foreach (UpTransition transition in transitions)
             {
                 res += transition;

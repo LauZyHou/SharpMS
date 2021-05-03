@@ -12,10 +12,14 @@ namespace Plat._T
     /// </summary>
     public class UpProject
     {
-        private readonly UpDeclaration globalDeclaration;
-        private readonly List<UpProcess> processes;
-        private readonly UpInstantiation modelDeclaration;
-        private readonly List<UpQuery> queries;
+        private UpDeclaration? globalDeclaration;
+        private List<UpProcess>? processes;
+        private UpInstantiation? modelDeclaration;
+        private List<UpQuery>? queries;
+
+        public UpProject()
+        {
+        }
 
         public UpProject(UpDeclaration globalDeclaration, List<UpProcess> processes, UpInstantiation modelDeclaration, List<UpQuery> queries)
         {
@@ -25,14 +29,19 @@ namespace Plat._T
             this.queries = queries;
         }
 
-        public UpDeclaration GlobalDeclaration => globalDeclaration;
-        public List<UpProcess> Processes => processes;
-        public UpInstantiation ModelDeclaration => modelDeclaration;
-        public List<UpQuery> Queries => queries;
+        public UpDeclaration? GlobalDeclaration { get => globalDeclaration; set => globalDeclaration = value; }
+        public List<UpProcess>? Processes { get => processes; set => processes = value; }
+        public UpInstantiation? ModelDeclaration { get => modelDeclaration; set => modelDeclaration = value; }
+        public List<UpQuery>? Queries { get => queries; set => queries = value; }
 
         public override string ToString()
         {
-            string res = "<?xml version=\"1.0\" encoding=\"utf - 8\"?>\n";
+            if (globalDeclaration is null || processes is null || modelDeclaration is null || queries is null)
+            {
+                return "[ERROR: null reference in UpProject]";
+            }
+
+            string res = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
             res += "<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>\n";
             res += "<nta>\n";
             res += globalDeclaration;

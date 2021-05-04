@@ -52,7 +52,7 @@ namespace Test
             Console.WriteLine(upProject);
 
             // dump磁盘
-            DumpManager.OutUppalXml(upProject, "D:\\Code\\Mix\\CMSS-Case\\uppaal-gen\\simple.xml");
+            UpDumpManager.OutUppalXml(upProject, "D:\\Code\\Mix\\CMSS-Case\\uppaal-gen\\simple.xml");
         }
 
 

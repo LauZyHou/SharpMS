@@ -45,7 +45,7 @@ namespace Test
                     new UpQuery("A&lt;&gt; Process.end", ""),
                     new UpQuery("E&lt;&gt; Process.end", ""),
                 },
-                ModelDeclaration = upInstantiation
+                UpInstantiation = upInstantiation
             };
 
             // 打印
@@ -53,6 +53,98 @@ namespace Test
 
             // dump磁盘
             UpDumpManager.OutUppalXml(upProject, "D:\\Code\\Mix\\CMSS-Case\\uppaal-gen\\simple.xml");
+        }
+
+        /// <summary>
+        /// 构建一个简单的互斥进入临界区的模型
+        /// case见 https://lauzyhou.blog.csdn.net/article/details/108569153 第3部分
+        /// </summary>
+        public static void BuildSimpleMutuallyExclusiveEntryIntoTheCriticalSectionModel()
+        {
+            // 全局声明
+            UpDeclaration globalDec = new UpDeclaration();
+            globalDec.Statements.Add(new UpNewVar(UpType.INT, "req1"));
+            globalDec.Statements.Add(new UpNewVar(UpType.INT, "req2"));
+            globalDec.Statements.Add(new UpNewVar(UpType.INT, "turn"));
+
+            // 进程模板：mutex
+            UpPG mutexPG = new UpPG();
+            
+            UpLocation id0 = new UpLocation("idle", true);
+            mutexPG.Locations.Add(id0);
+
+            UpLocation id1 = new UpLocation("want");
+            mutexPG.Locations.Add(id1);
+
+            UpLocation id3 = new UpLocation("wait");
+            mutexPG.Locations.Add(id3);
+
+            UpLocation id2 = new UpLocation("CS");
+            mutexPG.Locations.Add(id2);
+
+            mutexPG.Transitions.Add(
+                new UpTransition(id2, id0)
+                {
+                    UpAssign = new UpAssignment("req_self", "0")
+                }
+            );
+
+            mutexPG.Transitions.Add(
+                new UpTransition(id3, id2)
+                {
+                    UpGurad = new UpGuard("req_other", "==", "0")
+                }
+            );
+
+            mutexPG.Transitions.Add(
+                new UpTransition(id3, id2)
+                {
+                    UpGurad = new UpGuard("turn", "==", "me")
+                }
+            );
+
+            mutexPG.Transitions.Add(
+                new UpTransition(id1, id3)
+                {
+                    UpAssign = new UpAssignment("turn", "(me==1?2:1)")
+                }
+            );
+
+            mutexPG.Transitions.Add(
+                new UpTransition(id0, id1)
+                {
+                    UpAssign = new UpAssignment("req_self", "1")
+                }
+            );
+
+            UpProcess mutexProc = new UpProcess("mutex", new UpDeclaration(), mutexPG);
+            mutexProc.Params.Add(new UpParam(UpType.INT, "me"));
+            mutexProc.Params.Add(new UpParam(UpType.INT, "req_self", true));
+            mutexProc.Params.Add(new UpParam(UpType.INT, "req_other", true));
+
+            // 进程例化
+            UpInstantiation system = new UpInstantiation();
+            system.Statements.Add(new UpAssignment("P1", "mutex(1, req1, req2)"));
+            system.Statements.Add(new UpAssignment("P2", "mutex(2, req2, req1)"));
+            system.Statements.Add(new UpConcurrency("P1", "P2"));
+
+            // 根Project构造
+            UpProject upProject = new UpProject()
+            {
+                GlobalDeclaration = globalDec,
+                Processes = new List<UpProcess> { mutexProc },
+                Queries = new List<UpQuery> {
+                    new UpQuery("E&lt;&gt; P1.CS"),
+                    new UpQuery("A[] not(P1.CS and P2.CS)")
+                },
+                UpInstantiation = system
+            };
+
+            // 控制台输出
+            Console.WriteLine(upProject);
+
+            // dump到磁盘
+            UpDumpManager.OutUppalXml(upProject, "D:\\Code\\Mix\\CMSS-Case\\uppaal-gen\\mutually-exclusive.xml");
         }
 
 

@@ -14,7 +14,7 @@ namespace Plat._T
         private readonly string formula;
         private readonly string comment;
 
-        public UpQuery(string formula, string comment)
+        public UpQuery(string formula, string comment = "")
         {
             this.formula = formula;
             this.comment = comment;

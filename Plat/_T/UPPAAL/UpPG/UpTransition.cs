@@ -13,8 +13,12 @@ namespace Plat._T
     {
         private readonly UpLocation source;
         private readonly UpLocation target;
-        private readonly UpSyncAction? syncAction;
-        private readonly List<UpAssignment> assignActions = new List<UpAssignment>();
+
+        private UpSelect? upSelect;
+        private UpGuard? upGurad;
+        private UpSynchronisation? upSync;
+        private UpAssignment? upAssign;
+
         private int x;
         private int y;
 
@@ -28,8 +32,12 @@ namespace Plat._T
 
         public UpLocation Source => source;
         public UpLocation Target => target;
-        public UpSyncAction? SyncAction => syncAction;
-        public List<UpAssignment> AssignActions => assignActions;
+
+        public UpSelect? UpSelect { get => upSelect; set => upSelect = value; }
+        public UpGuard? UpGurad { get => upGurad; set => upGurad = value; }
+        public UpSynchronisation? UpSync { get => upSync; set => upSync = value; }
+        public UpAssignment? UpAssign { get => upAssign; set => upAssign = value; }
+
         public int X { get => x; set => x = value; }
         public int Y { get => y; set => y = value; }
 
@@ -37,46 +45,32 @@ namespace Plat._T
         {
             string res = $"<transition>\n<source ref=\"id{source.Id}\"/>\n<target ref=\"id{target.Id}\"/>\n";
             int yBias = 0; // Y方向每写一条，就要往下挪20的偏置以写下一条
-            if (syncAction is not null)
+            // 可能存在的select label
+            if (upSelect is not null)
             {
-                res += $"<label kind=\"synchronisation\" x=\"{x}\" y=\"{y}\">\n{syncAction}\n</label>\n";
+                res += $"<label kind=\"select\" x=\"{x}\" y=\"{y + yBias}\">{upSelect}</label>\n";
                 yBias += 20;
             }
-            foreach (UpAssignment assignAction in assignActions)
+            // 可能存在的guard label
+            if (upGurad is not null)
             {
-                res += $"<label kind=\"assignment\" x=\"{x}\" y=\"{y + yBias}\">\n{assignAction}\n</label>\n";
+                res += $"<label kind=\"guard\" x=\"{x}\" y=\"{y + yBias}\">{upGurad}</label>\n";
                 yBias += 20;
+            }
+            // 可能存在的synchronisation label
+            if (upSync is not null)
+            {
+                res += $"<label kind=\"synchronisation\" x=\"{x}\" y=\"{y + yBias}\">{upSync}</label>\n";
+                yBias += 20;
+            }
+            // 可能存在的assignment label
+            if (upAssign is not null)
+            {
+                res += $"<label kind=\"assignment\" x=\"{x}\" y=\"{y + yBias}\">{upAssign}</label>\n";
+                //yBias += 20;
             }
             res += "</transition>\n";
             return res;
         }
     }
-
-    /// <summary>
-    /// UPPAAL sync action, which can be trans to content of "<label/>" with attr kind="synchronisation".
-    /// [todo] channel definition use a new class.
-    /// </summary>
-    public class UpSyncAction
-    {
-        /// <summary>
-        /// "true" if it is send sync, otherwise "false" to identify receive sync.
-        /// </summary>
-        private readonly bool isSend;
-        private readonly string channelName;
-
-        public UpSyncAction(bool isSend, string channelName)
-        {
-            this.isSend = isSend;
-            this.channelName = channelName;
-        }
-
-        public bool IsSend => isSend;
-        public string ChannelName => channelName;
-
-        public override string ToString()
-        {
-            return $"{channelName}{(isSend ? "!" : "?")}";
-        }
-    }
-
 }

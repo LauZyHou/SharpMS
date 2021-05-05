@@ -35,7 +35,7 @@ namespace Plat._T
                     initId = location.Id;
                 }
             }
-            res += $"\n<init ref=\"id{initId}\"/>\n";
+            res += $"<init ref=\"id{initId}\"/>\n";
             foreach (UpTransition transition in transitions)
             {
                 res += transition;

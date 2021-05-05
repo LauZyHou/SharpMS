@@ -14,29 +14,29 @@ namespace Plat._T
     {
         private UpDeclaration? globalDeclaration;
         private List<UpProcess>? processes;
-        private UpInstantiation? modelDeclaration;
+        private UpInstantiation? upInstantiation;
         private List<UpQuery>? queries;
 
         public UpProject()
         {
         }
 
-        public UpProject(UpDeclaration globalDeclaration, List<UpProcess> processes, UpInstantiation modelDeclaration, List<UpQuery> queries)
+        public UpProject(UpDeclaration globalDeclaration, List<UpProcess> processes, UpInstantiation upInstantiation, List<UpQuery> queries)
         {
             this.globalDeclaration = globalDeclaration;
             this.processes = processes;
-            this.modelDeclaration = modelDeclaration;
+            this.upInstantiation = upInstantiation;
             this.queries = queries;
         }
 
         public UpDeclaration? GlobalDeclaration { get => globalDeclaration; set => globalDeclaration = value; }
         public List<UpProcess>? Processes { get => processes; set => processes = value; }
-        public UpInstantiation? ModelDeclaration { get => modelDeclaration; set => modelDeclaration = value; }
+        public UpInstantiation? UpInstantiation { get => upInstantiation; set => upInstantiation = value; }
         public List<UpQuery>? Queries { get => queries; set => queries = value; }
 
         public override string ToString()
         {
-            if (globalDeclaration is null || processes is null || modelDeclaration is null || queries is null)
+            if (globalDeclaration is null || processes is null || upInstantiation is null || queries is null)
             {
                 return "[ERROR: null reference in UpProject]";
             }
@@ -49,7 +49,7 @@ namespace Plat._T
             {
                 res += process;
             }
-            res += modelDeclaration;
+            res += upInstantiation;
             res += "<queries>\n";
             foreach (UpQuery query in queries)
             {

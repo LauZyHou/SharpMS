@@ -24,5 +24,8 @@ namespace Plat._T
         {
             return name;
         }
+
+        public static UpType INT = new UpType("int");
+        public static UpType CLOCK = new UpType("clock");
     }
 }

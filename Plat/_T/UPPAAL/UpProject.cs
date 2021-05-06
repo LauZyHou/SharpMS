@@ -50,12 +50,12 @@ namespace Plat._T
                 res += process;
             }
             res += upInstantiation;
-            res += "<queries>\n";
+            res += "\t<queries>\n";
             foreach (UpQuery query in queries)
             {
                 res += query;
             }
-            res += "</queries>\n</nta>\n";
+            res += "\t</queries>\n</nta>\n";
             return res;
         }
     }

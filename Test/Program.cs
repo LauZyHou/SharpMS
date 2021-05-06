@@ -6,7 +6,7 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            TestUPPAAL.BuildSimpleMutuallyExclusiveEntryIntoTheCriticalSectionModel();
+            TestUPPAAL.BuildSimpleChannelSyncAndClockControlModel();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plat._C;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace Plat._T
 
         public override string ToString()
         {
-            string res = "<system>\n";
+            string res = $"\t<system>//{CommonDumpManager.AutoGenTips}\n";
             foreach (UpStatement statement in statements)
             {
                 if (statement is null || statement is UpPass)
@@ -34,7 +35,7 @@ namespace Plat._T
                     res += $"{statement};\n";
                 }
             }
-            res += "</system>\n";
+            res += "\t</system>\n";
             return res;
         }
     }

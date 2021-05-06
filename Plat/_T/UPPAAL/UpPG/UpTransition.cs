@@ -43,33 +43,41 @@ namespace Plat._T
 
         public override string ToString()
         {
-            string res = $"<transition>\n<source ref=\"id{source.Id}\"/>\n<target ref=\"id{target.Id}\"/>\n";
+            string res = $"\t\t<transition>\n" +
+                         $"\t\t\t<source ref=\"id{source.Id}\"/>\n" +
+                         $"\t\t\t<target ref=\"id{target.Id}\"/>\n";
             int yBias = 0; // Y方向每写一条，就要往下挪20的偏置以写下一条
             // 可能存在的select label
             if (upSelect is not null)
             {
-                res += $"<label kind=\"select\" x=\"{x}\" y=\"{y + yBias}\">{upSelect}</label>\n";
+                res += $"\t\t\t<label kind=\"select\" x=\"{x}\" y=\"{y + yBias}\">{upSelect}</label>\n";
                 yBias += 20;
             }
             // 可能存在的guard label
             if (upGurad is not null)
             {
-                res += $"<label kind=\"guard\" x=\"{x}\" y=\"{y + yBias}\">{upGurad}</label>\n";
+                res += $"\t\t\t<label kind=\"guard\" x=\"{x}\" y=\"{y + yBias}\">{upGurad}</label>\n";
                 yBias += 20;
             }
             // 可能存在的synchronisation label
             if (upSync is not null)
             {
-                res += $"<label kind=\"synchronisation\" x=\"{x}\" y=\"{y + yBias}\">{upSync}</label>\n";
+                res += $"\t\t\t<label kind=\"synchronisation\" x=\"{x}\" y=\"{y + yBias}\">{upSync}</label>\n";
                 yBias += 20;
             }
             // 可能存在的assignment label
             if (upAssign is not null)
             {
-                res += $"<label kind=\"assignment\" x=\"{x}\" y=\"{y + yBias}\">{upAssign}</label>\n";
+                res += $"\t\t\t<label kind=\"assignment\" x=\"{x}\" y=\"{y + yBias}\">{upAssign}</label>\n";
                 //yBias += 20;
             }
-            res += "</transition>\n";
+            // 如果是自己连自己的，考虑加上nail
+            if (source == target)
+            {
+                res += $"\t\t\t<nail x=\"{x + 70}\" y=\"{y - 50}\"/>\n";
+                res += $"\t\t\t<nail x=\"{x + 70}\" y=\"{y + 50}\"/>\n";
+            }
+            res += "\t\t</transition>\n";
             return res;
         }
     }

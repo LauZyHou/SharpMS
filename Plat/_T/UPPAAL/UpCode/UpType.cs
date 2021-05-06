@@ -27,5 +27,6 @@ namespace Plat._T
 
         public static UpType INT = new UpType("int");
         public static UpType CLOCK = new UpType("clock");
+        public static UpType CHAN = new UpType("chan");
     }
 }

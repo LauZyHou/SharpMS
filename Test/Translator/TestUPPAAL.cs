@@ -147,45 +147,79 @@ namespace Test
             UpDumpManager.OutUppalXml(upProject, "D:\\Code\\Mix\\CMSS-Case\\uppaal-gen\\mutually-exclusive.xml");
         }
 
-
-        public static void BuildMemoryModel()
+        /// <summary>
+        /// 构建一个简单的通道同步和时钟控制的模型
+        /// case见 https://lauzyhou.blog.csdn.net/article/details/108569153 第4部分
+        /// </summary>
+        public static void BuildSimpleChannelSyncAndClockControlModel()
         {
-            // Model Type define
-            UpType ByteVec = new UpType("ByteVec");
-            UpType SUCI = new UpType("SUCI");
+            // 全局声明
+            UpDeclaration globalDec = new UpDeclaration();
+            globalDec.Statements.Add(new UpNewVar(UpType.CLOCK, "x"));
+            globalDec.Statements.Add(new UpNewVar(UpType.CHAN, "reset"));
 
-            // Global Declaration
-            UpDeclaration globalDeclaration = new UpDeclaration();
-            globalDeclaration.Statements.Add(new UpAssignment("a", "1"));
-            globalDeclaration.Statements.Add(new UpPass());
-            globalDeclaration.Statements.Add(new UpAssignment("b[1].c", "2"));
+            // 进程模板：P1
+            UpPG p1PG = new UpPG();
 
-            // Model Declaration
-            UpInstantiation modelDeclaration = new UpInstantiation();
-            modelDeclaration.Statements.Add(new UpConcurrency("p1", "p2", "p3"));
+            UpLocation id0 = new UpLocation("loop", true)
+            {
+                Invariant = "x&lt;=3"
+            };
+            p1PG.Locations.Add(id0);
 
-            // Process: UE
-            UpDeclaration UEDeclaration = new UpDeclaration();
-            UEDeclaration.Statements.Add(new UpNewVar(ByteVec, "__bytevec__encrypted"));
-            UEDeclaration.Statements.Add(new UpNewVar(ByteVec, "bv"));
-            UEDeclaration.Statements.Add(new UpNewVar(SUCI, "suci"));
+            UpTransition id0_id0 = new UpTransition(id0, id0)
+            {
+                UpGurad = new UpGuard("x", "&gt;", "2"),
+                UpSync = new UpSynchronisation(true, "reset")
+            };
+            p1PG.Transitions.Add(id0_id0);
 
-            UpPG UEPG = new UpPG();
-            UpLocation UE_init = new UpLocation("init", true);
-            UEPG.Locations.Add(UE_init);
-            UpLocation UE_Sended = new UpLocation("Sended");
-            UEPG.Locations.Add(UE_Sended);
-            UEPG.Transitions.Add(new UpTransition(UE_init, UE_Sended));
+            UpProcess p1Proc = new UpProcess("P1", new UpDeclaration(), p1PG);
 
-            UpProcess UEProc = new UpProcess("UE", UEDeclaration, UEPG);
+            // 进程模板：Obs
+            UpPG obsPG = new UpPG();
 
-            // Root Project
-            List<UpProcess> processes = new List<UpProcess>();
-            processes.Add(UEProc);
-            UpProject upProject = new UpProject(globalDeclaration, processes, modelDeclaration, new List<UpQuery>());
+            UpLocation id1 = new UpLocation("idle", true);
+            obsPG.Locations.Add(id1);
 
-            // Take a look
+            UpLocation id2 = new UpLocation("taken");
+            obsPG.Locations.Add(id2);
+
+            UpTransition id2_id1 = new UpTransition(id2, id1)
+            {
+                UpAssign = new UpAssignment("x", "0")
+            };
+            obsPG.Transitions.Add(id2_id1);
+
+            UpTransition id1_id2 = new UpTransition(id1, id2)
+            {
+                UpSync = new UpSynchronisation(false, "reset")
+            };
+            obsPG.Transitions.Add(id1_id2);
+
+            UpProcess obsProc = new UpProcess("Obs", new UpDeclaration(), obsPG);
+
+            // 进程例化
+            UpInstantiation system = new UpInstantiation();
+            system.Statements.Add(new UpConcurrency("P1", "Obs"));
+
+            // 根Project构造
+            UpProject upProject = new UpProject()
+            {
+                GlobalDeclaration = globalDec,
+                Processes = new List<UpProcess> { p1Proc, obsProc },
+                Queries = new List<UpQuery> { 
+                    new UpQuery("E&lt;&gt; Obs.idle and x&gt;2"),
+                    new UpQuery("A[] Obs.taken imply (x&gt;=2 and x&lt;=3)")
+                },
+                UpInstantiation = system
+            };
+
+            // 控制台打印
             Console.WriteLine(upProject);
+
+            // dump到磁盘文件
+            UpDumpManager.OutUppalXml(upProject, "D:\\Code\\Mix\\CMSS-Case\\uppaal-gen\\channel-clock.xml");
         }
     }
 }

@@ -25,7 +25,10 @@ namespace Plat._T
 
         public override string ToString()
         {
-            return $"<query>\n<formula>{formula}</formula>\n<comment>{comment}</comment>\n</query>\n";
+            return $"\t\t<query>\n" +
+                   $"\t\t\t<formula>{formula}</formula>\n" +
+                   $"\t\t\t<comment>{comment}</comment>\n" +
+                   $"\t\t</query>\n";
         }
     }
 }

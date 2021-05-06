@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plat._C;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,17 +14,20 @@ namespace Plat._T
     public class UpDeclaration
     {
         private readonly List<UpStatement> statements;
+        private bool isLocal;
 
-        public UpDeclaration()
+        public UpDeclaration(bool isLocal = false)
         {
             this.statements = new List<UpStatement>();
+            this.isLocal = isLocal;
         }
 
         public List<UpStatement> Statements => statements;
+        public bool IsLocal { get => isLocal; set => isLocal = value; }
 
         public override string ToString()
         {
-            string res = "<declaration>\n";
+            string res = $"\t{(isLocal?"\t":"")}<declaration>//{CommonDumpManager.AutoGenTips}\n";
             foreach (UpStatement statement in statements)
             {
                 if (statement is null || statement is UpPass)
@@ -35,7 +39,7 @@ namespace Plat._T
                     res += $"{statement};\n";
                 }
             }
-            res += "</declaration>\n";
+            res += $"\t{(isLocal?"\t":"")}</declaration>\n";
             return res;
         }
     }

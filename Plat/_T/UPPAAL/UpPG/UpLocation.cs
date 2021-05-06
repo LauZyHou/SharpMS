@@ -16,6 +16,7 @@ namespace Plat._T
         private readonly int id;
         private string name;
         private bool isInit;
+        private string? invariant;
         private int x;
         private int y;
 
@@ -49,12 +50,22 @@ namespace Plat._T
         public string Name { get => name; set => name = value; }
         public bool IsInit { get => isInit; set => isInit = value; }
         public int Id => id;
+        public string? Invariant { get => invariant; set => invariant = value; }
         public int X { get => x; set => x = value; }
         public int Y { get => y; set => y = value; }
 
         public override string ToString()
         {
-            return $"<location id=\"id{id}\" x=\"{x}\" y=\"{y}\">\n<name x=\"{x}\" y=\"{y+20}\">{name}</name>\n</location>\n";
+            if (invariant is null)
+            {
+                return $"\t\t<location id=\"id{id}\" x=\"{x}\" y=\"{y}\">\n" +
+                       $"\t\t\t<name x=\"{x}\" y=\"{y + 40}\">{name}</name>\n" +
+                       "\t\t</location>\n";
+            }
+            return $"\t\t<location id=\"id{id}\" x=\"{x}\" y=\"{y}\">\n" +
+                   $"\t\t\t<name x=\"{x}\" y=\"{y + 40}\">{name}</name>\n" +
+                   $"\t\t\t<label kind=\"invariant\" x=\"{x}\" y=\"{y + 80}\">{invariant}</label>\n" +
+                   "\t\t</location>\n";
         }
     }
 }

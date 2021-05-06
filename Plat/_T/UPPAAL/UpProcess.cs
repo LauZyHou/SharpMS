@@ -21,6 +21,7 @@ namespace Plat._T
         {
             this.name = name;
             this.localDeclaration = localDeclaration;
+            this.localDeclaration.IsLocal = true; // 即使用户忘了写local这里也强制下，只影响缩进
             this.progGraph = progGraph;
             this.parameters = new List<UpParam>();
         }
@@ -32,11 +33,15 @@ namespace Plat._T
 
         public override string ToString()
         {
-            string res = $"<template>\n<name x=\"0\" y=\"0\">{name}</name>\n";
-            res += $"<parameter>{(string.Join(", ", parameters))}</parameter>\n";
+            string res = $"\t<template>\n" +
+                         $"\t\t<name x=\"0\" y=\"0\">{name}</name>\n";
+            if (parameters.Count != 0)
+            {
+                res += $"\t\t<parameter>{(string.Join(", ", parameters))}</parameter>\n";
+            }
             res += localDeclaration;
             res += progGraph;
-            res += "</template>\n";
+            res += "\t</template>\n";
             return res;
         }
     }

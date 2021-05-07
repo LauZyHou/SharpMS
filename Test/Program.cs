@@ -6,7 +6,8 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            TestUPPAAL.BuildSimpleChannelSyncAndClockControlModel();
+            //TestUPPAAL.BuildSimpleChannelSyncAndClockControlModel();
+            TestProVerif.BuildSimpleReachModel();
         }
     }
 }

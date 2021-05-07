@@ -12,10 +12,14 @@ namespace Plat._T
     /// </summary>
     public class PvProject
     {
-        private readonly PvDeclaration globalDeclaration;
-        private readonly List<PvProcess> processes;
-        private readonly List<PvQuery> queries;
-        private readonly PvInstantiation instantiation;
+        private PvDeclaration? globalDeclaration;
+        private List<PvProcess>? processes;
+        private List<PvQuery>? queries;
+        private PvInstantiation? instantiation;
+
+        public PvProject()
+        {
+        }
 
         public PvProject(PvDeclaration globalDeclaration, List<PvProcess> processes, List<PvQuery> queries, PvInstantiation instantiation)
         {
@@ -25,9 +29,35 @@ namespace Plat._T
             this.instantiation = instantiation;
         }
 
-        public PvDeclaration GlobalDeclaration => globalDeclaration;
-        public List<PvProcess> Processes => processes;
-        public List<PvQuery> Queries => queries;
-        public PvInstantiation Instantiation => instantiation;
+        public PvDeclaration? GlobalDeclaration { get => globalDeclaration; set => globalDeclaration = value; }
+        public List<PvProcess>? Processes { get => processes; set => processes = value; }
+        public List<PvQuery>? Queries { get => queries; set => queries = value; }
+        public PvInstantiation? Instantiation { get => instantiation; set => instantiation = value; }
+
+        public override string ToString()
+        {
+            string res = "";
+            if (globalDeclaration is not null)
+            {
+                res = globalDeclaration + "\n";
+            }
+            if (processes is not null && processes.Count > 0)
+            {
+                foreach (PvProcess proc in processes)
+                {
+                    res += proc + "\n";
+                }
+            }
+            res += "\n";
+            if (queries is not null && queries.Count > 0)
+            {
+                foreach (PvQuery query in queries)
+                {
+                    res += query + "\n";
+                }
+            }
+            res += "\n";
+            return res + instantiation;
+        }
     }
 }

@@ -13,6 +13,11 @@ namespace Plat._T
     {
         private readonly List<PvStatement> statements;
 
+        public PvDeclaration()
+        {
+            this.statements = new List<PvStatement>();
+        }
+
         public PvDeclaration(List<PvStatement> statements)
         {
             this.statements = statements;
@@ -25,7 +30,7 @@ namespace Plat._T
             string res = "";
             foreach (PvStatement statement in Statements)
             {
-                res += $"\t{statement}\n";
+                res += $"{statement}\n";
             }
             return res;
         }

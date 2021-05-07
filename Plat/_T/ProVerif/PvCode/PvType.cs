@@ -24,5 +24,7 @@ namespace Plat._T
         {
             return name;
         }
+
+        public static PvType BITSTRING = new PvType("bitstring");
     }
 }

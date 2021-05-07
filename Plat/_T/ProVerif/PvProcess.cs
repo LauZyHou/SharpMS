@@ -67,7 +67,7 @@ namespace Plat._T
         /// <returns></returns>
         public override string ToString()
         {
-            return $"let {name}({string.Join(", ", parameters)}) = \n{string.Join("\n\t", statements)}";
+            return $"let {name}({string.Join(", ", parameters)}) = \n{string.Join("\n\t", statements)}.";
         }
     }
 }

@@ -21,7 +21,8 @@ namespace Plat._T
     {
         public override string ToString()
         {
-            return "0.";
+            // 这里先不加结尾的dot（'.'号），在进程模板里需要加，在实例化时候不需要
+            return "0";
         }
     }
 

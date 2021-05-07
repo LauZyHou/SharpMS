@@ -13,6 +13,11 @@ namespace Plat._T
     {
         private readonly List<PvActiveStmt> statements;
 
+        public PvInstantiation()
+        {
+            this.statements = new List<PvActiveStmt>();
+        }
+
         public PvInstantiation(List<PvActiveStmt> statements)
         {
             this.statements = statements;

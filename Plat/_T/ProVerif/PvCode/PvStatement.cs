@@ -110,7 +110,7 @@ namespace Plat._T
 
         public override string ToString()
         {
-            return $"free {channel.Name}: channel{(channel.IsPrivate ? "[private]" : "")}.";
+            return $"free {channel.Name}: channel{(channel.IsPrivate ? " [private]" : "")}.";
         }
     }
 
@@ -131,7 +131,7 @@ namespace Plat._T
 
         public override string ToString()
         {
-            return $"free {var.Name}: {var.Type}{(var.IsPrivate ? "[private]" : "")}.";
+            return $"free {var.Name}: {var.Type}{(var.IsPrivate ? " [private]" : "")}.";
         }
     }
 

@@ -22,5 +22,10 @@ namespace Plat._T
 
         public string Name => name;
         public List<PvType> ParamTypes => paramTypes;
+
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }

@@ -151,6 +151,10 @@ namespace Plat._T
 
         public override string ToString()
         {
+            if (@event.ParamTypes.Count == 0)
+            {
+                return $"event {@event.Name}.";
+            }
             return $"event {@event.Name}({(string.Join(", ", @event.ParamTypes))}).";
         }
     }

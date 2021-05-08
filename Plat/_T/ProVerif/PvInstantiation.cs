@@ -11,28 +11,26 @@ namespace Plat._T
     /// </summary>
     public class PvInstantiation
     {
-        private readonly List<PvActiveStmt> statements;
+        private PvSeqStmt rootStmt;
 
         public PvInstantiation()
         {
-            this.statements = new List<PvActiveStmt>();
+            this.rootStmt = new PvSeqStmt();
         }
 
-        public PvInstantiation(List<PvActiveStmt> statements)
+        public PvInstantiation(PvSeqStmt rootStmt)
         {
-            this.statements = statements;
+            this.rootStmt = rootStmt;
         }
 
-        public List<PvActiveStmt> Statements => statements;
+        /// <summary>
+        /// 实例化的根是一个顺序语句
+        /// </summary>
+        public PvSeqStmt RootStmt { get => rootStmt; set => rootStmt = value; }
 
         public override string ToString()
         {
-            string res = "process\n";
-            foreach (PvActiveStmt statement in statements)
-            {
-                res += $"\t{statement}\n";
-            }
-            return res;
+            return $"process\n{rootStmt}";
         }
     }
 }

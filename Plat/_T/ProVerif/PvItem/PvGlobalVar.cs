@@ -12,7 +12,7 @@ namespace Plat._T
         private readonly string name;
         private readonly bool isPrivate;
 
-        public PvGlobalVar(PvType type, string name, bool isPrivate)
+        public PvGlobalVar(PvType type, string name, bool isPrivate = false)
         {
             this.type = type;
             this.name = name;

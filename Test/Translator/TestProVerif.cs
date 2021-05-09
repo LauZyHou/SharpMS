@@ -91,7 +91,7 @@ namespace Test
                         {
                             new PvEventPoint(evCocks), // event evCocks
                             new PvEventPoint(evRSA) // event evRSA
-                        }    
+                        }
                     ),
                     ElseStmt = new PvEventPoint(evRSA) // else \n event evRSA
                 }
@@ -115,6 +115,148 @@ namespace Test
 
             // dump到磁盘文件
             PvDumpManager.OutProVerifPv(pvProject, "D:\\Code\\Mix\\CMSS-Case\\proverif-gen\\correspondence-assertion.pv");
+        }
+
+
+        /// <summary>
+        /// 构建一个简单的握手协议模型
+        /// case见 https://lauzyhou.blog.csdn.net/article/details/107937590 第3部分
+        /// 以及 https://lauzyhou.blog.csdn.net/article/details/107952903 第3部分
+        /// 两个部分拼接形成模型
+        /// </summary>
+        public static void BuildHandshakeProtocolModel()
+        {
+            // 全局声明
+            PvDeclaration globalDec = new PvDeclaration();
+
+            PvChannel c = new PvChannel("c");
+            PvGlobalVar s = new PvGlobalVar(PvType.BITSTRING, "s", true);
+
+            globalDec.Statements.Add(new PvChannelDeclaration(c));
+            globalDec.Statements.Add(new PvGlobalVarDeclaration(s));
+
+            // - 对称加密
+            PvType key = new PvType("key");
+
+            globalDec.Statements.Add(new PvTypeDeclaration(key));
+
+            globalDec.Statements.Add(new PvFuncDeclaration("senc", new List<PvType> { PvType.BITSTRING, key }, PvType.BITSTRING));
+            globalDec.Statements.Add(new PvReducDeclaration(
+                new List<PvParam>
+                {
+                    new PvParam(PvType.BITSTRING, "m"),
+                    new PvParam(key, "k")
+                },
+                "sdec(senc(m,k),k)=m"
+            ));
+
+            // - 非对称加密
+            PvType skey = new PvType("skey");
+            PvType pkey = new PvType("pkey");
+
+            globalDec.Statements.Add(new PvTypeDeclaration(skey));
+            globalDec.Statements.Add(new PvTypeDeclaration(pkey));
+
+            globalDec.Statements.Add(new PvFuncDeclaration("pk", new List<PvType> { skey }, pkey));
+            globalDec.Statements.Add(new PvFuncDeclaration("aenc", new List<PvType> { PvType.BITSTRING, pkey }, PvType.BITSTRING));
+            globalDec.Statements.Add(new PvReducDeclaration(
+                new List<PvParam>
+                {
+                    new PvParam(PvType.BITSTRING, "m"),
+                    new PvParam(skey, "k")
+                },
+                "adec(aenc(m, pk(k)),k)=m"
+            ));
+
+            // - 数字签名
+            PvType sskey = new PvType("sskey");
+            PvType spkey = new PvType("spkey");
+
+            globalDec.Statements.Add(new PvTypeDeclaration(sskey));
+            globalDec.Statements.Add(new PvTypeDeclaration(spkey));
+
+            globalDec.Statements.Add(new PvFuncDeclaration("spk", new List<PvType> { sskey }, spkey));
+            globalDec.Statements.Add(new PvFuncDeclaration("sign", new List<PvType> { PvType.BITSTRING, sskey }, PvType.BITSTRING));
+            globalDec.Statements.Add(new PvReducDeclaration(
+                new List<PvParam>
+                {
+                    new PvParam(PvType.BITSTRING, "m"),
+                    new PvParam(sskey, "k")
+                },
+                "getmess(sign(m,k))=m"
+            ));
+            globalDec.Statements.Add(new PvReducDeclaration(
+                new List<PvParam>
+                {
+                    new PvParam(PvType.BITSTRING, "m"),
+                    new PvParam(sskey, "k")
+                },
+                "checksign(sign(m,k),spk(k))=m"
+            ));
+
+            // 进程声明
+            PvProcess clientA = new PvProcess("clientA");
+            clientA.Params = new List<PvParam> { new PvParam(pkey, "pkA"), new PvParam(skey, "skA"), new PvParam(spkey, "pkB") };
+            clientA.RootStmt.SubStmts = new List<PvActiveStmt>
+            {
+                new PvSendMsg(c, new List<string> { "pkA" }),
+                new PvRecvMsg(c, new List<PvParam> { new PvParam(PvType.BITSTRING, "x") }),
+                new PvLetStmt("y", "adec(x, skA)"),
+                new PvLetStmt("(=pkB, k:key)", "checksign(y, pkB)"),
+                new PvSendMsg(c, new List<string> { "senc(s, k)" })
+            };
+
+            PvProcess serverB = new PvProcess("serverB");
+            serverB.Params = new List<PvParam> { new PvParam(spkey, "pkB"), new PvParam(sskey, "skB") };
+            serverB.RootStmt.SubStmts = new List<PvActiveStmt>()
+            {
+                new PvRecvMsg(c, new List<PvParam> { new PvParam(pkey, "pkX") }),
+                new PvNewVar(key, "k"),
+                new PvSendMsg(c, new List<string> { "aenc(sign((pkB,k),skB),pkX)" }),
+                new PvRecvMsg(c, new List<PvParam> { new PvParam(PvType.BITSTRING, "x") }),
+                new PvLetStmt("z", "sdec(x, k)"),
+                new PvPass()
+            };
+
+            // 进程实例化
+            PvInstantiation inst = new PvInstantiation();
+            inst.RootStmt.SubStmts = new List<PvActiveStmt>()
+            {
+                new PvNewVar(skey, "skA"),
+                new PvNewVar(sskey, "skB"),
+                new PvLetStmt("pkA", "pk(skA)"),
+                new PvSendMsg(c, new List<string> { "pkA" }),
+                new PvLetStmt("pkB", "spk(skB)"),
+                new PvSendMsg(c, new List<string> { "pkB" }),
+                new PvConcurrency(
+                    new List<PvProcInst>()
+                    {
+                        new PvProcInst(clientA, true)
+                        {
+                            Params = new List<string> { "pkA", "skA", "pkB" }
+                        },
+                        new PvProcInst(serverB, true)
+                        {
+                            Params = new List<string> { "pkB", "skB" }
+                        }
+                    }
+                )
+            };
+
+            // 根Project构造
+            PvProject pvProject = new PvProject()
+            {
+                GlobalDeclaration = globalDec,
+                Processes = new List<PvProcess> { clientA, serverB },
+                Queries = new List<PvQuery> { new PvConfidentiality("s") },
+                Instantiation = inst
+            };
+
+            // 打印输出
+            Console.WriteLine(pvProject);
+
+            // dump到磁盘
+            PvDumpManager.OutProVerifPv(pvProject, "D:\\Code\\Mix\\CMSS-Case\\proverif-gen\\handshake-protocol.pv");
         }
     }
 }

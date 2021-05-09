@@ -130,9 +130,9 @@ namespace Plat._T
             {
                 return res;
             }
-            for (int i = 0; i < len - 1; i++) // 前n-1个带顺序连接符';'
+            for (int i = 0; i < len - 1; i++) // 前n-1个带顺序连接符';'，如果是let就不带
             {
-                res += $"{subStmts[i]};\n";
+                res += $"{subStmts[i]}{(subStmts[i] is PvLetStmt ? "" : ";")}\n";
             }
             res += $"{subStmts[len - 1]}"; // 最后一个不带
             return res;
@@ -262,7 +262,7 @@ namespace Plat._T
 
         public override string ToString()
         {
-            return $"{TabSuffix}new {type}:{name}";
+            return $"{TabSuffix}new {name}:{type}";
         }
     }
 
@@ -328,40 +328,26 @@ namespace Plat._T
     /// </summary>
     public class PvConcurrency : PvActiveStmt
     {
-        /// <summary>
-        /// e.g. {Proc__UE, Proc__SN, Proc__HN, Proc__HN}
-        /// </summary>
-        private readonly List<PvProcess> processes;
-        /// <summary>
-        /// e.g. {{id_UE_1, supi, rs, pk_HN_2}, {id_SN_1}, {id_HN_1, sk_HN_1}, {id_HN_2, sk_HN_2}}
-        /// </summary>
-        private readonly List<List<string>> procVars;
+        private List<PvProcInst> procInsts;
 
-        public PvConcurrency(List<PvProcess> processes, List<List<string>> procParams)
+        public PvConcurrency()
         {
-            Debug.Assert(processes.Count == procParams.Count);
-            int procCnt = processes.Count;
-            for (int i = 0; i < procCnt; i++)
-            {
-                Debug.Assert(processes[i].Parameters.Count == procParams[i].Count);
-                // todo: type check
-            }
-            this.processes = processes;
-            this.procVars = procParams;
+            procInsts = new List<PvProcInst>();
         }
 
-        public List<PvProcess> Processes => processes;
-        public List<List<string>> ProcParams => procVars;
+        public PvConcurrency(List<PvProcInst> procInsts)
+        {
+            this.procInsts = procInsts;
+        }
+
+        /// <summary>
+        /// 进程实例化的列表
+        /// </summary>
+        public List<PvProcInst> ProcInsts { get => procInsts; set => procInsts = value; }
 
         public override string ToString()
         {
-            List<string> resList = new List<string>();
-            int procCnt = processes.Count;
-            for (int i = 0; i < procCnt; i++)
-            {
-                resList.Add($"{processes[i].Name}({string.Join(", ", procVars[i])})");
-            }
-            return TabSuffix + string.Join($" |\n{TabSuffix}", resList);
+            return TabSuffix + string.Join($" |\n{TabSuffix}", procInsts);
         }
     }
 
@@ -384,4 +370,21 @@ namespace Plat._T
             return $"{TabSuffix}event {pvEvent.Name}";
         }
     }
+
+    /// <summary>
+    /// ProVerif Pass语句，可以用在let后面也可以作为Seq的一部分（基本就用在一个分支结尾的地方）
+    /// 用在let里是因为let部分可以做解包的动作，但是不关心解包之后的内容
+    /// </summary>
+    public class PvPass : PvActiveStmt
+    {
+        public PvPass()
+        {
+        }
+
+        public override string ToString()
+        {
+            return $"{TabSuffix}0";
+        }
+    }
+
 }

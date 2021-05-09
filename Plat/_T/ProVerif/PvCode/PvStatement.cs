@@ -158,5 +158,4 @@ namespace Plat._T
             return $"event {@event.Name}({(string.Join(", ", @event.ParamTypes))}).";
         }
     }
-
 }

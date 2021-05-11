@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Plat._M
 {
+    /// <summary>
+    /// 属性（Attr），或形式参数（Param），在SharpMS中共用这个类型
+    /// </summary>
     public class Attribute : ReactiveObject
     {
         private string identifier;

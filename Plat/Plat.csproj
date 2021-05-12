@@ -17,6 +17,9 @@
     <Compile Update="_V\MainWindow_V.axaml.cs">
       <DependentUpon>MainWindow_V.axaml</DependentUpon>
     </Compile>
+    <Compile Update="_V\MetaInfo\MetaInfo_PG_V.axaml.cs">
+      <DependentUpon>MetaInfo_PG_V.axaml</DependentUpon>
+    </Compile>
     <Compile Update="_V\ProcGraph\ProcGraphPanel_V.axaml.cs">
       <DependentUpon>ProcGraphPanel_V.axaml</DependentUpon>
     </Compile>

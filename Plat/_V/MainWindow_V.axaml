@@ -32,7 +32,7 @@
 
     <TabControl Grid.Row="1">
       <TabItem Header="Meta Info">
-        <v:MetaInfo_V DataContext="{Binding MetaInfo_VM}"/>
+        <v:MetaInfo_PG_V DataContext="{Binding MetaInfo_PG_VM}"/>
       </TabItem>
       <TabItem Header="Proc Graph">
         <v:ProcGraphPanel_V DataContext="{Binding ProcGraphPanel_VM}"/>

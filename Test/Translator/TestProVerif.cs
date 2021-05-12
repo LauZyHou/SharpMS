@@ -208,7 +208,7 @@ namespace Test
 
             PvProcess serverB = new PvProcess("serverB");
             serverB.Params = new List<PvParam> { new PvParam(spkey, "pkB"), new PvParam(sskey, "skB") };
-            serverB.RootStmt.SubStmts = new List<PvActiveStmt>()
+            serverB.RootStmt.SubStmts = new List<PvActiveStmt>
             {
                 new PvRecvMsg(c, new List<PvParam> { new PvParam(pkey, "pkX") }),
                 new PvNewVar(key, "k"),
@@ -220,7 +220,7 @@ namespace Test
 
             // 进程实例化
             PvInstantiation inst = new PvInstantiation();
-            inst.RootStmt.SubStmts = new List<PvActiveStmt>()
+            inst.RootStmt.SubStmts = new List<PvActiveStmt>
             {
                 new PvNewVar(skey, "skA"),
                 new PvNewVar(sskey, "skB"),

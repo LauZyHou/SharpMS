@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace Plat._V
 {
-    public partial class MetaInfo_V : UserControl
+    public partial class MetaInfo_PG_V : UserControl
     {
-        public MetaInfo_V()
+        public MetaInfo_PG_V()
         {
             InitializeComponent();
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Plat._VM
 {
-    public class MetaInfo_VM
+    public class MetaInfo_PG_VM
     {
         private readonly TypePanel_VM typePanel_VM = new TypePanel_VM();
         private readonly ProcPanel_VM procPanel_VM = new ProcPanel_VM();

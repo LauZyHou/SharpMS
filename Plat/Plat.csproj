@@ -20,8 +20,8 @@
     <Compile Update="_V\MetaInfo\MetaInfo_PG_V.axaml.cs">
       <DependentUpon>MetaInfo_PG_V.axaml</DependentUpon>
     </Compile>
-    <Compile Update="_V\ProcGraph\ProcGraphPanel_V.axaml.cs">
-      <DependentUpon>ProcGraphPanel_V.axaml</DependentUpon>
+    <Compile Update="_V\ProcGraph\ProcGraph_PG_V.axaml.cs">
+      <DependentUpon>ProcGraph_PG_V.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

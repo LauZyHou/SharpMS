@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Plat._VM
 {
-    public class ProcGraphPanel_VM : ViewModelBase
+    public class ProcGraph_PG_VM : ViewModelBase
     {
         private readonly ObservableCollection<ProcGraph_VM> procGraph_VMs;
 
-        public ProcGraphPanel_VM()
+        public ProcGraph_PG_VM()
         {
             this.procGraph_VMs = ResourceManager.procGraph_VMs;
         }

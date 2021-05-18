@@ -42,11 +42,11 @@ namespace Plat._VM
                 return;
             }
             this.procList.Remove(proc);
-            foreach (ProcGraph_VM procGraph_VM in ResourceManager.procGraph_VMs)
+            foreach (ProcGraph_P_VM procGraph_P_VM in ResourceManager.procGraph_P_VMs)
             {
-                if (procGraph_VM.ProcGraph.Proc == proc)
+                if (procGraph_P_VM.ProcGraph.Proc == proc)
                 {
-                    ResourceManager.procGraph_VMs.Remove(procGraph_VM);
+                    ResourceManager.procGraph_P_VMs.Remove(procGraph_P_VM);
                     break;
                 }
             }
@@ -60,7 +60,7 @@ namespace Plat._VM
         {
             Proc proc = new Proc("NewProc");
             this.procList.Add(proc);
-            ResourceManager.procGraph_VMs.Add(new ProcGraph_VM(new ProcGraph(proc)));
+            ResourceManager.procGraph_P_VMs.Add(new ProcGraph_P_VM(new ProcGraph(proc)));
             ResourceManager.UpdateTip("Create a new process.");
         }
 

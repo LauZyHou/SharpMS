@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 namespace Plat._VM
 {
     /// <summary>
-    /// Process Graph View Model
+    /// Process Graph面板的View Model
     /// </summary>
-    public class ProcGraph_VM : DragDrop_P_VM
+    public class ProcGraph_P_VM : DragDrop_P_VM
     {
         private readonly ProcGraph procGraph;
 
-        public ProcGraph_VM(ProcGraph procGraph)
+        public ProcGraph_P_VM(ProcGraph procGraph)
         {
             this.procGraph = procGraph;
         }

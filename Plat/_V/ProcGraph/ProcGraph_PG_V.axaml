@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Plat._V.ProcGraph_PG_V">
-	<TabControl Items="{Binding ProcGraph_VMs}">
+	<TabControl Items="{Binding ProcGraph_P_VMs}">
 		<TabControl.ItemTemplate>
 			<DataTemplate>
 				<TextBlock Text="{Binding ProcGraph.Proc.Identifier}"/>

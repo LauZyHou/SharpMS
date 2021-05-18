@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="clr-namespace:Plat._VM;assembly=Plat"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Plat._V.ProcGraph_V">
+             x:Class="Plat._V.ProcGraph_P_V">
 	<!--从ItemsControl改用ListBox，能将切换TabItem时的渲染加速到之前的三倍-->
 	<UserControl.Styles>
 		<!--ItemsControl的样式-->

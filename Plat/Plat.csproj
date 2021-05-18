@@ -23,6 +23,9 @@
     <Compile Update="_V\ProcGraph\ProcGraph_PG_V.axaml.cs">
       <DependentUpon>ProcGraph_PG_V.axaml</DependentUpon>
     </Compile>
+    <Compile Update="_V\ProcGraph\ProcGraph_P_V.axaml.cs">
+      <DependentUpon>ProcGraph_P_V.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="_M\DragDrop\" />

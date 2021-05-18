@@ -6,9 +6,9 @@ using Avalonia.Media;
 
 namespace Plat._V
 {
-    public partial class ProcGraph_V : UserControl
+    public partial class ProcGraph_P_V : UserControl
     {
-        public ProcGraph_V()
+        public ProcGraph_P_V()
         {
             InitializeComponent();
         }

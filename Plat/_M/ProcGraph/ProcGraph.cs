@@ -24,5 +24,10 @@ namespace Plat._M
         /// Proc和ProcGraph是双射（单满射）关系
         /// </summary>
         public Proc Proc => proc;
+
+        public override string ToString()
+        {
+            return proc.ToString();
+        }
     }
 }

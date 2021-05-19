@@ -1,4 +1,5 @@
-﻿using Plat._M;
+﻿using Plat._C;
+using Plat._M;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,20 @@ namespace Plat._VM
         }
 
         public ProcGraph ProcGraph => procGraph;
+
+        #region Command Callback
+
+        private void OnCreatePureState()
+        {
+            PureState_VM pureState_VM = new PureState_VM()
+            {
+                X = 300,
+                Y = 400
+            };
+            this.DragDrop_VMs.Add(pureState_VM);
+            ResourceManager.UpdateTip($"Create a pure state [{pureState_VM}] on process graph [{procGraph}].");
+        }
+
+        #endregion
     }
 }

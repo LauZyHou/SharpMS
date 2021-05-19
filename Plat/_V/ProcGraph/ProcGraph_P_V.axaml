@@ -18,7 +18,7 @@
 							<!--右键菜单行为-->
 							<Canvas.ContextMenu>
 								<ContextMenu>
-									<MenuItem Header="TestMenu"/>
+									<MenuItem Header="Create Pure State" Command="{Binding OnCreatePureState}"/>
 								</ContextMenu>
 							</Canvas.ContextMenu>
 						</Canvas>
@@ -52,7 +52,7 @@
 			<Button Grid.Column="0" Content="test" HorizontalAlignment="Center" VerticalContentAlignment="Stretch"/>
 		</Grid>
 		<ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-			<ListBox Name="panel" Items="{Binding UserControlVMs}" Height="1000" Width="2000"/>
+			<ListBox Name="panel" Items="{Binding DragDrop_VMs}" Height="1000" Width="2000"/>
 		</ScrollViewer>
 	</Grid>
 </UserControl>

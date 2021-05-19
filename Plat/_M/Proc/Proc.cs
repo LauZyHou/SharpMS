@@ -37,5 +37,10 @@ namespace Plat._M
         /// 请将这个字段理解为Params，在SharpMS中为了方便Param和Attr共用一个名为Attribute的class
         /// </summary>
         public ObservableCollection<Attribute> Attributes { get => attributes; set => attributes = value; }
+
+        public override string ToString()
+        {
+            return identifier;
+        }
     }
 }

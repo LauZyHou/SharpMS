@@ -29,7 +29,7 @@ namespace Plat._VM
         public ObservableCollection<Proc> ProcList { get => procList; set => this.RaiseAndSetIfChanged(ref procList, value); }
         public ObservableCollection<Type> TypeList { get => typeList; set => this.RaiseAndSetIfChanged(ref typeList, value); }
 
-        #region Button Command
+        #region Command Callback
 
         /// <summary>
         /// 删除进程模板，注意同时还要删除Process Graph相关对象

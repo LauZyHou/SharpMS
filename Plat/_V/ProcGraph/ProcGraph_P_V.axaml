@@ -18,7 +18,7 @@
 							<!--右键菜单行为-->
 							<Canvas.ContextMenu>
 								<ContextMenu>
-									<MenuItem Header="Create Pure State" Command="{Binding OnCreatePureState}"/>
+									<MenuItem Header="Create Pure State" Command="{Binding $parent[UserControl].OnCreatePureState}"/>
 								</ContextMenu>
 							</Canvas.ContextMenu>
 						</Canvas>

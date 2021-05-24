@@ -8,7 +8,7 @@
         x:Class="Plat._V.MainWindow_V"
         Icon="/Assets/avalonia-logo.ico"
         WindowStartupLocation="CenterScreen"
-        Title="SharpMS">
+        WindowState="Maximized" Title="SharpMS">
 
   <Design.DataContext>
     <vm:MainWindow_VM/>

@@ -39,6 +39,20 @@ namespace Plat._V
             ResourceManager.UpdateTip($"Create a pure state [{pureState_VM}] on process graph [{VM.ProcGraph}].");
         }
 
+        /// <summary>
+        /// ÓÒ¼ü²Ëµ¥°´ÏÂCreate Final State
+        /// </summary>
+        private void OnCreateFinalState()
+        {
+            FinalState_VM finalState_VM = new FinalState_VM()
+            {
+                X = mousePos.X,
+                Y = mousePos.Y
+            };
+            VM.DragDrop_VMs.Add(finalState_VM);
+            ResourceManager.UpdateTip($"Create a final state on process graph [{VM.ProcGraph}].");
+        }
+
         #endregion
 
         /// <summary>

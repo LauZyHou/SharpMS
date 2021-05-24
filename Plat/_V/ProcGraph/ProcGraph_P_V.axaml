@@ -18,7 +18,14 @@
 							<!--右键菜单行为-->
 							<Canvas.ContextMenu>
 								<ContextMenu>
-									<MenuItem Header="Create Pure State" Command="{Binding $parent[UserControl].OnCreatePureState}"/>
+									<MenuItem Header="Create">
+										<MenuItem Header="Pure State" Command="{Binding $parent[UserControl].OnCreatePureState}"/>
+										<MenuItem Header="Final State" Command="{Binding $parent[UserControl].OnCreateFinalState}"/>
+									</MenuItem>
+									<MenuItem Header="Export as">
+										<MenuItem Header="PNG"/>
+										<MenuItem Header="SVG"/>
+									</MenuItem>
 								</ContextMenu>
 							</Canvas.ContextMenu>
 						</Canvas>

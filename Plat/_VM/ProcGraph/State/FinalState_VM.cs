@@ -14,21 +14,9 @@ namespace Plat._VM
     {
         private readonly State state;
 
-        /// <summary>
-        /// 空参构造FinalState的VM，用于用户手动在界面上创建FinalState
-        /// </summary>
         public FinalState_VM()
         {
             this.state = new State("FinalState");
-        }
-
-        /// <summary>
-        /// 通过State对象构造其FinalState的VM，用于导入模型时的构造
-        /// </summary>
-        /// <param name="state"></param>
-        public FinalState_VM(State state)
-        {
-            this.state = state;
         }
 
         public State State => state;

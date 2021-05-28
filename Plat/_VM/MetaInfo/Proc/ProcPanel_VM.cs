@@ -61,13 +61,7 @@ namespace Plat._VM
             Proc proc = new Proc("NewProc");
             this.procList.Add(proc);
             ProcGraph_P_VM procGraph_P_VM = new ProcGraph_P_VM(new ProcGraph(proc));
-            procGraph_P_VM.DragDrop_VMs.Add(
-                new InitState_VM()
-                {
-                    X = 50,
-                    Y = 50
-                }
-            ); // 自动添加一个初始状态
+            procGraph_P_VM.DragDrop_VMs.Add(new InitState_VM(50, 50)); // 自动添加一个初始状态
             ResourceManager.procGraph_P_VMs.Add(procGraph_P_VM);
             ResourceManager.UpdateTip("Create a new process.");
         }

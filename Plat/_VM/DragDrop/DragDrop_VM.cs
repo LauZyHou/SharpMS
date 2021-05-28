@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,17 @@ namespace Plat._VM
     {
         private double x;
         private double y;
+        private readonly ObservableCollection<Anchor_VM> anchor_VMs = new ObservableCollection<Anchor_VM>();
+
+        public DragDrop_VM()
+        {
+        }
+
+        public DragDrop_VM(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
 
         /// <summary>
         /// 横坐标位置
@@ -25,5 +37,9 @@ namespace Plat._VM
         /// 纵坐标位置
         /// </summary>
         public double Y { get => y; set => this.RaiseAndSetIfChanged(ref y, value); }
+        /// <summary>
+        /// 该item身上的锚点表（注意锚点本身也是一种DragDrop_VM，但其锚点表为默认的空表）
+        /// </summary>
+        public ObservableCollection<Anchor_VM> Anchor_VMs => anchor_VMs;
     }
 }

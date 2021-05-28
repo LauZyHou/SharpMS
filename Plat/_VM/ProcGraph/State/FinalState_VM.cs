@@ -12,14 +12,11 @@ namespace Plat._VM
     /// </summary>
     public class FinalState_VM : DragDrop_VM
     {
-        private readonly State state;
-
-        public FinalState_VM()
+        public FinalState_VM(double x, double y)
+            :base(x, y)
         {
-            this.state = new State("FinalState");
+            this.Anchor_VMs.Add(new Anchor_VM(X + 20, Y + 4, this));
         }
-
-        public State State => state;
 
         #region Command Callback
 

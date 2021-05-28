@@ -30,11 +30,7 @@ namespace Plat._V
         /// </summary>
         private void OnCreatePureState()
         {
-            PureState_VM pureState_VM = new PureState_VM()
-            {
-                X = mousePos.X,
-                Y = mousePos.Y
-            };
+            PureState_VM pureState_VM = new PureState_VM(clkPos.X, clkPos.Y);
             VM.DragDrop_VMs.Add(pureState_VM);
             ResourceManager.UpdateTip($"Create a pure state [{pureState_VM}] on process graph [{VM.ProcGraph}].");
         }
@@ -44,11 +40,7 @@ namespace Plat._V
         /// </summary>
         private void OnCreateFinalState()
         {
-            FinalState_VM finalState_VM = new FinalState_VM()
-            {
-                X = mousePos.X,
-                Y = mousePos.Y
-            };
+            FinalState_VM finalState_VM = new FinalState_VM(clkPos.X, clkPos.Y);
             VM.DragDrop_VMs.Add(finalState_VM);
             ResourceManager.UpdateTip($"Create a final state on process graph [{VM.ProcGraph}].");
         }

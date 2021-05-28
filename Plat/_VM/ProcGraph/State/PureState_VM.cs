@@ -15,20 +15,64 @@ namespace Plat._VM
         private readonly State state;
 
         /// <summary>
-        /// 空参构造PureState的VM，用于用户手动在界面上创建PureState
+        /// 初始化锚点位置
         /// </summary>
-        public PureState_VM()
+        private void init_anchor()
         {
-            this.state = new State("NewState");
+            // 椭圆中心位置
+            double centerX = X + 65;
+            double centerY = Y + 40;
+
+            // 根据V中Grid的布局，计算横纵的一个单位的长度
+            int colSum = 1 + 2 + 6 + 6 + 8 + 6 + 6 + 2 + 1;
+            int rowSum = 1 + 1 + 2 + 3 + 3 + 3 + 2 + 1 + 1;
+            double c = 120 / colSum + 0.2; // 用Width除以份数得到列最小单位
+            double r = 70 / rowSum + 0.5; // 用Height除以份数得到行最小单位
+            // 这里加的是一个误差修复值
+
+            // 14个锚点,从椭圆中心位置进行位置推算，这里顺序和V中一样
+            Anchor_VMs.Add(new Anchor_VM(centerX - (4 + 6 + 3) * c, centerY - (1.5 + 3 + 1) * r, this));
+            Anchor_VMs.Add(new Anchor_VM(centerX - (4 + 3) * c, centerY - (1.5 + 3 + 2 + 0.5) * r, this));
+            Anchor_VMs.Add(new Anchor_VM(centerX, centerY - (1.5 + 3 + 2 + 1 + 1) * r, this));
+            Anchor_VMs.Add(new Anchor_VM(centerX + (4 + 3) * c, centerY - (1.5 + 3 + 2 + 0.5) * r, this));
+            Anchor_VMs.Add(new Anchor_VM(centerX + (4 + 6 + 3) * c, centerY - (1.5 + 3 + 1) * r, this));
+
+            Anchor_VMs.Add(new Anchor_VM(centerX - (4 + 6 + 6 + 1) * c, centerY - (1.5 + 1.5) * r, this));
+            Anchor_VMs.Add(new Anchor_VM(centerX + (4 + 6 + 6 + 1) * c, centerY - (1.5 + 1.5) * r, this));
+
+            Anchor_VMs.Add(new Anchor_VM(centerX - (4 + 6 + 6 + 1) * c, centerY + (1.5 + 1.5) * r, this));
+            Anchor_VMs.Add(new Anchor_VM(centerX + (4 + 6 + 6 + 1) * c, centerY + (1.5 + 1.5) * r, this));
+
+            Anchor_VMs.Add(new Anchor_VM(centerX - (4 + 6 + 3) * c, centerY + (1.5 + 3 + 1) * r, this));
+            Anchor_VMs.Add(new Anchor_VM(centerX - (4 + 3) * c, centerY + (1.5 + 3 + 2 + 0.5) * r, this));
+            Anchor_VMs.Add(new Anchor_VM(centerX, centerY + (1.5 + 3 + 2 + 1 + 1) * r, this));
+            Anchor_VMs.Add(new Anchor_VM(centerX + (4 + 3) * c, centerY + (1.5 + 3 + 2 + 0.5) * r, this));
+            Anchor_VMs.Add(new Anchor_VM(centerX + (4 + 6 + 3) * c, centerY + (1.5 + 3 + 1) * r, this));
         }
 
         /// <summary>
-        /// 通过State对象构造其PureState的VM，用于导入模型时的构造
+        /// 仅需要位置，用于用户手动在界面上创建PureState
         /// </summary>
-        /// <param name="state">State对象</param>
-        public PureState_VM(State state)
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public PureState_VM(double x, double y)
+            :base(x, y)
+        {
+            this.state = new State("NewState");
+            init_anchor();
+        }
+
+        /// <summary>
+        /// 需要位置和State对象，用于导入模型时的构造
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="state"></param>
+        public PureState_VM(double x, double y, State state)
+            :base(x, y)
         {
             this.state = state;
+            init_anchor();
         }
 
         public State State => state;

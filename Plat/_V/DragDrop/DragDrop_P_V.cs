@@ -20,7 +20,7 @@ namespace Plat._V
         /// <summary>
         /// 记录用户鼠标右键按下时候的位置，用于在创建对象时在当前鼠标所在的位置创建
         /// </summary>
-        public Point mousePos;
+        public Point clkPos;
 
         // 无法直接获取到鼠标位置，必须在鼠标相关事件回调方法里取得
         protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -32,7 +32,7 @@ namespace Plat._V
             if (e.GetCurrentPoint(panel).Properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed)
             {
                 // 更新位置
-                mousePos = e.GetPosition(panel);
+                clkPos = e.GetPosition(panel);
             }
         }
     }

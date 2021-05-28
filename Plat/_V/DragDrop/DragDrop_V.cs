@@ -14,18 +14,24 @@ namespace Plat._V
         // 是否正在按下状态
         private bool isPressed = false;
         // 按下位置坐标
-        Point pressPoint;
-        // 旧的NetworkItem_VM的位置坐标(原始图形左上角点的坐标)
-        Point oldLocation;
+        private Point clkPos;
+        // 拖拽前位置坐标
+        private Point oldPos;
         // 可视化树上的祖先容器组件,NetworkItem会在它上面移动
-        IVisual parentIVisual = null;
+        private IVisual parentIVisual = null;
 
-        #region NetworkItem的拖拽
+        #region DragDrop元素的拖拽
 
         // 鼠标按下
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             base.OnPointerPressed(e);
+            // 这里只管对象拖拽，对于锚点的点击不在这里处理
+            if (this is Anchor_V)
+            {
+                e.Handled = true;
+                return;
+            }
 
             //if (e.MouseButton != MouseButton.Left)
             //    return;
@@ -39,17 +45,14 @@ namespace Plat._V
             }
 
             isPressed = true;
-            pressPoint = e.GetPosition(parentIVisual);
-            oldLocation = new Point(DragDropVM.X, DragDropVM.Y);
+            clkPos = e.GetPosition(parentIVisual);
+            oldPos = new Point(VM.X, VM.Y);
 
             // 记录每个锚点的旧位置
-            //if (NetworkItemVM.ConnectorVMs != null)
-            //{
-            //    foreach (Connector_VM connectorVM in NetworkItemVM.ConnectorVMs)
-            //    {
-            //        connectorVM.OldPos = connectorVM.Pos;
-            //    }
-            //}
+            foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
+            {
+                anchor_VM.OldPos = new Point(anchor_VM.X, anchor_VM.Y);
+            }
 
             //ResourceManager.mainWindowVM.Tips = "鼠标按下，记录图形位置：" + oldLocation;
 
@@ -63,23 +66,23 @@ namespace Plat._V
 
             if (isPressed)
             {
-                // 计算X,Y方向的偏移量
+                // 计算X/Y方向的偏移量
                 Point pos = e.GetPosition(parentIVisual);
-                double deltaX = pos.X - pressPoint.X;
-                double deltaY = pos.Y - pressPoint.Y;
+                double deltaX = pos.X - clkPos.X;
+                double deltaY = pos.Y - clkPos.Y;
                 Point deltaPos = new Point(deltaX, deltaY);
 
-                DragDropVM.X = oldLocation.X + deltaX;
-                DragDropVM.Y = oldLocation.Y + deltaY;
+                // 更新元素新位置
+                VM.X = this.oldPos.X + deltaX;
+                VM.Y = this.oldPos.Y + deltaY;
 
-                // 对所有锚点也要维护相同的偏移量
-                //if (NetworkItemVM.ConnectorVMs != null)
-                //{
-                //    foreach (Connector_VM connectorVM in NetworkItemVM.ConnectorVMs)
-                //    {
-                //        connectorVM.Pos = connectorVM.OldPos + deltaPos;
-                //    }
-                //}
+                // 对所有锚点也要更新到新位置
+                foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
+                {
+                    Point newPos = anchor_VM.OldPos + deltaPos;
+                    anchor_VM.X = newPos.X;
+                    anchor_VM.Y = newPos.Y;
+                }
 
                 //ResourceManager.mainWindowVM.Tips = "拖拽图形，图形当前位置：" + NetworkItemVM.X + "," + NetworkItemVM.Y;
             }
@@ -101,9 +104,8 @@ namespace Plat._V
 
         #endregion
 
-
         // 获取DataContext里的VM
-        public DragDrop_VM DragDropVM
+        public DragDrop_VM VM
         {
             get
             {

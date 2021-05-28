@@ -9,13 +9,10 @@ namespace Plat._VM
 {
     public class InitState_VM : DragDrop_VM
     {
-        private readonly State state;
-
-        public InitState_VM()
+        public InitState_VM(double x, double y)
+            :base(x, y)
         {
-            this.state = new State("InitState");
+            this.Anchor_VMs.Add(new Anchor_VM(X + 20, Y + 40, this));
         }
-
-        public State State => state;
     }
 }

@@ -2,12 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="clr-namespace:Plat._V;assembly=Plat"
              Width="40" Height="48"
              x:Class="Plat._V.InitState_V">
 	<Grid Width="40" Height="40">
 		<Ellipse Stroke="Black" Fill="Black"/>
 		<Grid RowDefinitions="1*,2*,1*" ColumnDefinitions="1*,2*,1*" Margin="-6">
-			<!--<v:StateConnector_V DataContext="{Binding ConnectorVMs[0]}" Grid.Row="2" Grid.Column="1" IsVisible="{Binding $parent[Window].DataContext.ConnectorVisible}"/>-->
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[0]}" Grid.Row="2" Grid.Column="1" IsVisible="True"/>
 		</Grid>
 	</Grid>
 </UserControl>

@@ -12,7 +12,7 @@ namespace Plat._VM
         public InitState_VM(double x, double y)
             :base(x, y)
         {
-            this.Anchor_VMs.Add(new Anchor_VM(X + 20, Y + 40, this));
+            this.Anchor_VMs.Add(new Anchor_VM(Pos.X + 20, Pos.Y + 40, this));
         }
     }
 }

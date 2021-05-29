@@ -45,8 +45,8 @@
 		<!--ItemsControl > ContentPresenter-->
 		<Style Selector="ListBox#panel ListBoxItem">
 			<Setter Property="Focusable" Value="False"/>
-			<Setter Property="Canvas.Left" Value="{Binding X}"/>
-			<Setter Property="Canvas.Top" Value="{Binding Y}"/>
+			<Setter Property="Canvas.Left" Value="{Binding Pos.X}"/>
+			<Setter Property="Canvas.Top" Value="{Binding Pos.Y}"/>
 		</Style>
 		<Style Selector="ListBox#panel ListBoxItem > ContentPresenter">
 			<Setter Property="Background" Value="Transparent"/>

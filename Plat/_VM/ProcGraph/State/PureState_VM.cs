@@ -20,8 +20,8 @@ namespace Plat._VM
         private void init_anchor()
         {
             // 椭圆中心位置
-            double centerX = X + 65;
-            double centerY = Y + 40;
+            double centerX = Pos.X + 65;
+            double centerY = Pos.Y + 40;
 
             // 根据V中Grid的布局，计算横纵的一个单位的长度
             int colSum = 1 + 2 + 6 + 6 + 8 + 6 + 6 + 2 + 1;

@@ -15,8 +15,6 @@ namespace Plat._V
         private bool isPressed = false;
         // 按下位置坐标
         private Point clkPos;
-        // 拖拽前位置坐标
-        private Point oldPos;
         // 可视化树上的祖先容器组件,NetworkItem会在它上面移动
         private IVisual parentIVisual = null;
 
@@ -26,8 +24,8 @@ namespace Plat._V
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             base.OnPointerPressed(e);
-            // 这里只管对象拖拽，对于锚点的点击不在这里处理
-            if (this is Anchor_V)
+            // 这里只管普通对象拖拽，Anchor和Linker一律不处理
+            if (this is Anchor_V || this is Linker_V)
             {
                 e.Handled = true;
                 return;
@@ -46,12 +44,12 @@ namespace Plat._V
 
             isPressed = true;
             clkPos = e.GetPosition(parentIVisual);
-            oldPos = new Point(VM.X, VM.Y);
+            VM.OldPos = VM.Pos;
 
             // 记录每个锚点的旧位置
             foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
             {
-                anchor_VM.OldPos = new Point(anchor_VM.X, anchor_VM.Y);
+                anchor_VM.OldPos = anchor_VM.Pos;
             }
 
             //ResourceManager.mainWindowVM.Tips = "鼠标按下，记录图形位置：" + oldLocation;
@@ -67,21 +65,21 @@ namespace Plat._V
             if (isPressed)
             {
                 // 计算X/Y方向的偏移量
-                Point pos = e.GetPosition(parentIVisual);
-                double deltaX = pos.X - clkPos.X;
-                double deltaY = pos.Y - clkPos.Y;
-                Point deltaPos = new Point(deltaX, deltaY);
+                //Point pos = e.GetPosition(parentIVisual);
+                //double deltaX = pos.X - clkPos.X;
+                //double deltaY = pos.Y - clkPos.Y;
+                //Point deltaPos = new Point(deltaX, deltaY);
+                Point deltaPos = e.GetPosition(parentIVisual) - clkPos;
 
                 // 更新元素新位置
-                VM.X = this.oldPos.X + deltaX;
-                VM.Y = this.oldPos.Y + deltaY;
+                //VM.Pos = new Point(VM.OldPos.X + deltaX, VM.OldPos.Y + deltaY);
+                VM.Pos = VM.OldPos + deltaPos;
+
 
                 // 对所有锚点也要更新到新位置
                 foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
                 {
-                    Point newPos = anchor_VM.OldPos + deltaPos;
-                    anchor_VM.X = newPos.X;
-                    anchor_VM.Y = newPos.Y;
+                    anchor_VM.Pos = anchor_VM.OldPos + deltaPos;
                 }
 
                 //ResourceManager.mainWindowVM.Tips = "拖拽图形，图形当前位置：" + NetworkItemVM.X + "," + NetworkItemVM.Y;

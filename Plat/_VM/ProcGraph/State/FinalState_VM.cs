@@ -15,7 +15,7 @@ namespace Plat._VM
         public FinalState_VM(double x, double y)
             :base(x, y)
         {
-            this.Anchor_VMs.Add(new Anchor_VM(X + 20, Y + 4, this));
+            this.Anchor_VMs.Add(new Anchor_VM(Pos.X + 20, Pos.Y + 4, this));
         }
 
         #region Command Callback

@@ -19,10 +19,12 @@ namespace Plat._VM
         private Point pos;
         private Point oldPos;
         private readonly ObservableCollection<Anchor_VM> anchor_VMs = new ObservableCollection<Anchor_VM>();
+        private readonly DragDrop_P_VM panelVM;
 
-        public DragDrop_VM(double x, double y)
+        public DragDrop_VM(double x, double y, DragDrop_P_VM panelVM)
         {
             this.Pos = new Point(x, y);
+            this.panelVM = panelVM;
         }
 
         /// <summary>
@@ -37,5 +39,13 @@ namespace Plat._VM
         /// 该item身上的锚点表（注意锚点本身也是一种DragDrop_VM，但其锚点表为默认的空表）
         /// </summary>
         public ObservableCollection<Anchor_VM> Anchor_VMs => anchor_VMs;
+        /// <summary>
+        /// 该组件所在的Drag Drop面板的引用
+        /// </summary>
+        public DragDrop_P_VM PanelVM => panelVM;
+        /// <summary>
+        /// 是否是Item而不是锚点或者连线，决定了View层的IsHitTestVisible属性
+        /// </summary>
+        public bool IsItem => !(this is Anchor_VM || this is Linker_VM);
     }
 }

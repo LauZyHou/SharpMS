@@ -15,8 +15,8 @@ namespace Plat._VM
         private Anchor_VM source;
         private Anchor_VM dest;
 
-        public Linker_VM(Anchor_VM source, Anchor_VM dest)
-            :base(0, 0)
+        public Linker_VM(Anchor_VM source, Anchor_VM dest, DragDrop_P_VM panelVM)
+            :base(0, 0, panelVM)
         {
             this.source = source;
             this.dest = dest;

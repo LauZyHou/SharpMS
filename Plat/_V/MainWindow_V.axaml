@@ -42,10 +42,10 @@
       </TabItem>
     </TabControl>
 
-    <Grid Grid.Row="2" ColumnDefinitions="*, 160, 20, 20">
+    <Grid Grid.Row="2" ColumnDefinitions="*, 135, 20, 20">
       <TextBlock Grid.Column="0" Text="{Binding Tip}" Background="Black" FontSize="18" Foreground="White"
                HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="20, 0"/>
-      <TextBlock Grid.Column="1" Background="Black" Foreground="White" Text="Connector Visible:"
+      <TextBlock Grid.Column="1" Background="Black" Foreground="White" Text="Anchor Visible:"
                HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="18"/>
       <CheckBox Grid.Column="2"/>
       <TextBlock Grid.Column="3" Background="Black"/>

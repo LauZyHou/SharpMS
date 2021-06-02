@@ -55,8 +55,8 @@ namespace Plat._VM
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public PureState_VM(double x, double y)
-            :base(x, y)
+        public PureState_VM(double x, double y, DragDrop_P_VM panelVM)
+            :base(x, y, panelVM)
         {
             this.state = new State("NewState");
             init_anchor();
@@ -68,8 +68,8 @@ namespace Plat._VM
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="state"></param>
-        public PureState_VM(double x, double y, State state)
-            :base(x, y)
+        public PureState_VM(double x, double y, DragDrop_P_VM panelVM, State state)
+            :base(x, y, panelVM)
         {
             this.state = state;
             init_anchor();

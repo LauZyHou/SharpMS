@@ -12,8 +12,8 @@ namespace Plat._VM
     /// </summary>
     public class FinalState_VM : DragDrop_VM
     {
-        public FinalState_VM(double x, double y)
-            :base(x, y)
+        public FinalState_VM(double x, double y, DragDrop_P_VM panelVM)
+            :base(x, y, panelVM)
         {
             this.Anchor_VMs.Add(new Anchor_VM(Pos.X + 20, Pos.Y + 4, this));
         }

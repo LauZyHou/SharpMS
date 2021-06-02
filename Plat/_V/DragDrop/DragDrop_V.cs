@@ -27,7 +27,6 @@ namespace Plat._V
             // 这里只管普通对象拖拽，Anchor和Linker一律不处理
             if (this is Anchor_V || this is Linker_V)
             {
-                e.Handled = true;
                 return;
             }
 

@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Media;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace Plat._VM
     public class Anchor_VM : DragDrop_VM
     {
         private readonly DragDrop_VM hostVM;
+        private Linker_VM? linkerVM;
+        private bool isActive;
 
         /// <summary>
         /// 构造锚点时需要手动指定其X/Y位置
@@ -21,7 +24,7 @@ namespace Plat._VM
         /// <param name="x">锚点在面板中的x位置</param>
         /// <param name="y">锚点在面板中的y位置</param>
         public Anchor_VM(double x, double y, DragDrop_VM hostVM)
-            : base(x, y)
+            : base(x, y, hostVM.PanelVM)
         {
             this.hostVM = hostVM;
         }
@@ -30,6 +33,14 @@ namespace Plat._VM
         /// 锚点的宿主ViewModel，即该锚点吸附在的item组件VM
         /// </summary>
         public DragDrop_VM HostVM => hostVM;
+        /// <summary>
+        /// 锚点上的连线，没有时为null
+        /// </summary>
+        public Linker_VM? LinkerVM { get => linkerVM; set => this.RaiseAndSetIfChanged(ref linkerVM, value); }
+        /// <summary>
+        /// 是否是活动锚点
+        /// </summary>
+        public bool IsActive { get => isActive; set => this.RaiseAndSetIfChanged(ref isActive, value); }
         /// <summary>
         /// 锚点颜色，反映 被占用/活动/空闲
         /// </summary>

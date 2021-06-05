@@ -36,11 +36,25 @@ namespace Plat._VM
         /// <summary>
         /// 锚点上的连线，没有时为null
         /// </summary>
-        public Linker_VM? LinkerVM { get => linkerVM; set => this.RaiseAndSetIfChanged(ref linkerVM, value); }
+        public Linker_VM? LinkerVM
+        {
+            get => linkerVM; set
+            {
+                this.RaiseAndSetIfChanged(ref linkerVM, value);
+                this.RaisePropertyChanged(nameof(Color));
+            }
+        }
         /// <summary>
         /// 是否是活动锚点
         /// </summary>
-        public bool IsActive { get => isActive; set => this.RaiseAndSetIfChanged(ref isActive, value); }
+        public bool IsActive
+        {
+            get => isActive; set
+            {
+                this.RaiseAndSetIfChanged(ref isActive, value);
+                this.RaisePropertyChanged(nameof(Color));
+            }
+        }
         /// <summary>
         /// 锚点颜色，反映 被占用/活动/空闲
         /// </summary>
@@ -48,7 +62,14 @@ namespace Plat._VM
         {
             get
             {
-                return Brushes.White; // 空闲:白
+                // 被占用
+                if (linkerVM is not null)
+                    return Brushes.Red;
+                // 活动
+                else if (isActive)
+                    return Brushes.LightGreen;
+                // 空闲
+                return Brushes.White;
             }
         }
     }

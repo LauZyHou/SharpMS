@@ -52,6 +52,14 @@
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="IsHitTestVisible" Value="{Binding IsItem}"/>
 		</Style>
+		<!--选中时候没有蓝色框-->
+		<Style Selector="ListBox#panel ListBoxItem:selected > ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<!--Hover时候没有灰色框-->
+		<Style Selector="ListBox#panel ListBoxItem:pointerover > ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
 	</UserControl.Styles>
 
 	<Grid RowDefinitions="30, *">

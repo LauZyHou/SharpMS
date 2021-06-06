@@ -29,7 +29,7 @@ namespace Plat._VM
         /// <param name="dst"></param>
         public override void CreateLinker(Anchor_VM src, Anchor_VM dst)
         {
-            Linker_VM linker_VM = new Linker_VM(src, dst, this);
+            Arrow_VM linker_VM = new Arrow_VM(src, dst, this);
             src.LinkerVM = dst.LinkerVM = linker_VM;
             this.DragDrop_VMs.Add(linker_VM);
             ResourceManager.UpdateTip("Create a linker on process graph panel.");

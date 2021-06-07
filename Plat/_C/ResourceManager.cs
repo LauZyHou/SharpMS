@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace Plat._C
     public class ResourceManager
     {
         // 主窗体VM
-        public static MainWindow_VM? mainWindow_VM;
+        public static MainWindow_VM mainWindow_VM;
         // 系统中所有的类型
         public static ObservableCollection<_M.Type> types = new ObservableCollection<_M.Type>();
         // 系统中所有的进程模板
@@ -24,7 +25,10 @@ namespace Plat._C
         public static ObservableCollection<LogicChanGroup> logicChanGroups = new ObservableCollection<LogicChanGroup>();
         // 系统中所有的Process Graph面板的VM（在创建Proc时同步创建一个Process Graph面板）
         public static ObservableCollection<ProcGraph_P_VM> procGraph_P_VMs = new ObservableCollection<ProcGraph_P_VM>();
-
+        /// <summary>
+        /// 锚点是否可见
+        /// </summary>
+        public static Subject<bool> anchorVisible = new Subject<bool>();
 
         /// <summary>
         /// 更新主页最下方的提示内容

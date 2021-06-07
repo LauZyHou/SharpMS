@@ -15,6 +15,7 @@ namespace Plat._V
         public Anchor_V()
         {
             InitializeComponent();
+            init_binding();
         }
 
         private void InitializeComponent()
@@ -65,6 +66,20 @@ namespace Plat._V
             e.Handled = true;
         }
 
+        /// <summary>
+        /// 初始化数据绑定
+        /// </summary>
+        private void init_binding()
+        {
+            this.Bind(Anchor_V.IsVisibleProperty, ResourceManager.anchorVisible);
+            // 虽然这里绑定了，但是由于不确定创建时候的状态
+            // 需要在这里把创建时候的可视状态再赋值进去
+            // 否则会出现暂时的不一致的情况
+            // 例如：可视状态是false，创建时IsVisible为True，建立了绑定
+            // 但是由于可视状态没有变更，所以IsVisible不会自己变成False
+            // 所以这个时候就是短暂的不一致的情况
+            this.IsVisible = ResourceManager.mainWindow_VM.AnchorVisible;
+        }
 
         /// <summary>
         /// 对应的View Model

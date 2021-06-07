@@ -9,7 +9,7 @@
 		<Ellipse Fill="White" Stroke="Black" StrokeThickness="3.5"/>
 		<Grid RowDefinitions="1*,2*,1*" ColumnDefinitions="1*,2*,1*" Margin="-6">
 			<Ellipse Fill="Black" Grid.Row="1" Grid.Column="1"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[0]}" Grid.Row="0" Grid.Column="1" IsVisible="True"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[0]}" Grid.Row="0" Grid.Column="1"/>
 		</Grid>
 		<Grid.ContextMenu>
 			<ContextMenu>

@@ -11,23 +11,23 @@
 			<!--<Ellipse Stroke="Blue" StrokeThickness="2" Width="7" Height="7" Grid.Row="3" Grid.Column="6" IsVisible="{Binding State.HaveRefine}"/>-->
 			<TextBlock Text="{Binding State.Name}" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="5" Grid.RowSpan="5"
 					   FontSize="12" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[0]}" Grid.Row="2" Grid.Column="2" IsVisible="True"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[1]}" Grid.Row="1" Grid.Column="3" IsVisible="True"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[2]}" Grid.Row="0" Grid.Column="4" IsVisible="True"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[3]}" Grid.Row="1" Grid.Column="5" IsVisible="True"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[4]}" Grid.Row="2" Grid.Column="6" IsVisible="True"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[0]}" Grid.Row="2" Grid.Column="2"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[1]}" Grid.Row="1" Grid.Column="3"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[2]}" Grid.Row="0" Grid.Column="4"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[3]}" Grid.Row="1" Grid.Column="5"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[4]}" Grid.Row="2" Grid.Column="6"/>
 
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[5]}" Grid.Row="3" Grid.Column="1" IsVisible="True"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[6]}" Grid.Row="3" Grid.Column="7" IsVisible="True"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[5]}" Grid.Row="3" Grid.Column="1"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[6]}" Grid.Row="3" Grid.Column="7"/>
 
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[7]}" Grid.Row="5" Grid.Column="1" IsVisible="True"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[8]}" Grid.Row="5" Grid.Column="7" IsVisible="True"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[7]}" Grid.Row="5" Grid.Column="1"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[8]}" Grid.Row="5" Grid.Column="7"/>
 
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[9]}" Grid.Row="6" Grid.Column="2" IsVisible="True"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[10]}" Grid.Row="7" Grid.Column="3" IsVisible="True"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[11]}" Grid.Row="8" Grid.Column="4" IsVisible="True"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[12]}" Grid.Row="7" Grid.Column="5" IsVisible="True"/>
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[13]}" Grid.Row="6" Grid.Column="6" IsVisible="True"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[9]}" Grid.Row="6" Grid.Column="2"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[10]}" Grid.Row="7" Grid.Column="3"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[11]}" Grid.Row="8" Grid.Column="4"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[12]}" Grid.Row="7" Grid.Column="5"/>
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[13]}" Grid.Row="6" Grid.Column="6"/>
 		</Grid>
 		<Grid.ContextMenu>
 			<ContextMenu>

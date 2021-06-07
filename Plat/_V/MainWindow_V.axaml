@@ -47,7 +47,7 @@
                HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="20, 0"/>
       <TextBlock Grid.Column="1" Background="Black" Foreground="White" Text="Anchor Visible:"
                HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="18"/>
-      <CheckBox Grid.Column="2"/>
+      <CheckBox Name="anchorVisibleCheckBox" IsThreeState="False" IsChecked="{Binding AnchorVisible}" Grid.Column="2"/>
       <TextBlock Grid.Column="3" Background="Black"/>
     </Grid>
 

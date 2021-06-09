@@ -16,7 +16,7 @@ namespace Plat._V
         // 按下位置坐标
         private Point clkPos;
         // 可视化树上的祖先容器组件,NetworkItem会在它上面移动
-        private IVisual parentIVisual = null;
+        private IVisual? parentIVisual = null;
 
         #region DragDrop元素的拖拽
 
@@ -38,6 +38,10 @@ namespace Plat._V
             // 所在面板无法在构造函数里求得
             if (parentIVisual == null)
             {
+                if (this.Parent is null)
+                {
+                    throw new System.NullReferenceException();
+                }
                 parentIVisual = this.Parent.Parent.Parent;
             }
 
@@ -108,7 +112,7 @@ namespace Plat._V
             {
                 if (DataContext is null)
                 {
-                    return null; // todo 报错出来 failfast
+                    throw new System.InvalidCastException();
                 }
                 return (DragDrop_VM)DataContext;
             }

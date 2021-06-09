@@ -3,8 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:v="clr-namespace:Plat._V;assembly=Plat"
+             xmlns:vm="clr-namespace:Plat._VM;assembly=Plat"
              Height="82" Width="130"
              x:Class="Plat._V.PureState_V">
+	<Design.DataContext>
+		<vm:PureState_VM/>
+	</Design.DataContext>
+
 	<Grid Width="120" Height="70">
 		<Ellipse Stroke="Black" Fill="White" StrokeThickness="2"/>
 		<Grid Margin="-1,-3" ColumnDefinitions="1*,2*,6*,6*,8*,6*,6*,2*,1*" RowDefinitions="1*,1*,2*,3*,3*,3*,2*,1*,1*">

@@ -9,6 +9,15 @@ namespace Plat._VM
 {
     public class InitState_VM : DragDrop_VM
     {
+        /// <summary>
+        /// Just for design
+        /// </summary>
+        public InitState_VM()
+            :base(0, 0, null)
+        {
+            this.Anchor_VMs.Add(new Anchor_VM(0, 0, this));
+        }
+
         public InitState_VM(double x, double y, DragDrop_P_VM panelVM)
             :base(x, y, panelVM)
         {

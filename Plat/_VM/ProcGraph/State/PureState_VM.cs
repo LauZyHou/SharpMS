@@ -51,6 +51,16 @@ namespace Plat._VM
         }
 
         /// <summary>
+        /// Just for design
+        /// </summary>
+        public PureState_VM()
+            :base(0, 0, null)
+        {
+            this.state = new State("JustForDesign");
+            init_anchor();
+        }
+
+        /// <summary>
         /// 仅需要位置，用于用户手动在界面上创建PureState
         /// </summary>
         /// <param name="x"></param>

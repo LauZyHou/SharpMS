@@ -88,6 +88,10 @@ namespace Plat._V
         {
             get
             {
+                if (DataContext is null)
+                {
+                    throw new System.InvalidCastException();
+                }
                 return (Anchor_VM)DataContext;
             }
         }

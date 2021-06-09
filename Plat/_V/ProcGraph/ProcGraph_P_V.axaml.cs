@@ -50,6 +50,16 @@ namespace Plat._V
         /// <summary>
         /// 该View对应的ViewModel
         /// </summary>
-        public ProcGraph_P_VM VM { get => (ProcGraph_P_VM)DataContext; }
+        public ProcGraph_P_VM VM
+        {
+            get
+            {
+                if (DataContext is null)
+                {
+                    throw new System.InvalidCastException();
+                }
+                return (ProcGraph_P_VM)DataContext;
+            }
+        }
     }
 }

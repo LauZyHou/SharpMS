@@ -21,7 +21,7 @@ namespace Plat._VM
         public InitState_VM(double x, double y, DragDrop_P_VM panelVM)
             :base(x, y, panelVM)
         {
-            this.Anchor_VMs.Add(new Anchor_VM(Pos.X + 20, Pos.Y + 40, this));
+            this.Anchor_VMs.Add(new Anchor_VM(Pos.X + 34, Pos.Y + 37, this));
         }
     }
 }

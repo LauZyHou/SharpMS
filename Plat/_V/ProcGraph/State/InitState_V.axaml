@@ -12,8 +12,8 @@
 
 	<Grid Width="40" Height="40">
 		<Ellipse Stroke="Black" Fill="Black"/>
-		<Grid RowDefinitions="1*,2*,1*" ColumnDefinitions="1*,2*,1*" Margin="-6">
-			<v:Anchor_V DataContext="{Binding Anchor_VMs[0]}" Grid.Row="2" Grid.Column="1"/>
+		<Grid RowDefinitions="2*,1*" ColumnDefinitions="2*,1*" Margin="0">
+			<v:Anchor_V DataContext="{Binding Anchor_VMs[0]}" Grid.Row="1" Grid.Column="1"/>
 		</Grid>
 	</Grid>
 </UserControl>

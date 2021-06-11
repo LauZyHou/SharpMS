@@ -45,6 +45,16 @@ namespace Plat._V
             ResourceManager.UpdateTip($"Create a final state on process graph [{VM.ProcGraph}].");
         }
 
+        /// <summary>
+        /// ÓÒ¼ü²Ëµ¥°´ÏÂCreate Tiny State
+        /// </summary>
+        private void OnCreateTinyState()
+        {
+            TinyState_VM tinyState_VM = new TinyState_VM(clkPos.X, clkPos.Y, VM);
+            VM.DragDrop_VMs.Add(tinyState_VM);
+            ResourceManager.UpdateTip($"Create a tiny state [{tinyState_VM}] on process graph [{VM.ProcGraph}].");
+        }
+
         #endregion
 
         /// <summary>

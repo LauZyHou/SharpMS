@@ -15,6 +15,45 @@ namespace Plat._VM
         private readonly State state;
 
         /// <summary>
+        /// Just for design
+        /// </summary>
+        public PureState_VM()
+            :base(0, 0, null)
+        {
+            this.state = new State("JustForDesign");
+            this.init_anchor();
+        }
+
+        /// <summary>
+        /// 仅需要位置，用于用户手动在界面上创建PureState
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public PureState_VM(double x, double y, DragDrop_P_VM panelVM)
+            :base(x, y, panelVM)
+        {
+            this.state = new State("NewState");
+            this.init_anchor();
+        }
+
+        /// <summary>
+        /// 需要位置和State对象，用于导入模型时的构造
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="state"></param>
+        public PureState_VM(double x, double y, DragDrop_P_VM panelVM, State state)
+            :base(x, y, panelVM)
+        {
+            this.state = state;
+            this.init_anchor();
+        }
+
+        public State State => state;
+
+        #region Init
+
+        /// <summary>
         /// 初始化锚点位置
         /// </summary>
         private void init_anchor()
@@ -50,42 +89,7 @@ namespace Plat._VM
             Anchor_VMs.Add(new Anchor_VM(centerX + (4 + 6 + 3) * c, centerY + (1.5 + 3 + 1) * r, this));
         }
 
-        /// <summary>
-        /// Just for design
-        /// </summary>
-        public PureState_VM()
-            :base(0, 0, null)
-        {
-            this.state = new State("JustForDesign");
-            init_anchor();
-        }
-
-        /// <summary>
-        /// 仅需要位置，用于用户手动在界面上创建PureState
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public PureState_VM(double x, double y, DragDrop_P_VM panelVM)
-            :base(x, y, panelVM)
-        {
-            this.state = new State("NewState");
-            init_anchor();
-        }
-
-        /// <summary>
-        /// 需要位置和State对象，用于导入模型时的构造
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="state"></param>
-        public PureState_VM(double x, double y, DragDrop_P_VM panelVM, State state)
-            :base(x, y, panelVM)
-        {
-            this.state = state;
-            init_anchor();
-        }
-
-        public State State => state;
+        #endregion
 
         #region Command Callback
 
@@ -103,7 +107,7 @@ namespace Plat._VM
 
         public override string ToString()
         {
-            return state.ToString();
+            return $"{this.state.Id}-{this.state.Name}";
         }
     }
 }

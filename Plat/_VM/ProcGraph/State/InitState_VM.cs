@@ -23,5 +23,10 @@ namespace Plat._VM
         {
             this.Anchor_VMs.Add(new Anchor_VM(Pos.X + 34, Pos.Y + 37, this));
         }
+
+        public override string ToString()
+        {
+            return "InitState";
+        }
     }
 }

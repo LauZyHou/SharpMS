@@ -12,17 +12,39 @@ namespace Plat._M
     /// </summary>
     public class State : ReactiveObject
     {
+        public static int _id = 0;
         private string name;
+        private readonly int id;
+
+        /// <summary>
+        /// 用户创建状态
+        /// </summary>
+        /// <param name="name"></param>
         public State(string name)
         {
             this.name = name;
+            this.id = _id++;
         }
 
         /// <summary>
-        /// 状态机的名字
+        /// 从文件导入状态
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="id"></param>
+        public State(string name, int id)
+        {
+            this.name = name;
+            this.id = id;
+        }
+
+        /// <summary>
+        /// 状态的名字
         /// </summary>
         public string Name { get => name; set => this.RaiseAndSetIfChanged(ref name, value); }
-
+        /// <summary>
+        /// 状态的自增id
+        /// </summary>
+        public int Id => id;
         public override string ToString()
         {
             return name;

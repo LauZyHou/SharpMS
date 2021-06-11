@@ -21,7 +21,8 @@
 									<MenuItem Header="Create">
 										<MenuItem Header="Pure State" Command="{Binding $parent[UserControl].OnCreatePureState}"/>
 										<MenuItem Header="Final State" Command="{Binding $parent[UserControl].OnCreateFinalState}"/>
-									</MenuItem>
+                    <MenuItem Header="Tiny State" Command="{Binding $parent[UserControl].OnCreateTinyState}"/>
+                  </MenuItem>
 									<MenuItem Header="Export as">
 										<MenuItem Header="PNG"/>
 										<MenuItem Header="SVG"/>

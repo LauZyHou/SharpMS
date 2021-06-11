@@ -32,7 +32,7 @@ namespace Plat._VM
             Arrow_VM linker_VM = new Arrow_VM(src, dst, this);
             src.LinkerVM = dst.LinkerVM = linker_VM;
             this.DragDrop_VMs.Add(linker_VM);
-            ResourceManager.UpdateTip("Create a linker on process graph panel.");
+            ResourceManager.UpdateTip($"Create a linker on process graph panel, from [{src.HostVM}] to [{dst.HostVM}].");
         }
 
         /// <summary>

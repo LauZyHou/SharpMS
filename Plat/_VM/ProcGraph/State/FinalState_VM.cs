@@ -34,5 +34,10 @@ namespace Plat._VM
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return "FinalState";
+        }
     }
 }

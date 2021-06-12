@@ -95,12 +95,12 @@ namespace Plat._VM
 
         public void OnEdit()
         {
-
+            // todo
         }
 
         public void OnDelete()
         {
-
+            this.PanelVM.DeleteDragDropItem(this);
         }
 
         #endregion

@@ -31,6 +31,7 @@ namespace Plat._VM
 
         private void OnDelete()
         {
+            this.PanelVM.DeleteDragDropItem(this);
         }
 
         #endregion

@@ -41,6 +41,12 @@ namespace Plat._VM
         /// <param name="item"></param>
         public override void DeleteDragDropItem(DragDrop_VM item)
         {
+            // 因为有可能删除active anchor所在的item，特判一下
+            if (this.ActiveAnchorVM != null && this.ActiveAnchorVM.HostVM == item)
+            {
+                this.ActiveAnchorVM = null;
+            }
+            // 视item类别做不同处理
             if (item is Linker_VM)
             {
                 Linker_VM linker_VM = (Linker_VM)item;
@@ -50,9 +56,17 @@ namespace Plat._VM
                 ResourceManager.UpdateTip("Remove a linker on process graph panel.");
                 return;
             }
-            else if (item is PureState_VM)
+            else if (item is TinyState_VM || item is PureState_VM)
             {
-                // todod
+                foreach (Anchor_VM anchor_VM in item.Anchor_VMs)
+                {
+                    if (anchor_VM.LinkerVM is not null)
+                    {
+                        this.DeleteDragDropItem(anchor_VM.LinkerVM);
+                    }
+                }
+                this.DragDrop_VMs.Remove(item);
+                ResourceManager.UpdateTip($"Remove the state [{item}] on process graph panel.");
                 return;
             }
             else if (item is FinalState_VM)

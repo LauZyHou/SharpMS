@@ -73,14 +73,9 @@ namespace Plat._VM
 
         #region Command Callback
 
-        private void OnCreate()
-        {
-            // todo
-        }
-
         private void OnDelete()
         {
-            // todo
+            this.PanelVM.DeleteDragDropItem(this);
         }
 
         #endregion

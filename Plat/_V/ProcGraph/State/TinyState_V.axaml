@@ -15,5 +15,10 @@
       <TextBlock Text="{Binding State.Id}" Grid.Row="1" Grid.Column="1" TextAlignment="Center"
                  VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Grid>
+    <Grid.ContextMenu>
+      <ContextMenu>
+        <MenuItem Header="Delete" Command="{Binding OnDelete}"/>
+      </ContextMenu>
+    </Grid.ContextMenu>
   </Grid>
 </UserControl>

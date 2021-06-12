@@ -14,9 +14,10 @@ namespace Plat._VM
     {
         private Anchor_VM source;
         private Anchor_VM dest;
+        private object? extMsg;
 
         public Linker_VM(Anchor_VM source, Anchor_VM dest, DragDrop_P_VM panelVM)
-            :base(0, 0, panelVM)
+            : base(0, 0, panelVM)
         {
             this.source = source;
             this.dest = dest;
@@ -30,5 +31,9 @@ namespace Plat._VM
         /// 目标锚点引用
         /// </summary>
         public Anchor_VM Dest { get => dest; set => dest = value; }
+        /// <summary>
+        /// Linker携带的额外信息，可在具体实现时作不同用途而用
+        /// </summary>
+        public Object? ExtMsg { get => extMsg; set => extMsg = value; }
     }
 }

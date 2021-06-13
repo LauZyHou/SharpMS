@@ -29,9 +29,18 @@ namespace Plat._VM
         /// <param name="dst"></param>
         public override void CreateLinker(Anchor_VM src, Anchor_VM dst)
         {
+            // 线型箭头
             Arrow_VM linker_VM = new Arrow_VM(src, dst, this);
             src.LinkerVM = dst.LinkerVM = linker_VM;
             this.DragDrop_VMs.Add(linker_VM);
+            // 转移结点
+            TransNode_VM transNode_VM = new TransNode_VM(
+                (src.Pos.X + dst.Pos.X) / 2,
+                (src.Pos.Y + dst.Pos.Y) /2,
+                this,
+                linker_VM
+            );
+            this.DragDrop_VMs.Add(transNode_VM);
             ResourceManager.UpdateTip($"Create a linker on process graph panel, from [{src.HostVM}] to [{dst.HostVM}].");
         }
 
@@ -53,6 +62,10 @@ namespace Plat._VM
                 linker_VM.Source.LinkerVM = null;
                 linker_VM.Dest.LinkerVM = null;
                 this.DragDrop_VMs.Remove(linker_VM);
+                if (linker_VM.ExtMsg is not null && linker_VM.ExtMsg is TransNode_VM)
+                {
+                    this.DragDrop_VMs.Remove((TransNode_VM)linker_VM.ExtMsg);
+                }
                 ResourceManager.UpdateTip("Remove a linker on process graph panel.");
                 return;
             }

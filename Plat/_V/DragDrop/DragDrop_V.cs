@@ -53,8 +53,15 @@ namespace Plat._V
             foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
             {
                 anchor_VM.OldPos = anchor_VM.Pos;
+                // 如果锚点的Linker上吸附了DragDrop_VM，也要记录其旧位置
+                if (anchor_VM.LinkerVM is not null
+                        && anchor_VM.LinkerVM.ExtMsg is not null
+                        && anchor_VM.LinkerVM.ExtMsg is DragDrop_VM)
+                {
+                    DragDrop_VM attachedVM = (DragDrop_VM)anchor_VM.LinkerVM.ExtMsg;
+                    attachedVM.OldPos = attachedVM.Pos;
+                }
             }
-
             //ResourceManager.mainWindowVM.Tips = "鼠标按下，记录图形位置：" + oldLocation;
 
             e.Handled = true;
@@ -83,6 +90,16 @@ namespace Plat._V
                 foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
                 {
                     anchor_VM.Pos = anchor_VM.OldPos + deltaPos;
+                    // 锚点位置更新时，还要刷新锚点的Linker上吸附的ExtMsg的位置
+                    // 我们认为Linker上吸附的东西是放在Linker中央的，所以deltaPos要除以2来给它更新
+                    // 注意只有吸附的ExtMsg是DragDrop_VM才对其X/Y作更新
+                    if (anchor_VM.LinkerVM is not null
+                        && anchor_VM.LinkerVM.ExtMsg is not null
+                        && anchor_VM.LinkerVM.ExtMsg is DragDrop_VM)
+                    {
+                        DragDrop_VM attachedVM = (DragDrop_VM)anchor_VM.LinkerVM.ExtMsg;
+                        attachedVM.Pos = attachedVM.OldPos + deltaPos / 2;
+                    }
                 }
 
                 //ResourceManager.mainWindowVM.Tips = "拖拽图形，图形当前位置：" + NetworkItemVM.X + "," + NetworkItemVM.Y;

@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="170" d:DesignHeight="40"
+             x:Class="Plat._V.TransNode_V">
+  <Grid RowDefinitions="20, *" MinHeight="30" MinWidth="170">
+    <TextBlock Grid.Row="0" Background="LightBlue" Opacity="0.6"
+               TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+      <TextBlock.Text>
+        <MultiBinding StringFormat="[{0}]->[{1}]">
+          <Binding Path="AttachedLinker.Source.HostVM"/>
+          <Binding Path="AttachedLinker.Dest.HostVM"/>
+        </MultiBinding>
+      </TextBlock.Text>
+    </TextBlock>
+    <ListBox Grid.Row="1" Opacity="0.5">
+
+    </ListBox>
+  </Grid>
+</UserControl>

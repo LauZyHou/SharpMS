@@ -29,7 +29,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="_M\DragDrop\" />
-    <Folder Include="_VM\ProcGraph\Transition\" />
-    <Folder Include="_V\ProcGraph\Transition\" />
   </ItemGroup>
 </Project>

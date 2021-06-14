@@ -40,5 +40,7 @@ namespace Plat._VM
         {
             return "FinalState";
         }
+
+        public string Tag { get => "Fin"; }
     }
 }

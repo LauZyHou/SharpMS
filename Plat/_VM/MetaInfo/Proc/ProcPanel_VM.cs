@@ -21,7 +21,6 @@ namespace Plat._VM
         public ProcPanel_VM()
         {
             this.procList = ResourceManager.procs;
-            this.procList.Add(new Proc("test", "desc test")); // test
             this.typeList = ResourceManager.types; // 可以间接引用到TypePanel的TypeList
         }
 

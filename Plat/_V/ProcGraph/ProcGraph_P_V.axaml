@@ -5,70 +5,66 @@
 			 xmlns:vm="clr-namespace:Plat._VM;assembly=Plat"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Plat._V.ProcGraph_P_V">
-	<!--从ItemsControl改用ListBox，能将切换TabItem时的渲染加速到之前的三倍-->
-	<UserControl.Styles>
-		<!--ItemsControl的样式-->
-		<Style Selector="ListBox#panel">
-			<!--使用Canvas作面板-->
-			<Setter Property="ItemsPanel">
-				<Setter.Value>
-					<ItemsPanelTemplate>
-						<!--这里需要为Canvas设置颜色才能在按下时相应鼠标事件-->
-						<Canvas Background="#EEEEEE" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-							<!--右键菜单行为-->
-							<Canvas.ContextMenu>
-								<ContextMenu>
-									<MenuItem Header="Create">
-										<MenuItem Header="Pure State" Command="{Binding $parent[UserControl].OnCreatePureState}"/>
-										<MenuItem Header="Final State" Command="{Binding $parent[UserControl].OnCreateFinalState}"/>
-                    <MenuItem Header="Tiny State" Command="{Binding $parent[UserControl].OnCreateTinyState}"/>
-                  </MenuItem>
-									<MenuItem Header="Export as">
-										<MenuItem Header="PNG"/>
-										<MenuItem Header="SVG"/>
-									</MenuItem>
-								</ContextMenu>
-							</Canvas.ContextMenu>
-						</Canvas>
-					</ItemsPanelTemplate>
-				</Setter.Value>
-			</Setter>
-			<!--里面放控件,即xxx_VM-->
-			<Setter Property="ItemTemplate">
-				<Setter.Value>
-					<DataTemplate DataType="vm:ViewModelBase">
-						<ContentControl Content="{Binding .}"/>
-					</DataTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<!--Avalonia的ItemsControl中没有ItemContainerStyle,用选择器+样式来绑定Canvas.Left等附加属性-->
-		<!--ItemsControl > ContentPresenter-->
-		<Style Selector="ListBox#panel ListBoxItem">
-			<Setter Property="Focusable" Value="False"/>
-			<Setter Property="Canvas.Left" Value="{Binding Pos.X}"/>
-			<Setter Property="Canvas.Top" Value="{Binding Pos.Y}"/>
-		</Style>
-		<Style Selector="ListBox#panel ListBoxItem > ContentPresenter">
-			<Setter Property="Background" Value="Transparent"/>
-			<Setter Property="IsHitTestVisible" Value="{Binding IsItem}"/>
-		</Style>
-		<!--选中时候没有蓝色框-->
-		<Style Selector="ListBox#panel ListBoxItem:selected > ContentPresenter">
-			<Setter Property="Background" Value="Transparent"/>
-		</Style>
-		<!--Hover时候没有灰色框-->
-		<Style Selector="ListBox#panel ListBoxItem:pointerover > ContentPresenter">
-			<Setter Property="Background" Value="Transparent"/>
-		</Style>
-	</UserControl.Styles>
+  <!--从ItemsControl改用ListBox，能将切换TabItem时的渲染加速到之前的三倍-->
+  <UserControl.Styles>
+    <!--ItemsControl的样式-->
+    <Style Selector="ListBox#panel">
+      <!--使用Canvas作面板-->
+      <Setter Property="ItemsPanel">
+        <Setter.Value>
+          <ItemsPanelTemplate>
+            <!--这里需要为Canvas设置颜色才能在按下时相应鼠标事件-->
+            <Canvas Background="#EEEEEE" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+              <!--右键菜单行为-->
+              <Canvas.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="Create Tiny State" Command="{Binding $parent[UserControl].OnCreateTinyState}"/>
+                  <MenuItem Header="Create Final State" Command="{Binding $parent[UserControl].OnCreateFinalState}"/>
+                  <!--<MenuItem Header="Create Pure State" Command="{Binding $parent[UserControl].OnCreatePureState}"/>-->
+                  <MenuItem Header="Export as PNG"/>
+                  <MenuItem Header="Export as SVG"/>
+                </ContextMenu>
+              </Canvas.ContextMenu>
+            </Canvas>
+          </ItemsPanelTemplate>
+        </Setter.Value>
+      </Setter>
+      <!--里面放控件,即xxx_VM-->
+      <Setter Property="ItemTemplate">
+        <Setter.Value>
+          <DataTemplate DataType="vm:ViewModelBase">
+            <ContentControl Content="{Binding .}"/>
+          </DataTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <!--Avalonia的ItemsControl中没有ItemContainerStyle,用选择器+样式来绑定Canvas.Left等附加属性-->
+    <!--ItemsControl > ContentPresenter-->
+    <Style Selector="ListBox#panel ListBoxItem">
+      <Setter Property="Focusable" Value="False"/>
+      <Setter Property="Canvas.Left" Value="{Binding Pos.X}"/>
+      <Setter Property="Canvas.Top" Value="{Binding Pos.Y}"/>
+    </Style>
+    <Style Selector="ListBox#panel ListBoxItem > ContentPresenter">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="IsHitTestVisible" Value="{Binding IsItem}"/>
+    </Style>
+    <!--选中时候没有蓝色框-->
+    <Style Selector="ListBox#panel ListBoxItem:selected > ContentPresenter">
+      <Setter Property="Background" Value="Transparent"/>
+    </Style>
+    <!--Hover时候没有灰色框-->
+    <Style Selector="ListBox#panel ListBoxItem:pointerover > ContentPresenter">
+      <Setter Property="Background" Value="Transparent"/>
+    </Style>
+  </UserControl.Styles>
 
-	<Grid RowDefinitions="30, *">
-		<Grid Grid.Row="0" ColumnDefinitions="80, *" Background="WhiteSmoke">
-			<Button Grid.Column="0" Content="test" HorizontalAlignment="Center" VerticalContentAlignment="Stretch"/>
-		</Grid>
-		<ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-			<ListBox Name="panel" Items="{Binding DragDrop_VMs}" Height="2000" Width="2800"/>
-		</ScrollViewer>
-	</Grid>
+  <Grid RowDefinitions="30, *">
+    <Grid Grid.Row="0" ColumnDefinitions="80, *" Background="WhiteSmoke">
+      <Button Grid.Column="0" Content="test" HorizontalAlignment="Center" VerticalContentAlignment="Stretch"/>
+    </Grid>
+    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <ListBox Name="panel" Items="{Binding DragDrop_VMs}" Height="2000" Width="2800"/>
+    </ScrollViewer>
+  </Grid>
 </UserControl>

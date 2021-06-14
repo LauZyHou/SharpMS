@@ -84,5 +84,7 @@ namespace Plat._VM
         {
             return $"{this.state.Id}-{this.state.Name}";
         }
+
+        public string Tag { get => this.state.Id.ToString(); }
     }
 }

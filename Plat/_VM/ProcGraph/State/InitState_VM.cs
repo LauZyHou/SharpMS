@@ -28,5 +28,8 @@ namespace Plat._VM
         {
             return "InitState";
         }
+
+        public string Tag { get => "Init"; }
+
     }
 }

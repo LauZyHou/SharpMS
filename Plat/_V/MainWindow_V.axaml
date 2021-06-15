@@ -38,7 +38,7 @@
         <v:ProcGraph_PG_V DataContext="{Binding ProcGraph_PG_VM}"/>
       </TabItem>
       <TabItem Header="Topo Graph">
-
+        <v:TopoGraph_P_V DataContext="{Binding TopoGraph_P_VM}"/>
       </TabItem>
     </TabControl>
 

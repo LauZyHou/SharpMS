@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			       xmlns:vm="clr-namespace:Plat._VM;assembly=Plat"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Plat._V.ProcGraph_P_V">
+             x:Class="Plat._V.TopoGraph_P_V">
   <!--从ItemsControl改用ListBox，能将切换TabItem时的渲染加速到之前的三倍-->
   <UserControl.Styles>
     <!--ItemsControl的样式-->
@@ -18,9 +18,7 @@
               <!--右键菜单行为-->
               <Canvas.ContextMenu>
                 <ContextMenu>
-                  <MenuItem Header="Create Tiny State" Command="{Binding $parent[UserControl].OnCreateTinyState}"/>
-                  <MenuItem Header="Create Final State" Command="{Binding $parent[UserControl].OnCreateFinalState}"/>
-                  <!--<MenuItem Header="Create Pure State" Command="{Binding $parent[UserControl].OnCreatePureState}"/>-->
+                  <MenuItem Header="Create Topo Node"/>
                   <MenuItem Header="Export as PNG"/>
                   <MenuItem Header="Export as SVG"/>
                 </ContextMenu>
@@ -32,7 +30,7 @@
       <!--里面放控件,即xxx_VM-->
       <Setter Property="ItemTemplate">
         <Setter.Value>
-          <DataTemplate DataType="vm:ViewModelBase">
+          <DataTemplate DataType="vm:DragDrop_VM">
             <ContentControl Content="{Binding .}"/>
           </DataTemplate>
         </Setter.Value>
@@ -61,7 +59,7 @@
 
   <Grid RowDefinitions="30, *">
     <Grid Grid.Row="0" ColumnDefinitions="80, *" Background="WhiteSmoke">
-      <Button Grid.Column="0" Content="test" HorizontalAlignment="Center" VerticalContentAlignment="Stretch"/>
+      <Button Grid.Column="0" Content="test topo" HorizontalAlignment="Center" VerticalContentAlignment="Stretch"/>
     </Grid>
     <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
       <ListBox Name="panel" Items="{Binding DragDrop_VMs}" Height="2000" Width="2800"/>

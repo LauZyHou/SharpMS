@@ -32,7 +32,7 @@
       <!--里面放控件,即xxx_VM-->
       <Setter Property="ItemTemplate">
         <Setter.Value>
-          <DataTemplate DataType="vm:ViewModelBase">
+          <DataTemplate DataType="vm:DragDrop_VM">
             <ContentControl Content="{Binding .}"/>
           </DataTemplate>
         </Setter.Value>

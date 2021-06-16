@@ -18,7 +18,7 @@
               <!--右键菜单行为-->
               <Canvas.ContextMenu>
                 <ContextMenu>
-                  <MenuItem Header="Create Topo Node"/>
+                  <MenuItem Header="Create Topo Node" Command="{Binding $parent[UserControl].OnCreateTopoNode}"/>
                   <MenuItem Header="Export as PNG"/>
                   <MenuItem Header="Export as SVG"/>
                 </ContextMenu>

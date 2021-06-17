@@ -25,7 +25,7 @@ namespace Plat._V
         /// </summary>
         private void OnCreateTopoNode()
         {
-            TopoNode_VM topoNode_VM = new TopoNode_VM(clkPos.X, clkPos.Y, VM, null);
+            TopoNode_VM topoNode_VM = new TopoNode_VM(clkPos.X, clkPos.Y, VM);
             VM.DragDrop_VMs.Add(topoNode_VM);
             ResourceManager.UpdateTip("Create a topology node.");
         }

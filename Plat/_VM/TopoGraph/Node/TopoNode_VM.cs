@@ -13,19 +13,16 @@ namespace Plat._VM
     /// </summary>
     public class TopoNode_VM : DragDrop_VM
     {
-        private Proc? proc;
+        private readonly TopoNode topoNode;
 
-        public TopoNode_VM(double x, double y, DragDrop_P_VM panelVM, Proc? proc)
+        public TopoNode_VM(double x, double y, DragDrop_P_VM panelVM)
             : base(x, y, panelVM)
         {
-            this.proc = proc;
+            this.topoNode = new TopoNode(null);
             this.init_anchor();
         }
 
-        /// <summary>
-        /// 拓扑图所例化的进程模板，null表示尚未设置
-        /// </summary>
-        public Proc? Proc { get => proc; set => this.RaiseAndSetIfChanged(ref proc, value); }
+        public TopoNode TopoNode => topoNode;
 
         #region Init
 
@@ -50,7 +47,7 @@ namespace Plat._VM
 
         public override string ToString()
         {
-            return proc is not null ? proc.ToString() : "NullProc";
+            return topoNode.Proc is null ? "NullNode" : topoNode.Proc.Identifier;
         }
     }
 }

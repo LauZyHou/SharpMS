@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="_M\DragDrop\" />
+    <Folder Include="_M\TopoGraph\Edge\" />
     <Folder Include="_VM\TopoGraph\Edge\" />
     <Folder Include="_V\TopoGraph\Edge\" />
   </ItemGroup>

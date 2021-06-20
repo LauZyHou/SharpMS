@@ -24,7 +24,10 @@ namespace Plat._S
         private double headWidth = 15;
         private double headHeight = 8;
 
-        // 在此覆写方法中实现图形
+        /// <summary>
+        /// 在此覆写方法中实现图形
+        /// </summary>
+        /// <returns></returns>
         protected override Geometry CreateDefiningGeometry()
         {
             StreamGeometry streamGeometry = new StreamGeometry();
@@ -62,7 +65,9 @@ namespace Plat._S
             return streamGeometry;
         }
 
-        // 这里决定箭头尖部的张角和线长
+        /// <summary>
+        /// 这里决定箭头尖部的张角和线长
+        /// </summary>
         public double HeadWidth { get => headWidth; set => headWidth = value; }
         public double HeadHeight { get => headHeight; set => headHeight = value; }
     }

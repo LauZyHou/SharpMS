@@ -5,6 +5,6 @@
              xmlns:s="clr-namespace:Plat._S;assembly=Plat"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Plat._V.Arrow_V">
-	<s:Arrow Stroke="Black" StrokeThickness="2" StartPoint="{Binding Source.Pos, Mode=OneWay}"
+  <s:Arrow Stroke="Black" StrokeThickness="2" StartPoint="{Binding Source.Pos, Mode=OneWay}"
 		  EndPoint="{Binding Dest.Pos, Mode=OneWay}" IsHitTestVisible="False"/>
 </UserControl>

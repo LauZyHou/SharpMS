@@ -8,6 +8,12 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
+    <AvaloniaXaml Remove="_M\DragDrop\**" />
+    <Compile Remove="_M\DragDrop\**" />
+    <EmbeddedResource Remove="_M\DragDrop\**" />
+    <None Remove="_M\DragDrop\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.3" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.3" />
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.3" />
@@ -28,9 +34,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="_M\DragDrop\" />
     <Folder Include="_M\TopoGraph\Edge\" />
-    <Folder Include="_M\ClassDiagram\" />
     <Folder Include="_VM\TopoGraph\Edge\" />
     <Folder Include="_V\TopoGraph\Edge\" />
   </ItemGroup>

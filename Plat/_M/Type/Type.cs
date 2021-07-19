@@ -50,13 +50,54 @@ namespace Plat._M
         public bool IsBase => isBase;
 
         /// <summary>
-        /// Int类型，可以表达整数、布尔
+        /// Int类型，可以表达整数、枚举
         /// </summary>
         public static readonly Type TYPE_INT = new Type("Int", "integer number", true);
+        /// <summary>
+        /// Bool类型，逻辑量
+        /// </summary>
+        public static readonly Type TYPE_BOOL = new Type("Bool", "logical type", true);
         /// <summary>
         /// Msg类型，可以表达网络中传输的消息，当一个消息需要被传输时，一定直接或间接继承Msg
         /// </summary>
         public static readonly Type TYPE_MSG = new Type("Msg", "message in network", true);
+        /// <summary>
+        /// 对称密钥
+        /// </summary>
+        public static readonly Type TYPE_KEY = new Type("Key", "symmetric key", true) { parent = TYPE_MSG };
+        /// <summary>
+        /// 非对称公钥
+        /// </summary>
+        public static readonly Type TYPE_PUB_KEY = new Type("PubKey", "asymmetirc public key", true) { parent = TYPE_MSG };
+        /// <summary>
+        /// 非对称私钥
+        /// </summary>
+        public static readonly Type TYPE_PVT_KEY = new Type("PvtKey", "asymmetirc private key", true) { parent = TYPE_MSG };
 
+        #region Have xxx 字段
+
+        /// <summary>
+        /// 有父类型
+        /// </summary>
+        public bool HaveParent
+        {
+            get
+            {
+                return this.parent is not null;
+            }
+        }
+
+        /// <summary>
+        /// 有属性
+        /// </summary>
+        public bool HaveAttr
+        {
+            get
+            {
+                return (this.attributes is not null) && (this.attributes.Count > 0);
+            }
+        }
+
+        #endregion
     }
 }

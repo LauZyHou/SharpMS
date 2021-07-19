@@ -22,7 +22,13 @@ namespace Plat._VM
         {
             this.typeList = ResourceManager.types;
             this.typeList.Add(Type.TYPE_INT);
+            this.typeList.Add(Type.TYPE_BOOL);
             this.typeList.Add(Type.TYPE_MSG);
+            this.typeList.Add(Type.TYPE_KEY);
+            this.typeList.Add(Type.TYPE_PUB_KEY);
+            this.typeList.Add(Type.TYPE_PVT_KEY);
+            // 因为不能保证TypePanel_VM和ClassDragram_P_VM的构造顺序，所以不能在这去往后者里塞东西
+            // 只能到后者的构造里也一个一个地把VM塞进去
         }
 
         public ObservableCollection<Type> TypeList { get => typeList; set => this.RaiseAndSetIfChanged(ref typeList, value); }
@@ -49,7 +55,10 @@ namespace Plat._VM
         /// </summary>
         private void CreateType()
         {
-            this.typeList.Add(new Type("NewType"));
+            Type type = new Type("NewType");
+            this.typeList.Add(type);
+            ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;
+            classDiagram_P_VM.DragDrop_VMs.Add(new Type_VM(100, 100, classDiagram_P_VM, type));
             ResourceManager.UpdateTip("Create a new type.");
         }
 

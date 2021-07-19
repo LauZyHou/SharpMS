@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Plat._VM;assembly=Plat"
+             mc:Ignorable="d" d:DesignWidth="120" d:DesignHeight="60"
+             x:Class="Plat._V.Type_V" BorderBrush="Black" BorderThickness="2">
+  <Design.DataContext>
+    <vm:Type_VM/>
+  </Design.DataContext>
+
+  <UserControl.Styles>
+    <Style Selector="ListBoxItem">
+      <Setter Property="IsHitTestVisible" Value="False"/>
+    </Style>
+  </UserControl.Styles>
+
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="MyColor" Color="#AADDFF" />
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="20,1,15,*" Background="{StaticResource MyColor}" MinWidth="120" MinHeight="60">
+    <StackPanel Grid.Row="0" Orientation="Horizontal">
+      <TextBlock Text=" Type " FontWeight="Bold"/>
+      <TextBlock Text="{Binding Type.Identifier}"/>
+      <TextBlock Text=" ◁ " FontWeight="Bold" IsVisible="{Binding Type.HaveParent}"/>
+      <TextBlock Text="{Binding Type.Parent.Identifier}" IsVisible="{Binding Type.HaveParent}"/>
+      <TextBlock Text=" "/>
+    </StackPanel>
+    <TextBlock Grid.Row="1" Background="Black" HorizontalAlignment="Stretch"/>
+    <TextBlock Grid.Row="2" Text=" Attr:" IsVisible="{Binding Type.HaveAttr}"/>
+    <ListBox Grid.Row="3" Items="{Binding Type.Attributes}" IsEnabled="True" IsVisible="{Binding Type.HaveAttr}"
+             Background="{StaticResource MyColor}" BorderBrush="{StaticResource MyColor}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <!--使用多源绑定-->
+          <!--
+          <TextBlock>
+            <TextBlock.Text>
+              <MultiBinding StringFormat=" {0} {1};">
+                <Binding Path="Type.Name"/>
+                <Binding Path="Identifier"/>
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>-->
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Type.Identifier}"/>
+            <!--<TextBlock Text="[]" IsVisible="{Binding IsArray}"/>-->
+            <TextBlock Text=" "/>
+            <TextBlock Text="{Binding Identifier}"/>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <!--<TextBlock Grid.Row="4" Background="Black" IsVisible="{Binding !Type.Basic}"/>
+    <TextBlock Grid.Row="5" Text=" 方法:" IsVisible="{Binding !Type.Basic}"/>
+    <ListBox Grid.Row="6" Items="{Binding Type.Methods}" IsEnabled="True" IsVisible="{Binding !Type.Basic}"
+             Background="{StaticResource MyColor}" BorderBrush="{StaticResource MyColor}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock>
+            <TextBlock.Text>
+              <MultiBinding StringFormat=" {0} {1}({2})">
+                <Binding Path="ReturnType.Name"/>
+                <Binding Path="Name"/>
+                <Binding Path="ParamString"/>
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>-->
+  </Grid>
+</UserControl>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Plat._M
 {
     /// <summary>
-    /// 逻辑Channel
+    /// 逻辑Channel【作废？】
     /// </summary>
     public class LogicChan : ReactiveObject
     {

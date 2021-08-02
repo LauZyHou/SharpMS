@@ -17,6 +17,7 @@ namespace Plat._M
         private string description;
         private Type? parent;
         private ObservableCollection<Attribute> attributes;
+        private ObservableCollection<Caller> methods;
         private readonly bool isBase;
 
         public Type(string identifier, string description = "", bool isBase = false)
@@ -26,6 +27,7 @@ namespace Plat._M
             this.isBase = isBase;
             this.parent = null;
             this.attributes = new ObservableCollection<Attribute>();
+            this.methods = new ObservableCollection<Caller>();
         }
 
         /// <summary>
@@ -44,6 +46,10 @@ namespace Plat._M
         /// 类型的属性列表，可以理解为C语言Struct里的一个个字段
         /// </summary>
         public ObservableCollection<Attribute> Attributes { get => attributes; set => attributes = value; }
+        /// <summary>
+        /// 类型的方法定义表
+        /// </summary>
+        public ObservableCollection<Caller> Methods { get => methods; set => methods = value; }
         /// <summary>
         /// 是否是内置（基本）类型，目前只有Int和Msg是
         /// </summary>
@@ -98,6 +104,22 @@ namespace Plat._M
             }
         }
 
+        /// <summary>
+        /// 有方法
+        /// </summary>
+        public bool HaveMethod
+        {
+            get
+            {
+                return (this.methods is not null) && (this.methods.Count > 0);
+            }
+        }
+
         #endregion
+
+        public override string ToString()
+        {
+            return identifier;
+        }
     }
 }

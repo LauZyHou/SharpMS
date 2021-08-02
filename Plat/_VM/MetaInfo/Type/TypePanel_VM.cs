@@ -17,6 +17,8 @@ namespace Plat._VM
 
         private Type? currentType;
         private ObservableCollection<Type> typeList;
+        private Caller? currentMethod;
+        private Type? wantParamType;
 
         public TypePanel_VM()
         {
@@ -33,6 +35,11 @@ namespace Plat._VM
 
         public ObservableCollection<Type> TypeList { get => typeList; set => this.RaiseAndSetIfChanged(ref typeList, value); }
         public Type? CurrentType { get => currentType; set => this.RaiseAndSetIfChanged(ref currentType, value); }
+        public Caller? CurrentMethod { get => currentMethod; set => this.RaiseAndSetIfChanged(ref currentMethod, value); }
+        /// <summary>
+        /// 想变成的参数类型
+        /// </summary>
+        public Type? WantParamType { get => wantParamType; set => this.RaiseAndSetIfChanged(ref wantParamType, value); }
 
         #region Button Command
 
@@ -44,6 +51,7 @@ namespace Plat._VM
         {
             if (type is null || type.IsBase)
             {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
                 return;
             }
             this.typeList.Remove(type);
@@ -70,6 +78,7 @@ namespace Plat._VM
         {
             if (type is null)
             {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
                 return;
             }
             type.Parent = null;
@@ -82,6 +91,7 @@ namespace Plat._VM
         {
             if (type is null || type.IsBase)
             {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
                 return;
             }
             type.Attributes.Add(new Attribute("newAttr", Type.TYPE_INT));
@@ -96,10 +106,199 @@ namespace Plat._VM
         {
             if (currentType is null || currentType.IsBase || attribute is null)
             {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
                 return;
             }
             currentType.Attributes.Remove(attribute);
             ResourceManager.UpdateTip($"Delete attribute [{attribute.Identifier}] for type [{currentType.Identifier}].");
+        }
+
+        /// <summary>
+        /// 创建新的类型方法
+        /// </summary>
+        private void OnCreateMethod()
+        {
+            if (this.currentType is null || this.currentType.IsBase)
+            {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
+                return;
+            }
+            currentType.Methods.Add(new Caller("NewMethod", Type.TYPE_BOOL));
+            ResourceManager.UpdateTip($"Create a new method on type [{currentType.Identifier}].");
+        }
+
+        /// <summary>
+        /// 删除类型方法
+        /// </summary>
+        private void OnDeleteMethod(Caller c)
+        {
+            if (this.currentType is null || this.currentType.IsBase)
+            {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
+                return;
+            }
+            currentType.Methods.Remove(c);
+            ResourceManager.UpdateTip($"Delete the method [{c.Identifier}] on type [{currentType.Identifier}].");
+        }
+
+        /// <summary>
+        /// 给Method添加参数
+        /// </summary>
+        private void OnAddParam()
+        {
+            if (this.currentType is null || this.currentType.IsBase)
+            {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
+                return;
+            }
+            if (currentMethod is null)
+            {
+                ResourceManager.UpdateTip("A custom method must be selected!");
+                return;
+            }
+            currentMethod.ParamTypes.Add(Type.TYPE_BOOL);
+            currentMethod.RaisePropertyChanged("ParamTypeString");
+            ResourceManager.UpdateTip($"Add new param type for method [{currentMethod.Identifier}].");
+        }
+
+        /// <summary>
+        /// 给Method删除参数
+        /// </summary>
+        private void OnDeleteParam(int? paramPos)
+        {
+            if (this.currentType is null || this.currentType.IsBase)
+            {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
+                return;
+            }
+            if (currentMethod is null)
+            {
+                ResourceManager.UpdateTip("A custom method must be selected!");
+                return;
+            }
+            if (paramPos is null)
+            {
+                ResourceManager.UpdateTip("A param must be selected!");
+                return;
+            }
+            if (paramPos < 0 || paramPos >= currentMethod.ParamTypes.Count)
+            {
+                ResourceManager.UpdateTip("The pos of the param to be delete is in wrong value!");
+                return;
+            }
+            currentMethod.ParamTypes.RemoveAt((int)paramPos);
+            currentMethod.RaisePropertyChanged("ParamTypeString");
+            ResourceManager.UpdateTip($"Delete a param type for method [{currentMethod.Identifier}].");
+        }
+
+        /// <summary>
+        /// 给Method表确认改参数类型
+        /// </summary>
+        private void OnConfirmWantParamType(int? paramPos)
+        {
+            if (this.currentType is null || this.currentType.IsBase)
+            {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
+                return;
+            }
+            if (currentMethod is null)
+            {
+                ResourceManager.UpdateTip("A custom method must be selected!");
+                return;
+            }
+            if (paramPos is null)
+            {
+                ResourceManager.UpdateTip("A param must be selected!");
+                return;
+            }
+            if (wantParamType is null)
+            {
+                ResourceManager.UpdateTip("A wanted param type must be selected!");
+                return;
+            }
+            if (paramPos < 0 || paramPos >= currentMethod.ParamTypes.Count)
+            {
+                ResourceManager.UpdateTip("The pos of the param to be delete is in wrong value!");
+                return;
+            }
+            currentMethod.ParamTypes.RemoveAt((int)paramPos);
+            currentMethod.ParamTypes.Insert((int)paramPos, wantParamType);
+            currentMethod.RaisePropertyChanged("ParamTypeString");
+            ResourceManager.UpdateTip($"Update a param type for method [{currentMethod.Identifier}] at pos [{paramPos}].");
+        }
+
+        /// <summary>
+        /// 向上移动一个参数
+        /// </summary>
+        private void OnMoveUpParamType(int? paramPos)
+        {
+            if (this.currentType is null || this.currentType.IsBase)
+            {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
+                return;
+            }
+            if (currentMethod is null)
+            {
+                ResourceManager.UpdateTip("A custom method must be selected!");
+                return;
+            }
+            if (paramPos is null)
+            {
+                ResourceManager.UpdateTip("A param must be selected!");
+                return;
+            }
+            if (paramPos < 0 || paramPos >= currentMethod.ParamTypes.Count)
+            {
+                ResourceManager.UpdateTip("The pos of the param to be delete is in wrong value!");
+                return;
+            }
+            if (paramPos == 0)
+            {
+                ResourceManager.UpdateTip("It is the first param!");
+                return;
+            }
+            Type t = currentMethod.ParamTypes[(int)paramPos];
+            currentMethod.ParamTypes.RemoveAt((int)paramPos);
+            currentMethod.ParamTypes.Insert((int)paramPos - 1, t);
+            currentMethod.RaisePropertyChanged("ParamTypeString");
+            ResourceManager.UpdateTip($"Move up a param type for method [{currentMethod.Identifier}] at pos [{paramPos}].");
+        }
+
+        /// <summary>
+        /// 向下移动一个参数
+        /// </summary>
+        private void OnMoveDownParamType(int? paramPos)
+        {
+            if (this.currentType is null || this.currentType.IsBase)
+            {
+                ResourceManager.UpdateTip("A custom data type must be selected!");
+                return;
+            }
+            if (currentMethod is null)
+            {
+                ResourceManager.UpdateTip("A custom method must be selected!");
+                return;
+            }
+            if (paramPos is null)
+            {
+                ResourceManager.UpdateTip("A param must be selected!");
+                return;
+            }
+            if (paramPos < 0 || paramPos >= currentMethod.ParamTypes.Count)
+            {
+                ResourceManager.UpdateTip("The pos of the param to be delete is in wrong value!");
+                return;
+            }
+            if (paramPos == currentMethod.ParamTypes.Count - 1)
+            {
+                ResourceManager.UpdateTip("It is the last param!");
+                return;
+            }
+            Type t = currentMethod.ParamTypes[(int)paramPos];
+            currentMethod.ParamTypes.RemoveAt((int)paramPos);
+            currentMethod.ParamTypes.Insert((int)paramPos + 1, t);
+            currentMethod.RaisePropertyChanged("ParamTypeString");
+            ResourceManager.UpdateTip($"Move down a param type for method [{currentMethod.Identifier}] at pos [{paramPos}].");
         }
 
         #endregion

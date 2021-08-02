@@ -4,6 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Plat._V.TypePanel_V">
+  <UserControl.Styles>
+    <Style Selector="Grid.ABBox">
+      <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="Grid.ABBox > TextBlock">
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="16"/>
+    </Style>
+    <Style Selector="Grid.ABBox > ComboBox">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+  </UserControl.Styles>
+  
 	<Grid ColumnDefinitions="49*, 2*, 49*">
 		<!--Type List-->
 		<Grid Grid.Column="0" RowDefinitions="8*, 84*, 8*">
@@ -30,69 +44,153 @@
 			</Grid>
 		</Grid>
 		<!--Type Detail-->
-		<Grid Grid.Column="2" RowDefinitions="8*, 8*, 8*, 8*, 36*, 8*, 8*, 8*, 8*">
-			<TextBlock Grid.Row="0" Text="Type Detail" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			<Grid Grid.Row="1" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
-				<TextBlock Grid.Column="0" Text="Type Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-				<TextBox Grid.Column="1" Text="{Binding CurrentType.Identifier, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-			</Grid>
-			<Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
-				<TextBlock Grid.Column="0" Text="Type Desc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-				<TextBox Grid.Column="1" Text="{Binding CurrentType.Description, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-			</Grid>
-			<Grid Grid.Row="3" ColumnDefinitions="30*, 55*, 15*" Margin="6,0" VerticalAlignment="Center">
-				<TextBlock Grid.Column="0" Text="Parent Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-				<ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Items="{Binding TypeList}"
-						  SelectedItem="{Binding CurrentType.Parent, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}">
-					<ComboBox.ItemTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
-						</DataTemplate>
-					</ComboBox.ItemTemplate>
-				</ComboBox>
-				<Button Grid.Column="2" HorizontalAlignment="Right" Content="Clear" Command="{Binding ClearParentType}"
-						CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-			</Grid>
-			<ListBox Grid.Row="4" Name="AttrList" Items="{Binding CurrentType.Attributes}">
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<TextBlock>
-							<TextBlock.Text>
-								<MultiBinding StringFormat=" {0} {1}; // {2}">
-									<Binding Path="Type.Identifier"/>
-									<Binding Path="Identifier"/>
-									<Binding Path="Description"/>
-								</MultiBinding>
-							</TextBlock.Text>
-						</TextBlock>
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-			</ListBox>
-			<Grid Grid.Row="5" ColumnDefinitions="50*, 50*">
-				<Button Grid.Column="0" Content="Create New Attribute" Command="{Binding CreateAttribute}"
-						CommandParameter="{Binding CurrentType}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-				<Button Grid.Column="1" Content="Delete Selected Attribute" Command="{Binding DeleteAttribute}" HorizontalAlignment="Right"
-						CommandParameter="{Binding #AttrList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-			</Grid>
-			<Grid Grid.Row="6" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
-				<TextBlock Grid.Column="0" Text="Attr Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-				<ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Items="{Binding TypeList}"
-						  SelectedItem="{Binding #AttrList.SelectedItem.Type, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}">
-					<ComboBox.ItemTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
-						</DataTemplate>
-					</ComboBox.ItemTemplate>
-				</ComboBox>
-			</Grid>
-			<Grid Grid.Row="7" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
-				<TextBlock Grid.Column="0" Text="Attr Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-				<TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Identifier, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-			</Grid>
-			<Grid Grid.Row="8" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
-				<TextBlock Grid.Column="0" Text="Attr Desc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-				<TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Description, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-			</Grid>
-		</Grid>
+    <TabControl Grid.Column="2">
+      <TabItem Header="Desc/Attrs">
+        <Grid RowDefinitions="8*, 8*, 8*, 36*, 8*, 8*, 8*, 8*">
+          <!--<TextBlock Grid.Row="0" Text="Type Detail" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+          <Grid Grid.Row="0" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="Type Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding CurrentType.Identifier, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+          </Grid>
+          <Grid Grid.Row="1" ColumnDefinitions="30*, 70*" Margin="6,0" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="Type Desc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding CurrentType.Description, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+          </Grid>
+          <Grid Grid.Row="2" ColumnDefinitions="30*, 55*, 15*" Margin="6,0" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="Parent Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Items="{Binding TypeList}"
+                  SelectedItem="{Binding CurrentType.Parent, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Grid.Column="2" HorizontalAlignment="Right" Content="Clear" Command="{Binding ClearParentType}"
+                CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+          </Grid>
+          <ListBox Grid.Row="3" Name="AttrList" Items="{Binding CurrentType.Attributes}">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock>
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0} {1}; // {2}">
+                      <Binding Path="Type.Identifier"/>
+                      <Binding Path="Identifier"/>
+                      <Binding Path="Description"/>
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <Grid Grid.Row="4" ColumnDefinitions="50*, 50*">
+            <Button Grid.Column="0" Content="Create New Attribute" Command="{Binding CreateAttribute}"
+                CommandParameter="{Binding CurrentType}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+            <Button Grid.Column="1" Content="Delete Selected Attribute" Command="{Binding DeleteAttribute}" HorizontalAlignment="Right"
+                CommandParameter="{Binding #AttrList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+          </Grid>
+          <Grid Grid.Row="5" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="Attr Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Items="{Binding TypeList}"
+                  SelectedItem="{Binding #AttrList.SelectedItem.Type, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </Grid>
+          <Grid Grid.Row="6" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="Attr Name:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Identifier, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+          </Grid>
+          <Grid Grid.Row="7" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="Attr Desc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Description, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+          </Grid>
+        </Grid>
+      </TabItem>
+      <TabItem Header="Methods">
+        <Grid RowDefinitions="40*, 10*, 10*, 10*, 30*">
+          <!--大函数表-->
+          <ListBox Grid.Row="0" Name="MethodList" Items="{Binding CurrentType.Methods}"
+                   SelectedItem="{Binding CurrentMethod, Mode=OneWayToSource}">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock>
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0}({1})->{2} // {3}">
+                      <Binding Path="Identifier"/>
+                      <Binding Path="ParamTypeString"/>
+                      <Binding Path="ReturnType.Identifier"/>
+                      <Binding Path="Description"/>
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <!--添加和删除函数-->
+          <Grid Grid.Row="1" ColumnDefinitions="50*, 50*">
+            <Button Grid.Column="0" Content="Create New Method" Command="{Binding OnCreateMethod}"/>
+            <Button Grid.Column="1" Content="Delete Selected Method" Command="{Binding OnDeleteMethod}"
+                    CommandParameter="{Binding #MethodList.SelectedItem}" HorizontalAlignment="Right"/>
+          </Grid>
+          <!--函数名-->
+          <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Method Name:"/>
+            <TextBox Grid.Column="1" Text="{Binding #MethodList.SelectedItem.Identifier, Mode=TwoWay}"/>
+          </Grid>
+          <!--返回值-->
+          <Grid Grid.Row="3" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Return Type:"/>
+            <ComboBox Grid.Column="1" Items="{Binding TypeList}" SelectedItem="{Binding #MethodList.SelectedItem.ReturnType, Mode=TwoWay}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </Grid>
+          <!--底下关于方法参数的Grid-->
+          <Grid Grid.Row="4" RowDefinitions="10*, 10*, 10*" ColumnDefinitions="25*, 10*, 5*" Margin="0, 0, 0, 20">
+            <ListBox Name="ParamList" Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+                     Items="{Binding #MethodList.SelectedItem.ParamTypes}">
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Identifier}"/>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Content="Add Param" Grid.Row="0" Grid.Column="1" Command="{Binding OnAddParam}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button Content="Delete Param" Grid.Row="1" Grid.Column="1" Command="{Binding OnDeleteParam}"
+                    CommandParameter="{Binding #ParamList.SelectedIndex}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <ComboBox Grid.Row="2" Grid.Column="1"
+                      Items="{Binding TypeList}" SelectedItem="{Binding WantParamType, Mode=OneWayToSource}"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Center">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Content="🔼" Grid.Row="0" Grid.Column="2" Command="{Binding OnMoveUpParamType}"
+                    CommandParameter="{Binding #ParamList.SelectedIndex}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button Content="🔽" Grid.Row="1" Grid.Column="2" Command="{Binding OnMoveDownParamType}"
+                    CommandParameter="{Binding #ParamList.SelectedIndex}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button Content="✔️" Grid.Row="2" Grid.Column="2" Command="{Binding OnConfirmWantParamType}"
+                    CommandParameter="{Binding #ParamList.SelectedIndex}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+          </Grid>
+        </Grid>
+      </TabItem>
+    </TabControl>
 	</Grid>
 </UserControl>

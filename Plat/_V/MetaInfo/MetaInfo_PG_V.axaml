@@ -9,6 +9,9 @@
 		<TabItem Header="Type">
 			<v:TypePanel_V DataContext="{Binding TypePanel_VM}"/>
 		</TabItem>
+    <TabItem Header="Env">
+      <v:EnvPanel_V DataContext="{Binding EnvPanel_VM}"/>
+    </TabItem>
 		<TabItem Header="Proc">
 			<v:ProcPanel_V DataContext="{Binding ProcPanel_VM}"/>
 		</TabItem>

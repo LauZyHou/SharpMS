@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Plat._V.EnvPanel_V">
+  <Grid ColumnDefinitions="49*, 2*, 49*">
+    <!--Env List-->
+    <Grid Grid.Column="0" RowDefinitions="8*, 84*, 8*">
+      <TextBlock Grid.Row="0" Text="Env List" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      <ListBox Name="EnvList" Grid.Row="1" Items="{Binding EnvList}" SelectedItem="{Binding CurrentEnv, Mode=OneWayToSource}">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock>
+              <TextBlock.Text>
+                <MultiBinding StringFormat=" {0}(Pub={1}) // {2}">
+                  <Binding Path="Identifier"/>
+                  <Binding Path="Pub"/>
+                  <Binding Path="Description"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <Grid Grid.Row="2" ColumnDefinitions="50*, 50*">
+        <Button Grid.Column="0" Content="Create New Env" Command="{Binding CreateEnv}"/>
+        <Button Grid.Column="1" Content="Delete Selected Env" Command="{Binding DeleteEnv}" HorizontalAlignment="Right"/>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

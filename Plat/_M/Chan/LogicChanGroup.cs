@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Plat._M
 {
     /// <summary>
-    /// 逻辑Channel组，即有相同的{source proc, dest proc}的LogicChan
+    /// 逻辑Channel组，即有相同的{source proc, dest proc}的LogicChan【作废？】
     /// </summary>
     public class LogicChanGroup : ReactiveObject
     {

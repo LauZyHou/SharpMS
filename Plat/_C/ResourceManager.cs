@@ -29,6 +29,10 @@ namespace Plat._C
         /// 锚点是否可见
         /// </summary>
         public static Subject<bool> anchorVisible = new Subject<bool>();
+        /// <summary>
+        /// Tip的刷新次数，每次刷新都+1
+        /// </summary>
+        public static uint tipFlushNum = 0;
 
         /// <summary>
         /// 更新主页最下方的提示内容
@@ -40,7 +44,7 @@ namespace Plat._C
             {
                 return;
             }
-            mainWindow_VM.Tip = tip;
+            mainWindow_VM.Tip = $"#{++tipFlushNum} | {tip}";
         }
     }
 }

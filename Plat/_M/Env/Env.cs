@@ -15,8 +15,8 @@ namespace Plat._M
     public class Env : ReactiveObject
     {
         private string identifier;
-        private ObservableCollection<Attribute> attributes;
-        private ObservableCollection<Chan> chans;
+        private ObservableCollection<VisAttr> attributes;
+        private ObservableCollection<Channel> channels;
         private bool pub;
         private string description;
 
@@ -24,8 +24,9 @@ namespace Plat._M
         {
             this.identifier = identifier;
             this.pub = pub;
-            this.attributes = new ObservableCollection<Attribute>();
-            this.chans = new ObservableCollection<Chan>();
+            this.attributes = new ObservableCollection<VisAttr>();
+            this.channels = new ObservableCollection<Channel>();
+            this.description = "";
         }
 
         /// <summary>
@@ -35,18 +36,54 @@ namespace Plat._M
         /// <summary>
         /// 环境模板中的所有属性（这里是不带值的，只有定义
         /// </summary>
-        public ObservableCollection<Attribute> Attributes { get => attributes; }
+        public ObservableCollection<VisAttr> Attributes { get => attributes; }
         /// <summary>
         /// 环境模板中的所有信道模板
         /// </summary>
-        public ObservableCollection<Chan> Chans { get => chans; }
+        public ObservableCollection<Channel> Channels { get => channels; }
         /// <summary>
         /// 是否是公开环境
         /// </summary>
-        public bool Pub { get => pub; set => this.RaiseAndSetIfChanged(ref pub, value); }
+        public bool Pub
+        {
+            get => pub;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref pub, value);
+                this.RaisePropertyChanged(nameof(PubStr));
+            }
+        }
         /// <summary>
         /// 环境的自然语言描述（相当于是一个注释
         /// </summary>
         public string Description { get => description; set => this.RaiseAndSetIfChanged(ref description, value); }
+
+        #region Have xxx 属性
+
+        public bool HaveAttr
+        {
+            get
+            {
+                return this.attributes is not null && this.attributes.Count > 0;
+            }
+        }
+
+        public bool HaveChan
+        {
+            get
+            {
+                return this.channels is not null && this.channels.Count > 0;
+            }
+        }
+
+        public string PubStr
+        {
+            get
+            {
+                return this.pub ? "+" : "-";
+            }
+        }
+
+        #endregion
     }
 }

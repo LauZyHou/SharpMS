@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Plat._VM;assembly=Plat"
+             mc:Ignorable="d" d:DesignWidth="120" d:DesignHeight="60"
+             x:Class="Plat._V.Env_V" BorderBrush="Black" BorderThickness="2">
+  <Design.DataContext>
+    <vm:Env_VM/>
+  </Design.DataContext>
+
+  <UserControl.Styles>
+    <Style Selector="ListBoxItem">
+      <Setter Property="IsHitTestVisible" Value="False"/>
+      <Setter Property="Padding" Value="0"/>
+    </Style>
+  </UserControl.Styles>
+
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="MyColor" Color="#CCFFEE" />
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="20,1,15,*,15,*" Background="{StaticResource MyColor}" MinWidth="120" MinHeight="60">
+    <StackPanel Grid.Row="0" Orientation="Horizontal">
+      <TextBlock Text=" Env " FontWeight="Bold"/>
+      <TextBlock Text="{Binding Env.Identifier}"/>
+      <!--<TextBlock Text=" "/>
+      <TextBlock Text="{Binding Env.PubStr}"/>-->
+      <TextBlock Text=" "/>
+    </StackPanel>
+    <TextBlock Grid.Row="1" Background="Black" HorizontalAlignment="Stretch"/>
+    <TextBlock Grid.Row="2" Text=" Props:" IsVisible="{Binding Env.HaveAttr}" Background="LightGreen"/>
+    <ListBox Grid.Row="3" Items="{Binding Env.Attributes}" IsEnabled="True" IsVisible="{Binding Env.HaveAttr}"
+             Background="{StaticResource MyColor}" BorderBrush="{StaticResource MyColor}" Padding="0" Margin="0">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
+            <TextBlock Text=" "/>
+            <TextBlock Text="{Binding PubStr}"/>
+            <TextBlock Text=" "/>
+            <TextBlock Text="{Binding Identifier}"/>
+            <!--<TextBlock Text="[]" IsVisible="{Binding IsArray}"/>-->
+            <TextBlock Text=": "/>
+            <TextBlock Text="{Binding Type.Identifier}"/>
+            <TextBlock Text=" "/>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <TextBlock Grid.Row="4" Text=" Chans:" IsVisible="{Binding Env.HaveChan}" Background="LightGreen"/>
+    <ListBox Grid.Row="5" Items="{Binding Env.Channels}" IsEnabled="True" IsVisible="{Binding Env.HaveChan}"
+             Background="{StaticResource MyColor}" BorderBrush="{StaticResource MyColor}" Padding="0" Margin="0">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
+            <TextBlock Text=" "/>
+            <TextBlock Text="{Binding PubStr}"/>
+            <TextBlock Text=" "/>
+            <TextBlock Text="{Binding Identifier}"/>
+            <!--<TextBlock Text="[]" IsVisible="{Binding IsArray}"/>-->
+            <TextBlock Text="["/>
+            <TextBlock Text="{Binding Capacity}"/>
+            <TextBlock Text="]"/>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </Grid>
+  
+</UserControl>

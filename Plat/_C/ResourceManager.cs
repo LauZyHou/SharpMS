@@ -17,8 +17,10 @@ namespace Plat._C
     {
         // 主窗体VM
         public static MainWindow_VM mainWindow_VM;
-        // 系统中所有的类型
+        // 系统中所有的数据类型
         public static ObservableCollection<_M.Type> types = new ObservableCollection<_M.Type>();
+        // 系统中所有的环境模板
+        public static ObservableCollection<_M.Env> envs = new ObservableCollection<_M.Env>();
         // 系统中所有的进程模板
         public static ObservableCollection<Proc> procs = new ObservableCollection<Proc>();
         // 系统中所有的逻辑Channel组

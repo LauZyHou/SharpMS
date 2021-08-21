@@ -32,7 +32,7 @@ namespace Plat._M
         /// </summary>
         public bool Pub
         {
-            get => pub;
+            get => pub; 
             set
             {
                 this.RaiseAndSetIfChanged(ref pub, value);

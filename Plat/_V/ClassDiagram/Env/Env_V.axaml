@@ -24,8 +24,8 @@
     <StackPanel Grid.Row="0" Orientation="Horizontal">
       <TextBlock Text=" Env " FontWeight="Bold"/>
       <TextBlock Text="{Binding Env.Identifier}"/>
-      <!--<TextBlock Text=" "/>
-      <TextBlock Text="{Binding Env.PubStr}"/>-->
+      <TextBlock Text=" ◁ " FontWeight="Bold" IsVisible="{Binding Env.HaveParent}"/>
+      <TextBlock Text="{Binding Env.Parent.Identifier}" IsVisible="{Binding Env.HaveParent}"/>
       <TextBlock Text=" "/>
     </StackPanel>
     <TextBlock Grid.Row="1" Background="Black" HorizontalAlignment="Stretch"/>

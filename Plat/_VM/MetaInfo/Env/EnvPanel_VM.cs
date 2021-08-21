@@ -139,6 +139,20 @@ namespace Plat._VM
             ResourceManager.UpdateTip($"Delete channel [{c.Identifier}] on env [{env.Identifier}].");
         }
 
+        /// <summary>
+        /// 清除父Env
+        /// </summary>
+        private void ClearParentEnv()
+        {
+            if (currentEnv is null)
+            {
+                ResourceManager.UpdateTip("A env must be selected!");
+                return;
+            }
+            currentEnv.Parent = null;
+            ResourceManager.UpdateTip($"Clear parent env for env [{currentEnv.Identifier}].");
+        }
+
         #endregion
     }
 }

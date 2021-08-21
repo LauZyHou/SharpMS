@@ -18,6 +18,7 @@ namespace Plat._M
         private ObservableCollection<VisAttr> attributes;
         private ObservableCollection<Channel> channels;
         private bool pub;
+        private Env? parent;
         private string description;
 
         public Env(string identifier, bool pub = true)
@@ -54,11 +55,23 @@ namespace Plat._M
             }
         }
         /// <summary>
+        /// 父环境（Env也具有类似Type的继承关系
+        /// </summary>
+        public Env? Parent { get => parent; set => this.RaiseAndSetIfChanged(ref parent, value); }
+        /// <summary>
         /// 环境的自然语言描述（相当于是一个注释
         /// </summary>
         public string Description { get => description; set => this.RaiseAndSetIfChanged(ref description, value); }
 
-        #region Have xxx 属性
+        #region Have xxx 属性=
+
+        public bool HaveParent
+        {
+            get
+            {
+                return this.parent is not null;
+            }
+        }
 
         public bool HaveAttr
         {

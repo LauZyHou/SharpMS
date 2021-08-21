@@ -51,7 +51,7 @@
     <!--Env Detail-->
     <TabControl Grid.Column="2">
       <TabItem Header="Desc/Attrs">
-        <Grid RowDefinitions="8*, 8*, 36*, 8*, 8*, 8*, 8*, 8*">
+        <Grid RowDefinitions="8*, 8*, 8*, 36*, 8*, 8*, 8*, 8*, 8*">
           <Grid Grid.Row="0" ColumnDefinitions="30*, 70*" Margin="6,0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Env Name:" FontSize="16"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentEnv.Identifier, Mode=TwoWay}"/>
@@ -61,11 +61,23 @@
             <CheckBox Grid.Column="1" IsThreeState="False"
                       IsChecked="{Binding CurrentEnv.Pub, Mode=TwoWay}"/>
           </Grid>-->
-          <Grid Grid.Row="1" ColumnDefinitions="30*, 70*" Margin="6,0" Classes="ABBox">
-            <TextBlock Grid.Column="0" Text="Env Desc:" FontSize="16"/>
+          <Grid Grid.Row="1" ColumnDefinitions="30*, 55*, 15*" Margin="6, 0" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Parent Env:"/>
+            <ComboBox Grid.Column="1" Items="{Binding EnvList}"
+                  SelectedItem="{Binding #EnvList.SelectedItem.Parent, Mode=TwoWay}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Grid.Column="2" HorizontalAlignment="Right" Content="Clear" Command="{Binding ClearParentEnv}"/>
+          </Grid>
+          <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Env Desc:"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentEnv.Description, Mode=TwoWay}"/>
           </Grid>
-          <ListBox Grid.Row="2" Name="AttrList" Items="{Binding CurrentEnv.Attributes}">
+          <ListBox Grid.Row="3" Name="AttrList" Items="{Binding CurrentEnv.Attributes}">
             <ListBox.ItemTemplate>
               <DataTemplate>
                 <TextBlock>
@@ -81,12 +93,12 @@
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
-          <Grid Grid.Row="3" ColumnDefinitions="50*, 50*">
+          <Grid Grid.Row="4" ColumnDefinitions="50*, 50*">
             <Button Grid.Column="0" Content="Create New Attribute" Command="{Binding CreateAttribute}"/>
             <Button Grid.Column="1" Content="Delete Selected Attribute" Command="{Binding DeleteAttribute}" HorizontalAlignment="Right"
                 CommandParameter="{Binding #AttrList.SelectedItem}"/>
           </Grid>
-          <Grid Grid.Row="4" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
+          <Grid Grid.Row="5" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Type:"/>
             <ComboBox Grid.Column="1" Items="{Binding TypeList}"
                   SelectedItem="{Binding #AttrList.SelectedItem.Type, Mode=TwoWay}">
@@ -97,16 +109,16 @@
               </ComboBox.ItemTemplate>
             </ComboBox>
           </Grid>
-          <Grid Grid.Row="5" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
+          <Grid Grid.Row="6" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Name:"/>
             <TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Identifier, Mode=TwoWay}"/>
           </Grid>
-          <Grid Grid.Row="6" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
+          <Grid Grid.Row="7" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Vis:"/>
             <CheckBox Grid.Column="1" IsThreeState="False"
                       IsChecked="{Binding #AttrList.SelectedItem.Pub, Mode=TwoWay}"/>
           </Grid>
-          <Grid Grid.Row="7" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
+          <Grid Grid.Row="8" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Desc:"/>
             <TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Description, Mode=TwoWay}"/>
           </Grid>

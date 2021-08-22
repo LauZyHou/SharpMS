@@ -20,6 +20,8 @@ namespace Plat._VM
         private Point oldPos;
         private readonly ObservableCollection<Anchor_VM> anchor_VMs = new ObservableCollection<Anchor_VM>();
         private readonly DragDrop_P_VM panelVM;
+        private double h;
+        private double w;
 
         public DragDrop_VM(double x, double y, DragDrop_P_VM panelVM)
         {
@@ -47,5 +49,24 @@ namespace Plat._VM
         /// 是否是Item而不是锚点或者连线，决定了View层的IsHitTestVisible属性
         /// </summary>
         public bool IsItem => !(this is Anchor_VM || this is Linker_VM);
+        /// <summary>
+        /// 高
+        /// </summary>
+        public double H { get => h; set => this.RaiseAndSetIfChanged(ref h, value); }
+        /// <summary>
+        /// 宽
+        /// </summary>
+        public double W { get => w; set => this.RaiseAndSetIfChanged(ref w, value); }
+
+        #region 可继承功能
+
+        /// <summary>
+        /// 刷新锚点位置
+        /// </summary>
+        public virtual void FlushAnchorPos()
+        {
+        }
+
+        #endregion
     }
 }

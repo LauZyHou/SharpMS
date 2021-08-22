@@ -64,13 +64,13 @@ namespace Plat._VM
                     Type_VM type_VM = (Type_VM)item;
                     if (type_VM.Type == type)
                     {
-                        classDiagram_P_VM.DragDrop_VMs.Remove(item);
+                        classDiagram_P_VM.DeleteDragDropItem(type_VM);
                         goto OVER;
                     }
                 }
             }
-            OVER:
-            ResourceManager.UpdateTip($"Delete type [{type.Identifier}], sync op to class diagram.");
+        OVER:
+            ResourceManager.UpdateTip($"Delete type [{type.Identifier}], op synced to class diagram.");
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Plat._VM
             // 同步操作结果到类图
             ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;
             classDiagram_P_VM.DragDrop_VMs.Add(new Type_VM(100, 100, classDiagram_P_VM, type));
-            ResourceManager.UpdateTip("Create a new type, sync op to class diagram.");
+            ResourceManager.UpdateTip("Create a new type, op synced to class diagram.");
         }
 
         /// <summary>

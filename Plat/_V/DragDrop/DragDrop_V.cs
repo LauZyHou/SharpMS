@@ -123,13 +123,14 @@ namespace Plat._V
         #endregion
 
         // 获取DataContext里的VM
-        public DragDrop_VM VM
+        public DragDrop_VM? VM
         {
             get
             {
                 if (DataContext is null)
                 {
-                    throw new System.InvalidCastException();
+                    //throw new System.InvalidCastException();
+                    return null;
                 }
                 return (DragDrop_VM)DataContext;
             }

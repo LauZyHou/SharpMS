@@ -1,4 +1,7 @@
-﻿using Plat._M;
+﻿using Plat._C;
+using Plat._M;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Plat._VM
 {
@@ -25,15 +28,61 @@ namespace Plat._VM
         /// <param name="dst"></param>
         public override void CreateLinker(Anchor_VM src, Anchor_VM dst)
         {
-            throw new System.NotImplementedException();
+            Debug.Assert(src is TopAnchor_VM && dst is BotAnchor_VM);
+            Linker_VM arrow_VM = new Linker_VM(src, dst, this);
+            // 只记录src的linker
+            src.LinkerVM = arrow_VM;
+            this.DragDrop_VMs.Add(arrow_VM);
+            ResourceManager.UpdateTip($"Create a linker on class diag.");
         }
 
         /// <summary>
-        /// 在类图上删除DragDrop元素
+        /// 在类图上删除DragDrop元素（级联删除）
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="item">要删掉的元素</param>
         public override void DeleteDragDropItem(DragDrop_VM item)
         {
+            if (item is Linker_VM)
+            {
+                Linker_VM linker_VM = (Linker_VM)item;
+                this.DragDrop_VMs.Remove(linker_VM);
+                // 只清理src的linker
+                Debug.Assert(linker_VM.Source is TopAnchor_VM && linker_VM.Dest is BotAnchor_VM);
+                TopAnchor_VM src = (TopAnchor_VM)linker_VM.Source;
+                src.LinkerVM = null;
+                ResourceManager.UpdateTip("Delete a linker on class diag.");
+                return;
+            }
+            else if (item is Type_VM)
+            {
+                Type_VM type_VM = (Type_VM)item;
+                // 所有连到上面的线都删掉
+                HashSet<Linker_VM> delSet = new HashSet<Linker_VM>();
+                foreach (DragDrop_VM vm in this.DragDrop_VMs)
+                {
+                    if (vm is Linker_VM)
+                    {
+                        Linker_VM linker_VM = (Linker_VM)vm;
+                        if (linker_VM.Source == type_VM.Anchor_VMs[0] || linker_VM.Dest == type_VM.Anchor_VMs[1])
+                        {
+                            delSet.Add(linker_VM);
+                        }
+                    }
+                }
+                foreach (Linker_VM vm in delSet)
+                {
+                    DeleteDragDropItem(vm);
+                }
+                // 然后删掉自己
+                this.DragDrop_VMs.Remove(type_VM);
+                ResourceManager.UpdateTip($"Delete the type [{type_VM.Type.Identifier}] on class diag.");
+                return;
+            }
+            else if (item is Env_VM)
+            {
+                // todo
+                return;
+            }
             throw new System.NotImplementedException();
         }
     }

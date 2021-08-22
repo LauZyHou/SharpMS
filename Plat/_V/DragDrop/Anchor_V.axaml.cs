@@ -34,6 +34,56 @@ namespace Plat._V
             // 找到这个锚点所在的Drag Drop Panel
             DragDrop_P_VM panelVM = VM.PanelVM;
 
+            // 类图有单独的处理逻辑
+            if (panelVM is ClassDiagram_P_VM)
+            {
+                // 当前点的是top锚点
+                if (VM is TopAnchor_VM)
+                {
+                    // 有线删线
+                    if (VM.LinkerVM is not null)
+                    {
+                        panelVM.DeleteDragDropItem(VM.LinkerVM);
+                    }
+                    // 自己已激活，灭掉
+                    else if (VM == panelVM.ActiveAnchorVM)
+                    {
+                        panelVM.ActiveAnchorVM = null;
+                        VM.IsActive = false;
+                    }
+                    // 有其它锚点激活，换成自己
+                    else if (panelVM.ActiveAnchorVM is not null)
+                    {
+                        panelVM.ActiveAnchorVM.IsActive = false;
+                        panelVM.ActiveAnchorVM = VM;
+                        VM.IsActive = true;
+                    }
+                    // 没锚点激活，让自己激活
+                    else
+                    {
+                        panelVM.ActiveAnchorVM = VM;
+                        VM.IsActive = true;
+                    }
+                }
+                // 当前点的是bot锚点
+                else
+                {
+                    // 已经有激活的了，连过来
+                    if (panelVM.ActiveAnchorVM is not null)
+                    {
+                        panelVM.CreateLinker(panelVM.ActiveAnchorVM, VM);
+                        panelVM.ActiveAnchorVM.IsActive = false;
+                        panelVM.ActiveAnchorVM = null;
+                    }
+                    // 其它情况下，不作任何响应
+                    else
+                    {
+                        ResourceManager.UpdateTip("Can not tap bot anchor unless you wanna link an active top anchor to it!");
+                    }
+                }
+                goto OVER;
+            }
+
             // 如果当前的锚点上有连线，那么要删除连线
             if (VM.LinkerVM is not null)
             {
@@ -63,6 +113,7 @@ namespace Plat._V
                 panelVM.ActiveAnchorVM = null;
             }
 
+        OVER:
             e.Handled = true;
         }
 

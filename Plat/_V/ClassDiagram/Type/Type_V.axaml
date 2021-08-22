@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Plat._VM;assembly=Plat"
+             xmlns:v="clr-namespace:Plat._V;assembly=Plat"
              mc:Ignorable="d" d:DesignWidth="120" d:DesignHeight="60"
              x:Class="Plat._V.Type_V" BorderBrush="Black" BorderThickness="2">
   <Design.DataContext>
@@ -20,17 +21,22 @@
     <SolidColorBrush x:Key="MyColor" Color="#AADDFF" />
   </UserControl.Resources>
 
-  <Grid RowDefinitions="20,1,15,*,15,*" Background="{StaticResource MyColor}" MinWidth="120" MinHeight="60">
-    <StackPanel Grid.Row="0" Orientation="Horizontal">
+  <Grid Name="RootGrid" RowDefinitions="2,20,1,15,*,15,*,2" ColumnDefinitions="*,2,*"
+        Background="{StaticResource MyColor}" MinWidth="120" MinHeight="60">
+    <v:Anchor_V Grid.Row="0" Grid.Column="1" DataContext="{Binding Anchor_VMs[0]}"/>
+    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal">
       <TextBlock Text=" Type " FontWeight="Bold"/>
       <TextBlock Text="{Binding Type.Identifier}"/>
       <TextBlock Text=" ◁ " FontWeight="Bold" IsVisible="{Binding Type.HaveParent}"/>
       <TextBlock Text="{Binding Type.Parent.Identifier}" IsVisible="{Binding Type.HaveParent}"/>
       <TextBlock Text=" "/>
     </StackPanel>
-    <TextBlock Grid.Row="1" Background="Black" HorizontalAlignment="Stretch"/>
-    <TextBlock Grid.Row="2" Text=" Props:" IsVisible="{Binding Type.HaveAttr}" Background="Azure"/>
-    <ListBox Grid.Row="3" Items="{Binding Type.Attributes}" IsEnabled="True" IsVisible="{Binding Type.HaveAttr}"
+    <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+               Background="Black" HorizontalAlignment="Stretch"/>
+    <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+               Text=" Props:" IsVisible="{Binding Type.HaveAttr}" Background="Azure"/>
+    <ListBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
+             Items="{Binding Type.Attributes}" IsEnabled="True" IsVisible="{Binding Type.HaveAttr}"
              Background="{StaticResource MyColor}" BorderBrush="{StaticResource MyColor}" Padding="0" Margin="0">
       <ListBox.ItemTemplate>
         <DataTemplate>
@@ -56,8 +62,10 @@
       </ListBox.ItemTemplate>
     </ListBox>
     <!--<TextBlock Grid.Row="4" Background="Black" IsVisible="{Binding Type.HaveMethod}"/>-->
-    <TextBlock Grid.Row="4" Text=" Method:" IsVisible="{Binding Type.HaveMethod}" Background="Azure"/>
-    <ListBox Grid.Row="5" Items="{Binding Type.Methods}" IsEnabled="True" IsVisible="{Binding Type.HaveMethod}"
+    <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"
+               Text=" Methods:" IsVisible="{Binding Type.HaveMethod}" Background="Azure"/>
+    <ListBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3"
+             Items="{Binding Type.Methods}" IsEnabled="True" IsVisible="{Binding Type.HaveMethod}"
              Background="{StaticResource MyColor}" BorderBrush="{StaticResource MyColor}">
       <ListBox.ItemTemplate>
         <DataTemplate>
@@ -73,5 +81,6 @@
         </DataTemplate>
       </ListBox.ItemTemplate>
     </ListBox>
+    <v:Anchor_V Grid.Row="7" Grid.Column="1" DataContext="{Binding Anchor_VMs[1]}"/>
   </Grid>
 </UserControl>

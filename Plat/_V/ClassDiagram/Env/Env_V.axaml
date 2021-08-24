@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="clr-namespace:Plat._V;assembly=Plat"
              xmlns:vm="clr-namespace:Plat._VM;assembly=Plat"
              mc:Ignorable="d" d:DesignWidth="120" d:DesignHeight="60"
              x:Class="Plat._V.Env_V" BorderBrush="Black" BorderThickness="2">
@@ -20,17 +21,20 @@
     <SolidColorBrush x:Key="MyColor" Color="#CCFFEE" />
   </UserControl.Resources>
 
-  <Grid RowDefinitions="20,1,15,*,15,*" Background="{StaticResource MyColor}" MinWidth="120" MinHeight="60">
-    <StackPanel Grid.Row="0" Orientation="Horizontal">
+  <Grid Name="RootGrid" RowDefinitions="2,20,1,15,*,15,*,2" Background="{StaticResource MyColor}" MinWidth="120" MinHeight="60">
+    <Grid Grid.Row="0" ColumnDefinitions="*,2,*">
+      <v:Anchor_V Grid.Column="1" DataContext="{Binding Anchor_VMs[0]}"/>
+    </Grid>
+    <StackPanel Grid.Row="1" Orientation="Horizontal">
       <TextBlock Text=" Env " FontWeight="Bold"/>
       <TextBlock Text="{Binding Env.Identifier}"/>
       <TextBlock Text=" ◁ " FontWeight="Bold" IsVisible="{Binding Env.HaveParent}"/>
       <TextBlock Text="{Binding Env.Parent.Identifier}" IsVisible="{Binding Env.HaveParent}"/>
       <TextBlock Text=" "/>
     </StackPanel>
-    <TextBlock Grid.Row="1" Background="Black" HorizontalAlignment="Stretch"/>
-    <TextBlock Grid.Row="2" Text=" Props:" IsVisible="{Binding Env.HaveAttr}" Background="LightGreen"/>
-    <ListBox Grid.Row="3" Items="{Binding Env.Attributes}" IsEnabled="True" IsVisible="{Binding Env.HaveAttr}"
+    <TextBlock Grid.Row="2" Background="Black" HorizontalAlignment="Stretch"/>
+    <TextBlock Grid.Row="3" Text=" Props:" IsVisible="{Binding Env.HaveAttr}" Background="LightGreen"/>
+    <ListBox Grid.Row="4" Items="{Binding Env.Attributes}" IsEnabled="True" IsVisible="{Binding Env.HaveAttr}"
              Background="{StaticResource MyColor}" BorderBrush="{StaticResource MyColor}" Padding="0" Margin="0">
       <ListBox.ItemTemplate>
         <DataTemplate>
@@ -47,8 +51,8 @@
         </DataTemplate>
       </ListBox.ItemTemplate>
     </ListBox>
-    <TextBlock Grid.Row="4" Text=" Chans:" IsVisible="{Binding Env.HaveChan}" Background="LightGreen"/>
-    <ListBox Grid.Row="5" Items="{Binding Env.Channels}" IsEnabled="True" IsVisible="{Binding Env.HaveChan}"
+    <TextBlock Grid.Row="5" Text=" Chans:" IsVisible="{Binding Env.HaveChan}" Background="LightGreen"/>
+    <ListBox Grid.Row="6" Items="{Binding Env.Channels}" IsEnabled="True" IsVisible="{Binding Env.HaveChan}"
              Background="{StaticResource MyColor}" BorderBrush="{StaticResource MyColor}" Padding="0" Margin="0">
       <ListBox.ItemTemplate>
         <DataTemplate>
@@ -65,6 +69,8 @@
         </DataTemplate>
       </ListBox.ItemTemplate>
     </ListBox>
+    <Grid Grid.Row="7" ColumnDefinitions="*,2,*">
+      <v:Anchor_V Grid.Column="1" DataContext="{Binding Anchor_VMs[1]}"/>
+    </Grid>
   </Grid>
-  
 </UserControl>

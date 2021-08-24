@@ -63,7 +63,7 @@ namespace Plat._VM
                     Env_VM env_VM = (Env_VM)item;
                     if (env_VM.Env == env)
                     {
-                        classDiagram_P_VM.DragDrop_VMs.Remove(item);
+                        classDiagram_P_VM.DeleteDragDropItem(item);
                         goto OVER;
                     }
                 }

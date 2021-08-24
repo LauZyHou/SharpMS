@@ -50,12 +50,11 @@ namespace Plat._VM
                 Debug.Assert(linker_VM.Source is TopAnchor_VM && linker_VM.Dest is BotAnchor_VM);
                 TopAnchor_VM src = (TopAnchor_VM)linker_VM.Source;
                 src.LinkerVM = null;
-                ResourceManager.UpdateTip("Delete a linker on class diag.");
+                ResourceManager.UpdateTip("Delete a linker on class diagram.");
                 return;
             }
-            else if (item is Type_VM)
+            else if (item is Type_VM || item is Env_VM)
             {
-                Type_VM type_VM = (Type_VM)item;
                 // 所有连到上面的线都删掉
                 HashSet<Linker_VM> delSet = new HashSet<Linker_VM>();
                 foreach (DragDrop_VM vm in this.DragDrop_VMs)
@@ -63,7 +62,7 @@ namespace Plat._VM
                     if (vm is Linker_VM)
                     {
                         Linker_VM linker_VM = (Linker_VM)vm;
-                        if (linker_VM.Source == type_VM.Anchor_VMs[0] || linker_VM.Dest == type_VM.Anchor_VMs[1])
+                        if (linker_VM.Source == item.Anchor_VMs[0] || linker_VM.Dest == item.Anchor_VMs[1])
                         {
                             delSet.Add(linker_VM);
                         }
@@ -74,13 +73,8 @@ namespace Plat._VM
                     DeleteDragDropItem(vm);
                 }
                 // 然后删掉自己
-                this.DragDrop_VMs.Remove(type_VM);
-                ResourceManager.UpdateTip($"Delete the type [{type_VM.Type.Identifier}] on class diag.");
-                return;
-            }
-            else if (item is Env_VM)
-            {
-                // todo
+                this.DragDrop_VMs.Remove(item);
+                ResourceManager.UpdateTip($"Delete the component [{item}] on class diagram.");
                 return;
             }
             throw new System.NotImplementedException();

@@ -17,6 +17,8 @@ namespace Plat._VM
         private Proc? currentProc;
         private ObservableCollection<Proc> procList;
         private ObservableCollection<Type> typeList;
+        private Caller? currentMethod;
+        private Type? wantParamType;
 
         public ProcPanel_VM()
         {
@@ -27,6 +29,11 @@ namespace Plat._VM
         public Proc? CurrentProc { get => currentProc; set => this.RaiseAndSetIfChanged(ref currentProc, value); }
         public ObservableCollection<Proc> ProcList { get => procList; set => this.RaiseAndSetIfChanged(ref procList, value); }
         public ObservableCollection<Type> TypeList { get => typeList; set => this.RaiseAndSetIfChanged(ref typeList, value); }
+        public Caller? CurrentMethod { get => currentMethod; set => this.RaiseAndSetIfChanged(ref currentMethod, value); }
+        /// <summary>
+        /// 想变成的参数类型
+        /// </summary>
+        public Type? WantParamType { get => wantParamType; set => this.RaiseAndSetIfChanged(ref wantParamType, value); }
 
         #region Command Callback
 
@@ -59,10 +66,14 @@ namespace Plat._VM
         {
             Proc proc = new Proc("NewProc");
             this.procList.Add(proc);
+            // 同步到ProcGraph组
             ProcGraph_P_VM procGraph_P_VM = new ProcGraph_P_VM(new ProcGraph(proc));
             procGraph_P_VM.DragDrop_VMs.Add(new InitState_VM(50, 50, procGraph_P_VM)); // 自动添加一个初始状态
             ResourceManager.procGraph_P_VMs.Add(procGraph_P_VM);
-            ResourceManager.UpdateTip("Create a new process.");
+            // 同步到ClassDiag
+            ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;
+            classDiagram_P_VM.DragDrop_VMs.Add(new Proc_VM(100, 100, classDiagram_P_VM, proc));
+            ResourceManager.UpdateTip("Create a new process, op synced to process graph and class diagram.");
         }
 
         /// <summary>
@@ -90,6 +101,208 @@ namespace Plat._VM
             }
             currentProc.Attributes.Remove(attribute);
             ResourceManager.UpdateTip($"Delete parameter [{attribute.Identifier}] for process [{currentProc.Identifier}].");
+        }
+
+        /// <summary>
+        /// 创建Method
+        /// </summary>
+        private void OnCreateMethod()
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"A process must be selected!");
+                return;
+            }
+            Caller c = new Caller("newMethod", Type.TYPE_BOOL);
+            this.currentProc.Methods.Add(c);
+            ResourceManager.UpdateTip($"Add a new method for process [{this.currentProc.Identifier}].");
+        }
+
+        /// <summary>
+        /// 删除选中的Method
+        /// </summary>
+        private void OnDeleteMethod()
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"A process must be selected!");
+                return;
+            }
+            if (this.currentMethod is null)
+            {
+                ResourceManager.UpdateTip($"A method must be selected!");
+                return;
+            }
+            this.currentProc.Methods.Remove(this.currentMethod);
+            ResourceManager.UpdateTip($"A method has been deleted on process [{this.currentProc.Identifier}].");
+        }
+
+        /// <summary>
+        /// 向指定Method中添加一个参数
+        /// </summary>
+        private void OnAddParam()
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"A process must be selected!");
+                return;
+            }
+            if (this.currentMethod is null)
+            {
+                ResourceManager.UpdateTip($"A method must be selected!");
+                return;
+            }
+            this.currentMethod.ParamTypes.Add(Type.TYPE_BOOL);
+            this.currentMethod.RaisePropertyChanged("ParamTypeString");
+            ResourceManager.UpdateTip($"A new param has been added to the method [{this.currentMethod.Identifier}].");
+        }
+
+        /// <summary>
+        /// 在Method中删除指定位置的参数
+        /// </summary>
+        /// <param name="paramPos"></param>
+        private void OnDeleteParam(int? paramPos)
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"A process must be selected!");
+                return;
+            }
+            if (this.currentMethod is null)
+            {
+                ResourceManager.UpdateTip($"A method must be selected!");
+                return;
+            }
+            if (paramPos is null)
+            {
+                ResourceManager.UpdateTip($"A param type must be selected!");
+                return;
+            }
+            if (paramPos < 0 || paramPos >= this.currentMethod.ParamTypes.Count)
+            {
+                ResourceManager.UpdateTip($"[ERROR] Wrong pos when [{nameof(OnDeleteMethod)}]! You need to select a param!");
+                return;
+            }
+            this.currentMethod.ParamTypes.RemoveAt((int)paramPos);
+            this.currentMethod.RaisePropertyChanged("ParamTypeString");
+            ResourceManager.UpdateTip($"The param at pos [{paramPos}] in method [{this.currentMethod.Identifier}] has been removed.");
+        }
+
+        /// <summary>
+        /// 在Method中上移指定位置的参数
+        /// </summary>
+        /// <param name="paramPos"></param>
+        private void OnMoveUpParamType(int? paramPos)
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"A process must be selected!");
+                return;
+            }
+            if (this.currentMethod is null)
+            {
+                ResourceManager.UpdateTip($"A method must be selected!");
+                return;
+            }
+            if (paramPos is null)
+            {
+                ResourceManager.UpdateTip($"A param type must be selected!");
+                return;
+            }
+            if (paramPos == 0)
+            {
+                ResourceManager.UpdateTip($"The param is the top one! No need to move up!");
+                return;
+            }
+            if (paramPos < 0 || paramPos >= this.currentMethod.ParamTypes.Count)
+            {
+                ResourceManager.UpdateTip($"[ERROR] Wrong pos when [{nameof(OnMoveUpParamType)}]! You need to select a param!");
+                return;
+            }
+            int pos = (int)paramPos;
+            Type type = this.currentMethod.ParamTypes[pos];
+            this.currentMethod.ParamTypes.RemoveAt(pos);
+            this.currentMethod.ParamTypes.Insert(pos - 1, type);
+            this.currentMethod.RaisePropertyChanged("ParamTypeString");
+            ResourceManager.UpdateTip($"The param at pos [{pos}] has been move up in method [{this.currentMethod.Identifier}].");
+        }
+
+        /// <summary>
+        /// 在Method中下移指定位置的参数
+        /// </summary>
+        /// <param name="paramPos"></param>
+        private void OnMoveDownParamType(int? paramPos)
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"A process must be selected!");
+                return;
+            }
+            if (this.currentMethod is null)
+            {
+                ResourceManager.UpdateTip($"A method must be selected!");
+                return;
+            }
+            if (paramPos is null)
+            {
+                ResourceManager.UpdateTip($"A param type must be selected!");
+                return;
+            }
+            if (paramPos == this.currentMethod.ParamTypes.Count - 1)
+            {
+                ResourceManager.UpdateTip($"The param is the bottom one! No need to move down!");
+                return;
+            }
+            if (paramPos < 0 || paramPos >= this.currentMethod.ParamTypes.Count)
+            {
+                ResourceManager.UpdateTip($"[ERROR] Wrong pos when [{nameof(OnMoveDownParamType)}]! You need to select a param!");
+                return;
+            }
+            int pos = (int)paramPos;
+            Type type = this.currentMethod.ParamTypes[pos];
+            this.currentMethod.ParamTypes.RemoveAt(pos);
+            this.currentMethod.ParamTypes.Insert(pos + 1, type);
+            this.currentMethod.RaisePropertyChanged("ParamTypeString");
+            ResourceManager.UpdateTip($"The param at pos [{pos}] has been move down in method [{this.currentMethod.Identifier}].");
+        }
+
+        /// <summary>
+        /// 确认用想要的参数类型替换Method中指定位置的参数
+        /// </summary>
+        /// <param name="paramPos"></param>
+        private void OnConfirmWantParamType(int? paramPos)
+        {
+            if(this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"A process must be selected!");
+                return;
+            }
+            if (this.currentMethod is null)
+            {
+                ResourceManager.UpdateTip($"A method must be selected!");
+                return;
+            }
+            if (paramPos is null)
+            {
+                ResourceManager.UpdateTip($"A param type must be selected!");
+                return;
+            }
+            if (this.wantParamType is null)
+            {
+                ResourceManager.UpdateTip($"A wanna type must be selected!");
+                return;
+            }
+            if (paramPos < 0 || paramPos >= this.currentMethod.ParamTypes.Count)
+            {
+                ResourceManager.UpdateTip($"[ERROR] Wrong pos when [{nameof(OnConfirmWantParamType)}]! You need to select a param!");
+                return;
+            }
+            int pos = (int)paramPos;
+            Type type = (Type)this.wantParamType;
+            this.currentMethod.ParamTypes.RemoveAt(pos);
+            this.currentMethod.ParamTypes.Insert(pos, type);
+            this.currentMethod.RaisePropertyChanged("ParamTypeString");
+            ResourceManager.UpdateTip($"Use type [{type.Identifier}] replace the type at the [{pos}] pos of method [{this.currentMethod.Identifier}].");
         }
 
         #endregion

@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Plat._VM;assembly=Plat"
+             xmlns:v="clr-namespace:Plat._V;assembly=Plat"
+             mc:Ignorable="d" d:DesignWidth="120" d:DesignHeight="100"
+             x:Class="Plat._V.Proc_V" BorderBrush="Black" BorderThickness="2">
+  <Design.DataContext>
+    <vm:Proc_VM/>
+  </Design.DataContext>
+
+  <UserControl.Styles>
+    <Style Selector="ListBoxItem">
+      <Setter Property="IsHitTestVisible" Value="False"/>
+      <Setter Property="Padding" Value="0"/>
+    </Style>
+  </UserControl.Styles>
+
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="OutColor" Color="#FFDF8C"/>
+    <SolidColorBrush x:Key="InColor" Color="#FFFFE0"/>
+  </UserControl.Resources>
+
+  <Grid Name="RootGrid" RowDefinitions="2,20,1,*,*,*,*,*,*,2"
+        Background="{StaticResource OutColor}" MinWidth="120" MinHeight="60">
+    <Grid Grid.Row="0" ColumnDefinitions="*,2,*">
+      
+    </Grid>
+    <StackPanel Grid.Row="1" Orientation="Horizontal">
+      <TextBlock Text=" Proc " FontWeight="Bold"/>
+      <TextBlock Text="{Binding Proc.Identifier}"/>
+      <!--<TextBlock Text=" ◁ " FontWeight="Bold" IsVisible="{Binding Type.HaveParent}"/>
+      <TextBlock Text="{Binding Type.Parent.Identifier}" IsVisible="{Binding Type.HaveParent}"/>-->
+      <TextBlock Text=" "/>
+    </StackPanel>
+    <TextBlock Grid.Row="2" Background="Black" HorizontalAlignment="Stretch"/>
+    <TextBlock Grid.Row="3" Text=" Props:" IsVisible="{Binding Proc.HaveAttr}" Background="{StaticResource InColor}"/>
+    <ListBox Grid.Row="4" Items="{Binding Proc.Attributes}" IsEnabled="True" IsVisible="{Binding Proc.HaveAttr}"
+             Background="{StaticResource OutColor}" BorderBrush="{StaticResource OutColor}" Padding="0" Margin="0">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
+            <TextBlock Text="   "/>
+            <TextBlock Text="{Binding Identifier}"/>
+            <!--<TextBlock Text="[]" IsVisible="{Binding IsArray}"/>-->
+            <TextBlock Text=": "/>
+            <TextBlock Text="{Binding Type.Identifier}"/>
+            <TextBlock Text=" "/>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <TextBlock Grid.Row="5" Text=" Methods:" IsVisible="{Binding Proc.HaveMethod}" Background="{StaticResource InColor}"/>
+    <ListBox Grid.Row="6" Items="{Binding Proc.Methods}" IsEnabled="True" IsVisible="{Binding Proc.HaveMethod}"
+             Background="{StaticResource OutColor}" BorderBrush="{StaticResource OutColor}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock>
+            <TextBlock.Text>
+              <MultiBinding StringFormat="   {0}({1})->{2} ">
+                <Binding Path="Identifier"/>
+                <Binding Path="ParamTypeString"/>
+                <Binding Path="ReturnType.Identifier"/>
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <TextBlock Grid.Row="7" Text=" Ports:" IsVisible="{Binding Proc.HavePort}" Background="{StaticResource InColor}"/>
+    <ListBox Grid.Row="8" Items="{Binding Proc.Ports}" IsEnabled="True" IsVisible="{Binding Proc.HavePort}"
+             Background="{StaticResource OutColor}" BorderBrush="{StaticResource OutColor}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock>
+            <TextBlock.Text>
+              <MultiBinding StringFormat="   {0}[{1}] ">
+                <Binding Path="Identifier"/>
+                <Binding Path="InOutString"/>
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <Grid Grid.Row="9" ColumnDefinitions="*,2,*">
+
+    </Grid>
+  </Grid>
+</UserControl>

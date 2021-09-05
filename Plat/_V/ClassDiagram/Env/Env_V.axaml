@@ -21,7 +21,7 @@
     <SolidColorBrush x:Key="MyColor" Color="#CCFFEE" />
   </UserControl.Resources>
 
-  <Grid Name="RootGrid" RowDefinitions="2,20,1,15,*,15,*,2" Background="{StaticResource MyColor}" MinWidth="120" MinHeight="60">
+  <Grid Name="RootGrid" RowDefinitions="2,20,1,*,*,*,*,2" Background="{StaticResource MyColor}" MinWidth="120" MinHeight="60">
     <Grid Grid.Row="0" ColumnDefinitions="*,2,*">
       <v:Anchor_V Grid.Column="1" DataContext="{Binding Anchor_VMs[0]}"/>
     </Grid>

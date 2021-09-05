@@ -16,12 +16,16 @@ namespace Plat._M
         private string identifier;
         private string description;
         private ObservableCollection<Attribute> attributes;
+        private ObservableCollection<Caller> methods;
+        private ObservableCollection<Port> ports;
 
         public Proc(string identifier, string description = "")
         {
             this.identifier = identifier;
             this.description = description;
             this.attributes = new ObservableCollection<Attribute>();
+            this.methods = new ObservableCollection<Caller>();
+            this.ports = new ObservableCollection<Port>();
         }
 
         /// <summary>
@@ -37,10 +41,46 @@ namespace Plat._M
         /// 请将这个字段理解为Params，在SharpMS中为了方便Param和Attr共用一个名为Attribute的class
         /// </summary>
         public ObservableCollection<Attribute> Attributes { get => attributes; set => attributes = value; }
+        /// <summary>
+        /// 进程的方法列表
+        /// </summary>
+        public ObservableCollection<Caller> Methods { get => methods; set => methods = value; }
+        /// <summary>
+        /// 通信端口列表
+        /// </summary>
+        public ObservableCollection<Port> Ports { get => ports; set => ports = value; }
 
         public override string ToString()
         {
             return identifier;
         }
+
+        #region Have xxx 属性
+
+        public bool HaveAttr
+        {
+            get
+            {
+                return this.attributes is not null && this.attributes.Count > 0;
+            }
+        }
+
+        public bool HaveMethod
+        {
+            get
+            {
+                return this.methods is not null && this.methods.Count > 0;
+            }
+        }
+
+        public bool HavePort
+        {
+            get
+            {
+                return this.ports is not null && this.ports.Count > 0;
+            }
+        }
+
+        #endregion
     }
 }

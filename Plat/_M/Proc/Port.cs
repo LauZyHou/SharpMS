@@ -11,11 +11,13 @@ namespace Plat._M
     {
         private string identifier;
         private bool isOut;
+        private string description;
 
-        public Port(string identifier, bool isOut)
+        public Port(string identifier, bool isOut = true)
         {
             this.identifier = identifier;
             this.isOut = isOut;
+            this.description = "";
         }
 
         public string Identifier { get => identifier; set => this.RaiseAndSetIfChanged(ref identifier, value); }
@@ -28,6 +30,7 @@ namespace Plat._M
                 this.RaisePropertyChanged(nameof(InOutString));
             }
         }
+        public string Description { get => description; set => this.RaiseAndSetIfChanged(ref description, value); }
 
         #region ToString
 

@@ -19,6 +19,7 @@ namespace Plat._VM
         private ObservableCollection<Type> typeList;
         private Caller? currentMethod;
         private Type? wantParamType;
+        private Port? currentPort;
 
         public ProcPanel_VM()
         {
@@ -34,6 +35,7 @@ namespace Plat._VM
         /// 想变成的参数类型
         /// </summary>
         public Type? WantParamType { get => wantParamType; set => this.RaiseAndSetIfChanged(ref wantParamType, value); }
+        public Port? CurrentPort { get => currentPort; set => this.RaiseAndSetIfChanged(ref currentPort, value); }
 
         #region Command Callback
 
@@ -272,7 +274,7 @@ namespace Plat._VM
         /// <param name="paramPos"></param>
         private void OnConfirmWantParamType(int? paramPos)
         {
-            if(this.currentProc is null)
+            if (this.currentProc is null)
             {
                 ResourceManager.UpdateTip($"A process must be selected!");
                 return;
@@ -303,6 +305,39 @@ namespace Plat._VM
             this.currentMethod.ParamTypes.Insert(pos, type);
             this.currentMethod.RaisePropertyChanged("ParamTypeString");
             ResourceManager.UpdateTip($"Use type [{type.Identifier}] replace the type at the [{pos}] pos of method [{this.currentMethod.Identifier}].");
+        }
+
+        /// <summary>
+        /// 创建一个Port
+        /// </summary>
+        private void OnCreateNewPort()
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"A process must be selected!");
+                return;
+            }
+            this.currentProc.Ports.Add(new Port("NewPort"));
+            ResourceManager.UpdateTip($"Create a new port on process [{this.currentProc.Identifier}].");
+        }
+
+        /// <summary>
+        /// 删除选中的Port
+        /// </summary>
+        private void OnDeleteSelectedPort()
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"A process must be selected!");
+                return;
+            }
+            if (this.currentPort is null)
+            {
+                ResourceManager.UpdateTip($"A port must be selected!");
+                return;
+            }
+            this.currentProc.Ports.Remove(this.currentPort);
+            ResourceManager.UpdateTip($"Remove a port on process [{this.currentProc.Identifier}]");
         }
 
         #endregion

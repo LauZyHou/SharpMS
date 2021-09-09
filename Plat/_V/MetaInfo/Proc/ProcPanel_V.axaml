@@ -189,7 +189,40 @@
         </Grid>
       </TabItem>
       <TabItem Header="Ports">
-        
+        <Grid RowDefinitions="68*, 8*, 8*, 8*, 8*">
+          <ListBox Grid.Row="0" Items="{Binding CurrentProc.Ports}"
+                   SelectedItem="{Binding CurrentPort, Mode=OneWayToSource}">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock>
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0}[{1}] // {2}">
+                      <Binding Path="Identifier"/>
+                      <Binding Path="InOutString"/>
+                      <Binding Path="Description"/>
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <Grid Grid.Row="1">
+            <Button Content="Create New Port" Command="{Binding OnCreateNewPort}"/>
+            <Button Content="Delete Selected Port" Command="{Binding OnDeleteSelectedPort}" HorizontalAlignment="Right"/>
+          </Grid>
+          <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Port Name:"/>
+            <TextBox Grid.Column="1" Text="{Binding CurrentPort.Identifier, Mode=TwoWay}"/>
+          </Grid>
+          <Grid Grid.Row="3" ColumnDefinitions="30*, 70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Port Visible:"/>
+            <CheckBox Grid.Column="1" IsThreeState="False" IsChecked="{Binding CurrentPort.IsOut, Mode=TwoWay}"/>
+          </Grid>
+          <Grid Grid.Row="4" ColumnDefinitions="30*, 70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Port Desc:"/>
+            <TextBox Grid.Column="1" Text="{Binding CurrentPort.Description, Mode=TwoWay}"/>
+          </Grid>
+        </Grid>
       </TabItem>
     </TabControl>
 		

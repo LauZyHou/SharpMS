@@ -18,6 +18,7 @@ namespace Plat._M
         private ObservableCollection<Attribute> attributes;
         private ObservableCollection<Caller> methods;
         private ObservableCollection<Port> ports;
+        private Proc? parent;
 
         public Proc(string identifier, string description = "")
         {
@@ -49,6 +50,10 @@ namespace Plat._M
         /// 通信端口列表
         /// </summary>
         public ObservableCollection<Port> Ports { get => ports; set => ports = value; }
+        /// <summary>
+        /// 父进程模板（见进程模板的继承关系
+        /// </summary>
+        public Proc? Parent { get => parent; set => this.RaiseAndSetIfChanged(ref parent, value); }
 
         public override string ToString()
         {
@@ -78,6 +83,14 @@ namespace Plat._M
             get
             {
                 return this.ports is not null && this.ports.Count > 0;
+            }
+        }
+
+        public bool HaveParent
+        {
+            get
+            {
+                return this.parent is not null;
             }
         }
 

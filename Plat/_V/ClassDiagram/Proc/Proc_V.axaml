@@ -30,8 +30,8 @@
     <StackPanel Grid.Row="1" Orientation="Horizontal">
       <TextBlock Text=" Proc " FontWeight="Bold"/>
       <TextBlock Text="{Binding Proc.Identifier}"/>
-      <!--<TextBlock Text=" ◁ " FontWeight="Bold" IsVisible="{Binding Type.HaveParent}"/>
-      <TextBlock Text="{Binding Type.Parent.Identifier}" IsVisible="{Binding Type.HaveParent}"/>-->
+      <TextBlock Text=" ◁ " FontWeight="Bold" IsVisible="{Binding Proc.HaveParent}"/>
+      <TextBlock Text="{Binding Proc.Parent.Identifier}" IsVisible="{Binding Proc.HaveParent}"/>
       <TextBlock Text=" "/>
     </StackPanel>
     <TextBlock Grid.Row="2" Background="Black" HorizontalAlignment="Stretch"/>

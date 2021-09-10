@@ -58,10 +58,14 @@
           </Grid>
           <Grid Grid.Row="1" ColumnDefinitions="30*, 55*, 15*" Margin="6,0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Parent Proc:"/>
-            <ComboBox Grid.Column="1">
-              <!--todo-->
+            <ComboBox Grid.Column="1" Items="{Binding ProcList}" SelectedItem="{Binding CurrentProc.Parent, Mode=TwoWay}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Identifier, Mode=OneWay}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Grid.Column="2" Content="Clear" HorizontalAlignment="Right"/>
+            <Button Grid.Column="2" Content="Clear" Command="{Binding ClearParent}" HorizontalAlignment="Right"/>
           </Grid>
           <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6,0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Proc Desc:"/>

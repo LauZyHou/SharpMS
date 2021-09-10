@@ -340,6 +340,25 @@ namespace Plat._VM
             ResourceManager.UpdateTip($"Remove a port on process [{this.currentProc.Identifier}]");
         }
 
+        /// <summary>
+        /// 清除继承关系
+        /// </summary>
+        private void ClearParent()
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"A process must be selected!");
+                return;
+            }
+            if (this.currentProc.Parent is null)
+            {
+                ResourceManager.UpdateTip($"No parent proc so do not need to clear!");
+                return;
+            }
+            this.currentProc.Parent = null;
+            ResourceManager.UpdateTip($"Clear parent for process [{this.currentProc.Identifier}].");
+        }
+
         #endregion
     }
 }

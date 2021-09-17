@@ -19,6 +19,14 @@ namespace Plat._VM
         private bool isActive;
 
         /// <summary>
+        /// for Design
+        /// </summary>
+        public Anchor_VM()
+            :base(0, 0, null)
+        {
+        }
+
+        /// <summary>
         /// 构造锚点时需要手动指定其X/Y位置
         /// </summary>
         /// <param name="x">锚点在面板中的x位置</param>

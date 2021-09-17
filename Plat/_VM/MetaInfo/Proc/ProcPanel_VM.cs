@@ -50,6 +50,7 @@ namespace Plat._VM
                 return;
             }
             this.procList.Remove(proc);
+            // 同步到ProcGraph组
             foreach (ProcGraph_P_VM procGraph_P_VM in ResourceManager.procGraph_P_VMs)
             {
                 if (procGraph_P_VM.ProcGraph.Proc == proc)
@@ -58,6 +59,21 @@ namespace Plat._VM
                     break;
                 }
             }
+            // 同步到ClassDiag
+            ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;
+            foreach (DragDrop_VM item in classDiagram_P_VM.DragDrop_VMs)
+            {
+                if (item is Proc_VM)
+                {
+                    Proc_VM proc_VM = (Proc_VM)item;
+                    if (proc_VM.Proc == proc)
+                    {
+                        classDiagram_P_VM.DeleteDragDropItem(item);
+                        goto OVER;
+                    }
+                }
+            }
+        OVER:
             ResourceManager.UpdateTip($"Delete process [{proc.Identifier}].");
         }
 

@@ -53,7 +53,7 @@ namespace Plat._VM
                 ResourceManager.UpdateTip("Delete a linker on class diagram.");
                 return;
             }
-            else if (item is Type_VM || item is Env_VM)
+            else if (item is Type_VM || item is Env_VM || item is Proc_VM)
             {
                 // 所有连到上面的线都删掉
                 HashSet<Linker_VM> delSet = new HashSet<Linker_VM>();

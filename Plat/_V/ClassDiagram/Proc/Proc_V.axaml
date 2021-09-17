@@ -25,7 +25,7 @@
   <Grid Name="RootGrid" RowDefinitions="2,20,1,*,*,*,*,*,*,2"
         Background="{StaticResource OutColor}" MinWidth="120" MinHeight="60">
     <Grid Grid.Row="0" ColumnDefinitions="*,2,*">
-      
+      <v:Anchor_V Grid.Column="1" DataContext="{Binding Anchor_VMs[0]}"/>
     </Grid>
     <StackPanel Grid.Row="1" Orientation="Horizontal">
       <TextBlock Text=" Proc " FontWeight="Bold"/>
@@ -85,7 +85,7 @@
       </ListBox.ItemTemplate>
     </ListBox>
     <Grid Grid.Row="9" ColumnDefinitions="*,2,*">
-
+      <v:Anchor_V Grid.Column="1" DataContext="{Binding Anchor_VMs[1]}"/>
     </Grid>
   </Grid>
 </UserControl>

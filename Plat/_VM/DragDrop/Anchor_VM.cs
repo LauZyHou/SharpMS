@@ -22,8 +22,9 @@ namespace Plat._VM
         /// for Design
         /// </summary>
         public Anchor_VM()
-            :base(0, 0, null)
+            :base(0, 0, new ClassDiagram_P_VM())
         {
+            this.hostVM = new Type_VM();
         }
 
         /// <summary>

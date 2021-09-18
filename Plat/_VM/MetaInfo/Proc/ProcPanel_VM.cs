@@ -375,6 +375,72 @@ namespace Plat._VM
             ResourceManager.UpdateTip($"Clear parent for process [{this.currentProc.Identifier}].");
         }
 
+        /// <summary>
+        /// 向上移动一个Attr
+        /// </summary>
+        /// <param name="attrPos"></param>
+        private void OnMoveUpAttr(int? attrPos)
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"An proc must be selected!");
+                return;
+            }
+            if (attrPos is null)
+            {
+                ResourceManager.UpdateTip($"An attr must be selected!");
+                return;
+            }
+            if (attrPos < 0 || attrPos >= this.currentProc.Attributes.Count)
+            {
+                ResourceManager.UpdateTip($"Attr pos exceed!");
+                return;
+            }
+            if (attrPos == 0)
+            {
+                ResourceManager.UpdateTip($"The attr is the top one! No need to move up!");
+                return;
+            }
+            int pos = (int)attrPos;
+            Attribute attr = this.currentProc.Attributes[pos];
+            this.currentProc.Attributes.RemoveAt(pos);
+            this.currentProc.Attributes.Insert(pos - 1, attr);
+            ResourceManager.UpdateTip($"Move up attr [{attr.Identifier}] for proc [{this.currentProc.Identifier}].");
+        }
+
+        /// <summary>
+        /// 向下移动一个Attr
+        /// </summary>
+        /// <param name="attrPos"></param>
+        private void OnMoveDownAttr(int? attrPos)
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"An proc must be selected!");
+                return;
+            }
+            if (attrPos is null)
+            {
+                ResourceManager.UpdateTip($"An attr must be selected!");
+                return;
+            }
+            if (attrPos < 0 || attrPos >= this.currentProc.Attributes.Count)
+            {
+                ResourceManager.UpdateTip($"Attr pos exceed!");
+                return;
+            }
+            if (attrPos == this.currentProc.Attributes.Count - 1)
+            {
+                ResourceManager.UpdateTip($"The attr is the bottom one! No need to move down!");
+                return;
+            }
+            int pos = (int)attrPos;
+            Attribute attr = this.currentProc.Attributes[pos];
+            this.currentProc.Attributes.RemoveAt(pos);
+            this.currentProc.Attributes.Insert(pos + 1, attr);
+            ResourceManager.UpdateTip($"Move down attr [{attr.Identifier}] for proc [{this.currentProc.Identifier}].");
+        }
+
         #endregion
     }
 }

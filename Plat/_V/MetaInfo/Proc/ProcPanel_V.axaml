@@ -22,6 +22,12 @@
     <Style Selector="Grid.ABBox > CheckBox">
       <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
+    <Style Selector="Grid.ABBox > Button">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
   </UserControl.Styles>
 
   <Grid ColumnDefinitions="49*, 2*, 49*">
@@ -42,9 +48,9 @@
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
-			<Grid Grid.Row="2" ColumnDefinitions="50*, 50*">
+			<Grid Grid.Row="2" ColumnDefinitions="50*, 50*" Classes="ABBox">
 				<Button Grid.Column="0" Content="Create New Process" Command="{Binding CreateProc}"/>
-				<Button Grid.Column="1" Content="Delete Selected Process" Command="{Binding DeleteProc}" HorizontalAlignment="Right"
+				<Button Grid.Column="1" Content="Delete Selected Process" Command="{Binding DeleteProc}"
 						CommandParameter="{Binding #ProcList.SelectedItem}" IsEnabled="{Binding !!CurrentProc}"/>
 			</Grid>
 		</Grid>
@@ -65,7 +71,7 @@
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Grid.Column="2" Content="Clear" Command="{Binding ClearParent}" HorizontalAlignment="Right"/>
+            <Button Grid.Column="2" Content="Clear" Command="{Binding ClearParent}"/>
           </Grid>
           <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6,0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Proc Desc:"/>
@@ -86,11 +92,13 @@
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
-          <Grid Grid.Row="4" ColumnDefinitions="50*, 50*">
+          <Grid Grid.Row="4" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
             <Button Grid.Column="0" Content="Create New Parameter" Command="{Binding CreateAttribute}"
                 CommandParameter="{Binding CurrentProc}"/>
-            <Button Grid.Column="1" Content="Delete Selected Parameter" Command="{Binding DeleteAttribute}" HorizontalAlignment="Right"
+            <Button Grid.Column="1" Content="Delete Selected Parameter" Command="{Binding DeleteAttribute}"
                 CommandParameter="{Binding #AttrList.SelectedItem}"/>
+            <Button Grid.Column="2" Content="🔼" Command="{Binding OnMoveUpAttr}" CommandParameter="{Binding #AttrList.SelectedIndex}"/>
+            <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownAttr}" CommandParameter="{Binding #AttrList.SelectedIndex}"/>
           </Grid>
           <Grid Grid.Row="5" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Param Type:"/>

@@ -122,6 +122,10 @@ namespace Plat._V
         /// </summary>
         private void init_binding()
         {
+            if (ResourceManager.anchorVisible is null || ResourceManager.mainWindow_VM is null)
+            {
+                return;
+            }
             this.Bind(Anchor_V.IsVisibleProperty, ResourceManager.anchorVisible);
             // 虽然这里绑定了，但是由于不确定创建时候的状态
             // 需要在这里把创建时候的可视状态再赋值进去

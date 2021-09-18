@@ -153,6 +153,72 @@ namespace Plat._VM
             ResourceManager.UpdateTip($"Clear parent env for env [{currentEnv.Identifier}].");
         }
 
+        /// <summary>
+        /// 向上移动一个Attr
+        /// </summary>
+        /// <param name="attrPos"></param>
+        private void OnMoveUpAttr(int? attrPos)
+        {
+            if (this.currentEnv is null)
+            {
+                ResourceManager.UpdateTip($"An env must be selected!");
+                return;
+            }
+            if (attrPos is null)
+            {
+                ResourceManager.UpdateTip($"An attr must be selected!");
+                return;
+            }
+            if (attrPos < 0 || attrPos >= this.currentEnv.Attributes.Count)
+            {
+                ResourceManager.UpdateTip($"Attr pos exceed!");
+                return;
+            }
+            if (attrPos == 0)
+            {
+                ResourceManager.UpdateTip($"The attr is the top one! No need to move up!");
+                return;
+            }
+            int pos = (int)attrPos;
+            VisAttr visAttr = this.currentEnv.Attributes[pos];
+            this.currentEnv.Attributes.RemoveAt(pos);
+            this.currentEnv.Attributes.Insert(pos - 1, visAttr);
+            ResourceManager.UpdateTip($"Move up attr [{visAttr.Identifier}] for env [{this.currentEnv.Identifier}].");
+        }
+
+        /// <summary>
+        /// 向下移动一个Attr
+        /// </summary>
+        /// <param name="attrPos"></param>
+        private void OnMoveDownAttr(int? attrPos)
+        {
+            if (this.currentEnv is null)
+            {
+                ResourceManager.UpdateTip($"An env must be selected!");
+                return;
+            }
+            if (attrPos is null)
+            {
+                ResourceManager.UpdateTip($"An attr must be selected!");
+                return;
+            }
+            if (attrPos < 0 || attrPos >= this.currentEnv.Attributes.Count)
+            {
+                ResourceManager.UpdateTip($"Attr pos exceed!");
+                return;
+            }
+            if (attrPos == this.currentEnv.Attributes.Count - 1)
+            {
+                ResourceManager.UpdateTip($"The attr is the bottom one! No need to move down!");
+                return;
+            }
+            int pos = (int)attrPos;
+            VisAttr visAttr = this.currentEnv.Attributes[pos];
+            this.currentEnv.Attributes.RemoveAt(pos);
+            this.currentEnv.Attributes.Insert(pos + 1, visAttr);
+            ResourceManager.UpdateTip($"Move down attr [{visAttr.Identifier}] for env [{this.currentEnv.Identifier}].");
+        }
+
         #endregion
     }
 }

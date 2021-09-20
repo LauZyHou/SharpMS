@@ -50,8 +50,8 @@
         </ListBox.ItemTemplate>
       </ListBox>
       <Grid Grid.Row="2" ColumnDefinitions="50*, 50*" Classes="ABBox">
-        <Button Grid.Column="0" Content="Create New Env" Command="{Binding CreateEnv}"/>
-        <Button Grid.Column="1" Content="Delete Selected Env" Command="{Binding DeleteEnv}"/>
+        <Button Grid.Column="0" Content="➕Create New Env" Command="{Binding CreateEnv}"/>
+        <Button Grid.Column="1" Content="➖Delete Selected Env" Command="{Binding DeleteEnv}"/>
       </Grid>
     </Grid>
     <!--Env Detail-->
@@ -77,7 +77,7 @@
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Grid.Column="2" Content="Clear" Command="{Binding ClearParentEnv}"/>
+            <Button Grid.Column="2" Content="✖️Clear" Command="{Binding ClearParentEnv}"/>
           </Grid>
           <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Env Desc:"/>
@@ -100,8 +100,8 @@
             </ListBox.ItemTemplate>
           </ListBox>
           <Grid Grid.Row="4" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
-            <Button Grid.Column="0" Content="Create New Attribute" Command="{Binding CreateAttribute}"/>
-            <Button Grid.Column="1" Content="Delete Selected Attribute" Command="{Binding DeleteAttribute}"
+            <Button Grid.Column="0" Content="➕Create New Attribute" Command="{Binding CreateAttribute}"/>
+            <Button Grid.Column="1" Content="➖Delete Selected Attribute" Command="{Binding DeleteAttribute}"
                 CommandParameter="{Binding #AttrList.SelectedItem}"/>
             <Button Grid.Column="2" Content="🔼" Command="{Binding OnMoveUpAttr}" CommandParameter="{Binding #AttrList.SelectedIndex}"/>
             <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownAttr}" CommandParameter="{Binding #AttrList.SelectedIndex}"/>
@@ -150,10 +150,12 @@
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
-          <Grid Grid.Row="1" ColumnDefinitions="50*, 50*">
-            <Button Grid.Column="0" Content="Add New Channel" Command="{Binding CreateChannel}"/>
-            <Button Grid.Column="1" Content="Delete Seleted Channel" Command="{Binding DeleteChannel}"
-                    CommandParameter="{Binding #ChanList.SelectedItem}" HorizontalAlignment="Right"/>
+          <Grid Grid.Row="1" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
+            <Button Grid.Column="0" Content="➕Add New Channel" Command="{Binding CreateChannel}"/>
+            <Button Grid.Column="1" Content="➖Delete Seleted Channel" Command="{Binding DeleteChannel}"
+                    CommandParameter="{Binding #ChanList.SelectedItem}"/>
+            <Button Grid.Column="2" Content="🔼" Command="{Binding OnMoveUpChan}" CommandParameter="{Binding #ChanList.SelectedIndex}"/>
+            <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownChan}" CommandParameter="{Binding #ChanList.SelectedIndex}"/>
           </Grid>
           <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Channel Name"/>

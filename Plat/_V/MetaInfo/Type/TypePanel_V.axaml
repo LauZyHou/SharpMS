@@ -16,6 +16,12 @@
     <Style Selector="Grid.ABBox > ComboBox">
       <Setter Property="HorizontalAlignment" Value="Stretch"/>
     </Style>
+    <Style Selector="Grid.ABBox > Button">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
   </UserControl.Styles>
   
 	<Grid ColumnDefinitions="49*, 2*, 49*">
@@ -37,9 +43,9 @@
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
-			<Grid Grid.Row="2" ColumnDefinitions="50*, 50*">
-				<Button Grid.Column="0" Content="Create New Type" Command="{Binding CreateType}"/>
-				<Button Grid.Column="1" Content="Delete Selected Type" Command="{Binding DeleteType}" HorizontalAlignment="Right"
+			<Grid Grid.Row="2" ColumnDefinitions="50*, 50*" Classes="ABBox">
+				<Button Grid.Column="0" Content="➕Create New Type" Command="{Binding CreateType}"/>
+				<Button Grid.Column="1" Content="➖Delete Selected Type" Command="{Binding DeleteType}"
 						CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
 			</Grid>
 		</Grid>
@@ -56,7 +62,7 @@
             <TextBlock Grid.Column="0" Text="Type Desc:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentType.Description, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}"/>
           </Grid>
-          <Grid Grid.Row="2" ColumnDefinitions="30*, 55*, 15*" Margin="6,0" VerticalAlignment="Center">
+          <Grid Grid.Row="2" ColumnDefinitions="30*, 55*, 15*" Margin="6,0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Parent Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Items="{Binding TypeList}"
                   SelectedItem="{Binding CurrentType.Parent, Mode=TwoWay}" IsEnabled="{Binding !CurrentType.IsBase}">
@@ -66,7 +72,7 @@
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Grid.Column="2" HorizontalAlignment="Right" Content="Clear" Command="{Binding ClearParentType}"
+            <Button Grid.Column="2" Content="✖️Clear" Command="{Binding ClearParentType}"
                 CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
           </Grid>
           <ListBox Grid.Row="3" Name="AttrList" Items="{Binding CurrentType.Attributes}">
@@ -84,11 +90,13 @@
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
-          <Grid Grid.Row="4" ColumnDefinitions="50*, 50*">
-            <Button Grid.Column="0" Content="Create New Attribute" Command="{Binding CreateAttribute}"
+          <Grid Grid.Row="4" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
+            <Button Grid.Column="0" Content="➕Create New Attribute" Command="{Binding CreateAttribute}"
                 CommandParameter="{Binding CurrentType}" IsEnabled="{Binding !CurrentType.IsBase}"/>
-            <Button Grid.Column="1" Content="Delete Selected Attribute" Command="{Binding DeleteAttribute}" HorizontalAlignment="Right"
+            <Button Grid.Column="1" Content="➖Delete Selected Attribute" Command="{Binding DeleteAttribute}"
                 CommandParameter="{Binding #AttrList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
+            <Button Grid.Column="2" Content="🔼" Command="{Binding OnMoveUpAttr}" CommandParameter="{Binding #AttrList.SelectedIndex}"/>
+            <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownAttr}" CommandParameter="{Binding #AttrList.SelectedIndex}"/>
           </Grid>
           <Grid Grid.Row="5" ColumnDefinitions="30*, 70*" Margin="6, 0" VerticalAlignment="Center">
             <TextBlock Grid.Column="0" Text="Attr Type:" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -132,10 +140,12 @@
             </ListBox.ItemTemplate>
           </ListBox>
           <!--添加和删除函数-->
-          <Grid Grid.Row="1" ColumnDefinitions="50*, 50*">
-            <Button Grid.Column="0" Content="Create New Method" Command="{Binding OnCreateMethod}"/>
-            <Button Grid.Column="1" Content="Delete Selected Method" Command="{Binding OnDeleteMethod}"
-                    CommandParameter="{Binding #MethodList.SelectedItem}" HorizontalAlignment="Right"/>
+          <Grid Grid.Row="1" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
+            <Button Grid.Column="0" Content="➕Create New Method" Command="{Binding OnCreateMethod}"/>
+            <Button Grid.Column="1" Content="➖Delete Selected Method" Command="{Binding OnDeleteMethod}"
+                    CommandParameter="{Binding #MethodList.SelectedItem}"/>
+            <Button Grid.Column="2" Content="🔼" Command="{Binding OnMoveUpMethod}" CommandParameter="{Binding #MethodList.SelectedIndex}"/>
+            <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownMethod}" CommandParameter="{Binding #MethodList.SelectedIndex}"/>
           </Grid>
           <!--函数名-->
           <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
@@ -163,10 +173,10 @@
                 </DataTemplate>
               </ListBox.ItemTemplate>
             </ListBox>
-            <Button Content="Add Param" Grid.Row="0" Grid.Column="1" Command="{Binding OnAddParam}"
+            <Button Content="➕Add Param" Grid.Row="0" Grid.Column="1" Command="{Binding OnAddParam}"
                     HorizontalAlignment="Stretch" VerticalAlignment="Center"
                     HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Button Content="Delete Param" Grid.Row="1" Grid.Column="1" Command="{Binding OnDeleteParam}"
+            <Button Content="➖Delete Param" Grid.Row="1" Grid.Column="1" Command="{Binding OnDeleteParam}"
                     CommandParameter="{Binding #ParamList.SelectedIndex}"
                     HorizontalAlignment="Stretch" VerticalAlignment="Center"
                     HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>

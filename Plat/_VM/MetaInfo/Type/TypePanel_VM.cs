@@ -317,6 +317,138 @@ namespace Plat._VM
             ResourceManager.UpdateTip($"Move down a param type for method [{currentMethod.Identifier}] at pos [{paramPos}].");
         }
 
+        /// <summary>
+        /// 向上移动一个Attr
+        /// </summary>
+        /// <param name="attrPos"></param>
+        private void OnMoveUpAttr(int? attrPos)
+        {
+            if (this.currentType is null)
+            {
+                ResourceManager.UpdateTip($"An type must be selected!");
+                return;
+            }
+            if (attrPos is null)
+            {
+                ResourceManager.UpdateTip($"An attr must be selected!");
+                return;
+            }
+            if (attrPos < 0 || attrPos >= this.currentType.Attributes.Count)
+            {
+                ResourceManager.UpdateTip($"Attr pos exceed!");
+                return;
+            }
+            if (attrPos == 0)
+            {
+                ResourceManager.UpdateTip($"The attr is the top one! No need to move up!");
+                return;
+            }
+            int pos = (int)attrPos;
+            Attribute attr = this.currentType.Attributes[pos];
+            this.currentType.Attributes.RemoveAt(pos);
+            this.currentType.Attributes.Insert(pos - 1, attr);
+            ResourceManager.UpdateTip($"Move up attr [{attr.Identifier}] for type [{this.currentType.Identifier}].");
+        }
+
+        /// <summary>
+        /// 向下移动一个Attr
+        /// </summary>
+        /// <param name="attrPos"></param>
+        private void OnMoveDownAttr(int? attrPos)
+        {
+            if (this.currentType is null)
+            {
+                ResourceManager.UpdateTip($"An type must be selected!");
+                return;
+            }
+            if (attrPos is null)
+            {
+                ResourceManager.UpdateTip($"An attr must be selected!");
+                return;
+            }
+            if (attrPos < 0 || attrPos >= this.currentType.Attributes.Count)
+            {
+                ResourceManager.UpdateTip($"Attr pos exceed!");
+                return;
+            }
+            if (attrPos == this.currentType.Attributes.Count - 1)
+            {
+                ResourceManager.UpdateTip($"The attr is the bottom one! No need to move down!");
+                return;
+            }
+            int pos = (int)attrPos;
+            Attribute attr = this.currentType.Attributes[pos];
+            this.currentType.Attributes.RemoveAt(pos);
+            this.currentType.Attributes.Insert(pos + 1, attr);
+            ResourceManager.UpdateTip($"Move down attr [{attr.Identifier}] for type [{this.currentType.Identifier}].");
+        }
+
+        /// <summary>
+        /// 向上移动一个Method
+        /// </summary>
+        /// <param name="methodPos"></param>
+        private void OnMoveUpMethod(int? methodPos)
+        {
+            if (this.currentType is null)
+            {
+                ResourceManager.UpdateTip($"A type must be selected!");
+                return;
+            }
+            if (methodPos is null)
+            {
+                ResourceManager.UpdateTip($"A method must be selected!");
+                return;
+            }
+            if (methodPos < 0 || methodPos >= this.currentType.Methods.Count)
+            {
+                ResourceManager.UpdateTip($"Method pos exceed!");
+                return;
+            }
+            if (methodPos == 0)
+            {
+                ResourceManager.UpdateTip($"The method is the top one! No need to move up!");
+                return;
+            }
+            int pos = (int)methodPos;
+            Caller method = this.currentType.Methods[pos];
+            this.currentType.Methods.RemoveAt(pos);
+            this.currentType.Methods.Insert(pos - 1, method);
+            ResourceManager.UpdateTip($"Move up method [{method.Identifier}] for type [{this.currentType.Identifier}].");
+        }
+
+        /// <summary>
+        /// 向下移动一个Method
+        /// </summary>
+        /// <param name="methodPos"></param>
+        private void OnMoveDownMethod(int? methodPos)
+        {
+            if (this.currentType is null)
+            {
+                ResourceManager.UpdateTip($"A type must be selected!");
+                return;
+            }
+            if (methodPos is null)
+            {
+                ResourceManager.UpdateTip($"A method must be selected!");
+                return;
+            }
+            if (methodPos < 0 || methodPos >= this.currentType.Methods.Count)
+            {
+                ResourceManager.UpdateTip($"Method pos exceed!");
+                return;
+            }
+            if (methodPos == this.currentType.Methods.Count - 1)
+            {
+                ResourceManager.UpdateTip($"The method is the bottom one! No need to move down!");
+                return;
+            }
+            int pos = (int)methodPos;
+            Caller method = this.currentType.Methods[pos];
+            this.currentType.Methods.RemoveAt(pos);
+            this.currentType.Methods.Insert(pos + 1, method);
+            ResourceManager.UpdateTip($"Move down method [{method.Identifier}] for type [{this.currentType.Identifier}].");
+        }
+
         #endregion
     }
 }

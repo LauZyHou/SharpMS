@@ -219,6 +219,72 @@ namespace Plat._VM
             ResourceManager.UpdateTip($"Move down attr [{visAttr.Identifier}] for env [{this.currentEnv.Identifier}].");
         }
 
+        /// <summary>
+        /// 向上移动一个Chan
+        /// </summary>
+        /// <param name="chanPos"></param>
+        private void OnMoveUpChan(int? chanPos)
+        {
+            if (this.currentEnv is null)
+            {
+                ResourceManager.UpdateTip($"An env must be selected!");
+                return;
+            }
+            if (chanPos is null)
+            {
+                ResourceManager.UpdateTip($"A channel must be selected!");
+                return;
+            }
+            if (chanPos < 0 || chanPos >= this.currentEnv.Channels.Count)
+            {
+                ResourceManager.UpdateTip($"Channel pos exceed!");
+                return;
+            }
+            if (chanPos == 0)
+            {
+                ResourceManager.UpdateTip($"The channel is the top one! No need to move up!");
+                return;
+            }
+            int pos = (int)chanPos;
+            Channel channel = this.currentEnv.Channels[pos];
+            this.currentEnv.Channels.RemoveAt(pos);
+            this.currentEnv.Channels.Insert(pos - 1, channel);
+            ResourceManager.UpdateTip($"Move up channel [{channel.Identifier}] for env [{this.currentEnv.Identifier}].");
+        }
+
+        /// <summary>
+        /// 向下移动一个Chan
+        /// </summary>
+        /// <param name="chanPos"></param>
+        private void OnMoveDownChan(int? chanPos)
+        {
+            if (this.currentEnv is null)
+            {
+                ResourceManager.UpdateTip($"An env must be selected!");
+                return;
+            }
+            if (chanPos is null)
+            {
+                ResourceManager.UpdateTip($"A channel must be selected!");
+                return;
+            }
+            if (chanPos < 0 || chanPos >= this.currentEnv.Channels.Count)
+            {
+                ResourceManager.UpdateTip($"Channel pos exceed!");
+                return;
+            }
+            if (chanPos == this.currentEnv.Channels.Count - 1)
+            {
+                ResourceManager.UpdateTip($"The channel is the bottom one! No need to move down!");
+                return;
+            }
+            int pos = (int)chanPos;
+            Channel channel = this.currentEnv.Channels[pos];
+            this.currentEnv.Channels.RemoveAt(pos);
+            this.currentEnv.Channels.Insert(pos + 1, channel);
+            ResourceManager.UpdateTip($"Move down channel [{channel.Identifier}] for env [{this.currentEnv.Identifier}].");
+        }
+
         #endregion
     }
 }

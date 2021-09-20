@@ -441,6 +441,139 @@ namespace Plat._VM
             ResourceManager.UpdateTip($"Move down attr [{attr.Identifier}] for proc [{this.currentProc.Identifier}].");
         }
 
+        /// <summary>
+        /// 向上移动Method
+        /// </summary>
+        /// <param name="methodPos"></param>
+        private void OnMoveUpMethod(int? methodPos)
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"An proc must be selected!");
+                return;
+            }
+            if (methodPos is null)
+            {
+                ResourceManager.UpdateTip($"An method must be selected!");
+                return;
+            }
+            if (methodPos < 0 || methodPos >= this.currentProc.Methods.Count)
+            {
+                ResourceManager.UpdateTip($"Method pos exceed!");
+                return;
+            }
+            if (methodPos == 0)
+            {
+                ResourceManager.UpdateTip($"The method is the top one! No need to move up!");
+                return;
+            }
+            int pos = (int)methodPos;
+            Caller method = this.currentProc.Methods[pos];
+            this.currentProc.Methods.RemoveAt(pos);
+            this.currentProc.Methods.Insert(pos - 1, method);
+            ResourceManager.UpdateTip($"Move up method [{method.Identifier}] for proc [{this.currentProc.Identifier}].");
+        }
+
+        /// <summary>
+        /// 向下移动Method
+        /// </summary>
+        /// <param name="methodPos"></param>
+        private void OnMoveDownMethod(int? methodPos)
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"An proc must be selected!");
+                return;
+            }
+            if (methodPos is null)
+            {
+                ResourceManager.UpdateTip($"An method must be selected!");
+                return;
+            }
+            if (methodPos < 0 || methodPos >= this.currentProc.Methods.Count)
+            {
+                ResourceManager.UpdateTip($"Method pos exceed!");
+                return;
+            }
+            if (methodPos == this.currentProc.Methods.Count - 1)
+            {
+                ResourceManager.UpdateTip($"The method is the bottom one! No need to move down!");
+                return;
+            }
+            int pos = (int)methodPos;
+            Caller method = this.currentProc.Methods[pos];
+            this.currentProc.Methods.RemoveAt(pos);
+            this.currentProc.Methods.Insert(pos + 1, method);
+            ResourceManager.UpdateTip($"Move down method [{method.Identifier}] for proc [{this.currentProc.Identifier}].");
+        }
+
+        /// <summary>
+        /// 上移一个Port
+        /// </summary>
+        /// <param name="portPos"></param>
+        private void OnMoveUpPort(int? portPos)
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"An proc must be selected!");
+                return;
+            }
+            if (portPos is null)
+            {
+                ResourceManager.UpdateTip($"An port must be selected!");
+                return;
+            }
+            if (portPos < 0 || portPos >= this.currentProc.Ports.Count)
+            {
+                ResourceManager.UpdateTip($"Port pos exceed!");
+                return;
+            }
+            if (portPos == 0)
+            {
+                ResourceManager.UpdateTip($"The port is the top one! No need to move up!");
+                return;
+            }
+            int pos = (int)portPos;
+            Port port = this.currentProc.Ports[pos];
+            this.currentProc.Ports.RemoveAt(pos);
+            this.currentProc.Ports.Insert(pos - 1, port);
+            ResourceManager.UpdateTip($"Move up port [{port.Identifier}] for proc [{this.currentProc.Identifier}].");
+        }
+
+        /// <summary>
+        /// 下移一个Port
+        /// </summary>
+        /// <param name="portPos"></param>
+        private void OnMoveDownPort(int? portPos)
+        {
+            if (this.currentProc is null)
+            {
+                ResourceManager.UpdateTip($"An proc must be selected!");
+                return;
+            }
+            if (portPos is null)
+            {
+                ResourceManager.UpdateTip($"An port must be selected!");
+                return;
+            }
+            if (portPos < 0 || portPos >= this.currentProc.Ports.Count)
+            {
+                ResourceManager.UpdateTip($"Port pos exceed!");
+                return;
+            }
+            if (portPos == this.currentProc.Ports.Count - 1)
+            {
+                ResourceManager.UpdateTip($"The port is the bottom one! No need to move down!");
+                return;
+            }
+            int pos = (int)portPos;
+            Port port = this.currentProc.Ports[pos];
+            this.currentProc.Ports.RemoveAt(pos);
+            this.currentProc.Ports.Insert(pos + 1, port);
+            ResourceManager.UpdateTip($"Move down port [{port.Identifier}] for proc [{this.currentProc.Identifier}].");
+        }
+
+
         #endregion
     }
 }

@@ -48,7 +48,7 @@
     </Grid>
     <!--IK customize-->
     <TabControl Grid.Column="2">
-      <TabItem Header="Desc/Global">
+      <TabItem Header="Desc/For Global">
         <Grid RowDefinitions="8*,60*,8*,8*,8*,8*">
           <Grid Grid.Row="0" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="IK Name:"/>
@@ -95,10 +95,57 @@
           </Grid>
         </Grid>
       </TabItem>
-      <TabItem Header="Process">
-        
+      <TabItem Header="For Template">
+        <Grid RowDefinitions="52*,8*,40*">
+          <ListBox Grid.Row="0">
+            
+          </ListBox>
+          <Grid Grid.Row="1" ColumnDefinitions="80*,10*,10*" Classes="ABBox">
+            <Button Grid.Column="0" Content="➖Delete Selected Template IK"/>
+            <Button Grid.Column="1" Content="🔼"/>
+            <Button Grid.Column="2" Content="🔽"/>
+          </Grid>
+          <TabControl Grid.Row="2" TabStripPlacement="Left">
+            <TabItem Header="Proc-Proc">
+              <Grid RowDefinitions="8*,8*,8*,8*,8*">
+                <Grid Grid.Row="0" ColumnDefinitions="30*,70*" Classes="ABBox">
+                  <TextBlock Grid.Column="0" Text="Process A:"/>
+                  <ComboBox Grid.Column="1">
+                    
+                  </ComboBox>
+                </Grid>
+                <Grid Grid.Row="1" ColumnDefinitions="30*,70*" Classes="ABBox">
+                  <TextBlock Grid.Column="0" Text="Process A Attrs:"/>
+                  <ComboBox Grid.Column="1">
+
+                  </ComboBox>
+                </Grid>
+                <Grid Grid.Row="2" ColumnDefinitions="30*,70*" Classes="ABBox">
+                  <TextBlock Grid.Column="0" Text="Process B:"/>
+                  <ComboBox Grid.Column="1">
+
+                  </ComboBox>
+                </Grid>
+                <Grid Grid.Row="3" ColumnDefinitions="30*,70*" Classes="ABBox">
+                  <TextBlock Grid.Column="0" Text="Process B Attrs:"/>
+                  <ComboBox Grid.Column="1">
+
+                  </ComboBox>
+                </Grid>
+                <Button Grid.Row="4" Content="➕Create Template IK by Process A and Process B with Attrs"
+                        HorizontalAlignment="Stretch"/>
+              </Grid>
+            </TabItem>
+            <TabItem Header="Env-Env">
+              
+            </TabItem>
+            <TabItem Header="Proc-Env">
+              
+            </TabItem>
+          </TabControl>
+        </Grid>
       </TabItem>
-      <TabItem Header="Attacker">
+      <TabItem Header="For Attacker">
         
       </TabItem>
     </TabControl>

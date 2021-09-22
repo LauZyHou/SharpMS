@@ -27,7 +27,7 @@
 	<Grid ColumnDefinitions="49*, 2*, 49*">
 		<!--Type List-->
 		<Grid Grid.Column="0" RowDefinitions="8*, 84*, 8*">
-			<TextBlock Grid.Row="0" Text="Type List" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<TextBlock Grid.Row="0" Text="Data Type List" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 			<ListBox Name="TypeList" Grid.Row="1" Items="{Binding TypeList}" SelectedItem="{Binding CurrentType, Mode=OneWayToSource}">
 				<ListBox.ItemTemplate>
 					<DataTemplate>

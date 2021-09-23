@@ -15,7 +15,7 @@ namespace Plat._M
     {
         private string identifier;
         private string description;
-        private ObservableCollection<Attribute> attributes;
+        private ObservableCollection<VisAttr> attributes;
         private ObservableCollection<Caller> methods;
         private ObservableCollection<Port> ports;
         private Proc? parent;
@@ -24,7 +24,7 @@ namespace Plat._M
         {
             this.identifier = identifier;
             this.description = description;
-            this.attributes = new ObservableCollection<Attribute>();
+            this.attributes = new ObservableCollection<VisAttr>();
             this.methods = new ObservableCollection<Caller>();
             this.ports = new ObservableCollection<Port>();
         }
@@ -41,7 +41,7 @@ namespace Plat._M
         /// 进程的属性列表，实际上这里是指进程例化时候需要传递的参数表
         /// 请将这个字段理解为Params，在SharpMS中为了方便Param和Attr共用一个名为Attribute的class
         /// </summary>
-        public ObservableCollection<Attribute> Attributes { get => attributes; set => attributes = value; }
+        public ObservableCollection<VisAttr> Attributes { get => attributes; set => attributes = value; }
         /// <summary>
         /// 进程的方法列表
         /// </summary>

@@ -103,7 +103,7 @@ namespace Plat._VM
             {
                 return;
             }
-            proc.Attributes.Add(new Attribute("newAttr", Type.TYPE_INT));
+            proc.Attributes.Add(new VisAttr("newAttr", Type.TYPE_INT));
             ResourceManager.UpdateTip($"Create a new parameter for process [{proc.Identifier}].");
         }
 
@@ -111,7 +111,7 @@ namespace Plat._VM
         /// 从当前Proc中删除参数
         /// </summary>
         /// <param name="attribute"></param>
-        private void DeleteAttribute(Attribute attribute)
+        private void DeleteAttribute(VisAttr attribute)
         {
             if (currentProc is null || attribute is null)
             {
@@ -402,7 +402,7 @@ namespace Plat._VM
                 return;
             }
             int pos = (int)attrPos;
-            Attribute attr = this.currentProc.Attributes[pos];
+            VisAttr attr = this.currentProc.Attributes[pos];
             this.currentProc.Attributes.RemoveAt(pos);
             this.currentProc.Attributes.Insert(pos - 1, attr);
             ResourceManager.UpdateTip($"Move up attr [{attr.Identifier}] for proc [{this.currentProc.Identifier}].");
@@ -435,7 +435,7 @@ namespace Plat._VM
                 return;
             }
             int pos = (int)attrPos;
-            Attribute attr = this.currentProc.Attributes[pos];
+            VisAttr attr = this.currentProc.Attributes[pos];
             this.currentProc.Attributes.RemoveAt(pos);
             this.currentProc.Attributes.Insert(pos + 1, attr);
             ResourceManager.UpdateTip($"Move down attr [{attr.Identifier}] for proc [{this.currentProc.Identifier}].");

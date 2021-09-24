@@ -11,14 +11,19 @@ namespace Plat._VM
     public class IKPanel_VM : DragDrop_P_VM
     {
         private IK? currentIK;
-        private ObservableCollection<Type> typeList;
-        private ObservableCollection<IK> iKList;
+        private readonly ObservableCollection<Type> typeList;
+        private readonly ObservableCollection<IK> iKList;
         private Attribute? currentAttr;
+        private AttrPair? currentAttrPair;
+        private readonly ObservableCollection<Proc> procList;
+        private readonly ObservableCollection<Env> envList;
 
         public IKPanel_VM()
         {
             this.typeList = ResourceManager.types;
             this.iKList = ResourceManager.iks;
+            this.procList = ResourceManager.procs;
+            this.envList = ResourceManager.envs;
         }
 
         /// <summary>
@@ -28,15 +33,27 @@ namespace Plat._VM
         /// <summary>
         /// 所有Type的表
         /// </summary>
-        public ObservableCollection<Type> TypeList { get => typeList; set => this.RaiseAndSetIfChanged(ref typeList, value); }
+        public ObservableCollection<Type> TypeList => typeList;
         /// <summary>
         /// 所有IK的表
         /// </summary>
-        public ObservableCollection<IK> IKList { get => iKList; set => this.RaiseAndSetIfChanged(ref iKList, value); }
+        public ObservableCollection<IK> IKList => iKList;
         /// <summary>
         /// 当前选中的Attribute
         /// </summary>
         public Attribute? CurrentAttr { get => currentAttr; set => this.RaiseAndSetIfChanged(ref currentAttr, value); }
+        /// <summary>
+        /// 当前选中的AttrPair，用于Proc型IK
+        /// </summary>
+        public AttrPair? CurrentAttrPair { get => currentAttrPair; set => this.RaiseAndSetIfChanged(ref currentAttrPair, value); }
+        /// <summary>
+        /// 所有的Proc的表
+        /// </summary>
+        public ObservableCollection<Proc> ProcList => procList;
+        /// <summary>
+        /// 所有的Env的表
+        /// </summary>
+        public ObservableCollection<Env> EnvList => envList;
 
         #region Command Operation
 
@@ -160,6 +177,91 @@ namespace Plat._VM
             this.currentIK.Attributes.RemoveAt(pos);
             this.currentIK.Attributes.Insert(pos + 1, attr);
             ResourceManager.UpdateTip($"Move down the global attribute [{attr.Identifier}] for IK [{this.currentIK.Identifier}].");
+        }
+
+        /// <summary>
+        /// 删除指定的模板IK
+        /// </summary>
+        private void OnDeleteTemplateIK()
+        {
+            if (this.currentIK is null)
+            {
+                ResourceManager.UpdateTip($"An IK must be selected!");
+                return;
+            }
+            if (this.currentAttrPair is null)
+            {
+                ResourceManager.UpdateTip($"A template IK must be selected!");
+                return;
+            }
+            this.currentIK.AttrPairs.Remove(this.currentAttrPair);
+            ResourceManager.UpdateTip($"Remove template IK from IK [{this.currentIK.Identifier}].");
+        }
+
+        /// <summary>
+        /// 上移一个Template IK
+        /// </summary>
+        /// <param name="vaPos"></param>
+        private void OnMoveUpTemplateIK(int? apPos)
+        {
+            if (this.currentIK is null)
+            {
+                ResourceManager.UpdateTip($"An IK must be selected!");
+                return;
+            }
+            if (apPos is null)
+            {
+                ResourceManager.UpdateTip($"A template IK must be selected!");
+                return;
+            }
+            if (apPos < 0 || apPos >= this.currentIK.AttrPairs.Count)
+            {
+                ResourceManager.UpdateTip($"Attr pair pos exceed!");
+                return;
+            }
+            if (apPos == 0)
+            {
+                ResourceManager.UpdateTip($"The attr pair is the top one! No need to move up!");
+                return;
+            }
+            int pos = (int)apPos;
+            AttrPair attrPair = (AttrPair)this.currentIK.AttrPairs[pos];
+            this.currentIK.AttrPairs.RemoveAt(pos);
+            this.currentIK.AttrPairs.Insert(pos - 1, attrPair);
+            ResourceManager.UpdateTip($"Move up template IK (attr pair) [{attrPair.ShowStr}] for IK [{this.currentIK.Identifier}].");
+        }
+
+        /// <summary>
+        /// 下移一个Template IK
+        /// </summary>
+        /// <param name="vaPos"></param>
+        private void OnMoveDownTemplateIK(int? apPos)
+        {
+            if (this.currentIK is null)
+            {
+                ResourceManager.UpdateTip($"An IK must be selected!");
+                return;
+            }
+            if (apPos is null)
+            {
+                ResourceManager.UpdateTip($"A template IK must be selected!");
+                return;
+            }
+            if (apPos < 0 || apPos >= this.currentIK.AttrPairs.Count)
+            {
+                ResourceManager.UpdateTip($"Attr pair pos exceed!");
+                return;
+            }
+            if (apPos == this.currentIK.AttrPairs.Count - 1)
+            {
+                ResourceManager.UpdateTip($"The attr pair is the bottom one! No need to move down!");
+                return;
+            }
+            int pos = (int)apPos;
+            AttrPair attrPair = (AttrPair)this.currentIK.AttrPairs[pos];
+            this.currentIK.AttrPairs.RemoveAt(pos);
+            this.currentIK.AttrPairs.Insert(pos + 1, attrPair);
+            ResourceManager.UpdateTip($"Move down template IK (attr pair) [{attrPair.ShowStr}] for IK [{this.currentIK.Identifier}].");
         }
 
         #endregion

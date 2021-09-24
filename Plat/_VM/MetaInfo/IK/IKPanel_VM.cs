@@ -62,7 +62,11 @@ namespace Plat._VM
         /// </summary>
         private void OnCreateNewIK()
         {
-            this.iKList.Add(new IK("NewIK"));
+            IK ik = new IK("NewIK");
+            this.iKList.Add(ik);
+            // 同步到Class Diagram
+            ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;
+            classDiagram_P_VM.DragDrop_VMs.Add(new IK_VM(100, 100, classDiagram_P_VM, ik));
             ResourceManager.UpdateTip($"Crate new IK.");
         }
 

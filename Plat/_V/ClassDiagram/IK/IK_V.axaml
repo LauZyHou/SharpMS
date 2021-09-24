@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="clr-namespace:Plat._V;assembly=Plat"
+             xmlns:vm="clr-namespace:Plat._VM;assembly=Plat"
+             mc:Ignorable="d" d:DesignWidth="120" d:DesignHeight="90"
+             x:Class="Plat._V.IK_V" BorderBrush="Black" BorderThickness="2">
+
+  <UserControl.Styles>
+    <Style Selector="ListBoxItem">
+      <Setter Property="IsHitTestVisible" Value="False"/>
+      <Setter Property="Padding" Value="0"/>
+    </Style>
+    <Style Selector="ListBox">
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="Margin" Value="0"/>
+      <Setter Property="IsEnabled" Value="True"/>
+    </Style>
+  </UserControl.Styles>
+
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="OutColor" Color="#AEEEEE"/>
+    <SolidColorBrush x:Key="InColor" Color="#E0FFFF"/>
+  </UserControl.Resources>
+  
+  <Grid Name="RootGrid" RowDefinitions="20,1,*,*,*,*" Background="{StaticResource OutColor}" MinWidth="120" MinHeight="60">
+    <StackPanel Grid.Row="0" Orientation="Horizontal">
+      <TextBlock Text=" IK " FontWeight="Bold"/>
+      <TextBlock Text="{Binding IK.Identifier}"/>
+      <TextBlock Text=" "/>
+    </StackPanel>
+    <TextBlock Grid.Row="1" Background="Black" HorizontalAlignment="Stretch"/>
+    <TextBlock Grid.Row="2" Text=" GlbIni:" IsVisible="{Binding IK.HaveGlbIni}" Background="{StaticResource InColor}"/>
+    <ListBox Name="AttrList" Grid.Row="3" Items="{Binding IK.Attributes}" Background="{StaticResource OutColor}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
+            <TextBlock Text="   "/>
+            <TextBlock Text="{Binding Identifier}"/>
+            <!--<TextBlock Text="[]" IsVisible="{Binding IsArray}"/>-->
+            <TextBlock Text=": "/>
+            <TextBlock Text="{Binding Type.Identifier}"/>
+            <TextBlock Text=" "/>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <TextBlock Grid.Row="4" Text=" TmpIni:" IsVisible="{Binding IK.HaveTmpIni}" Background="{StaticResource InColor}"/>
+    <ListBox Name="AttrPairList" Grid.Row="5" Items="{Binding IK.AttrPairs}" Background="{StaticResource OutColor}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
+            <TextBlock Text="   "/>
+            <TextBlock Text="{Binding ShowStr}"/>
+            <TextBlock Text=" "/>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </Grid>
+</UserControl>

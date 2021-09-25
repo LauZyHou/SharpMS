@@ -98,5 +98,10 @@ namespace Plat._M
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return this.identifier;
+        }
     }
 }

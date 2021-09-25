@@ -64,7 +64,7 @@ namespace Plat._VM
         {
             IK ik = new IK("NewIK");
             this.iKList.Add(ik);
-            // 同步到Class Diagram
+            // 同步操作结果到类图
             ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;
             classDiagram_P_VM.DragDrop_VMs.Add(new IK_VM(100, 100, classDiagram_P_VM, ik));
             ResourceManager.UpdateTip($"Crate new IK.");
@@ -80,7 +80,23 @@ namespace Plat._VM
                 ResourceManager.UpdateTip($"An IK must be selected!");
                 return;
             }
+            var ik = this.currentIK;
             this.IKList.Remove(this.currentIK);
+            // 同步操作结果到类图
+            ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;
+            foreach (DragDrop_VM item in classDiagram_P_VM.DragDrop_VMs)
+            {
+                if (item is IK_VM)
+                {
+                    IK_VM ik_VM = (IK_VM)item;
+                    if (ik_VM.IK == ik)
+                    {
+                        classDiagram_P_VM.DeleteDragDropItem(item);
+                        goto OVER;
+                    }
+                }
+            }
+        OVER:
             ResourceManager.UpdateTip($"Delete an IK.");
         }
 

@@ -77,6 +77,12 @@ namespace Plat._VM
                 ResourceManager.UpdateTip($"Delete the component [{item}] on class diagram.");
                 return;
             }
+            else if (item is IK_VM)
+            {
+                this.DragDrop_VMs.Remove(item);
+                ResourceManager.UpdateTip($"Delte initial knowledge [{item}] on class diagram.");
+                return;
+            }
             throw new System.NotImplementedException();
         }
     }

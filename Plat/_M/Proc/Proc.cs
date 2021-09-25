@@ -55,11 +55,6 @@ namespace Plat._M
         /// </summary>
         public Proc? Parent { get => parent; set => this.RaiseAndSetIfChanged(ref parent, value); }
 
-        public override string ToString()
-        {
-            return identifier;
-        }
-
         #region Have xxx 属性
 
         public bool HaveAttr
@@ -95,5 +90,10 @@ namespace Plat._M
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return identifier;
+        }
     }
 }

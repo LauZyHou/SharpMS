@@ -13,6 +13,7 @@ namespace Plat._VM
         private readonly ChanPanel_VM chanPanel_VM = new ChanPanel_VM();
         private readonly EnvPanel_VM envPanel_VM = new EnvPanel_VM();
         private readonly IKPanel_VM iKPanel_VM = new IKPanel_VM();
+        private readonly AxiomPanel_VM axiomPanel_VM = new AxiomPanel_VM();
 
         public string Greet => "meta info test";
 
@@ -21,5 +22,6 @@ namespace Plat._VM
         public ChanPanel_VM ChanPanel_VM => chanPanel_VM;
         public EnvPanel_VM EnvPanel_VM => envPanel_VM;
         public IKPanel_VM IKPanel_VM => iKPanel_VM;
+        public AxiomPanel_VM AxiomPanel_VM => axiomPanel_VM;
     }
 }

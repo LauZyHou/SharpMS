@@ -57,12 +57,12 @@
 		<!--Proc Detail-->
     <TabControl Grid.Column="2">
       <TabItem Header="Desc/Attrs">
-        <Grid RowDefinitions="8*, 8*, 8*, 44*, 8*, 8*, 8*, 8*">
-          <Grid Grid.Row="0" ColumnDefinitions="30*, 70*" Margin="6,0" Classes="ABBox">
+        <Grid RowDefinitions="8*, 8*, 8*, 36*, 8*, 8*, 8*, 8*, 8*">
+          <Grid Grid.Row="0" ColumnDefinitions="30*, 70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Proc Name:" FontSize="16"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentProc.Identifier, Mode=TwoWay}"/>
           </Grid>
-          <Grid Grid.Row="1" ColumnDefinitions="30*, 55*, 15*" Margin="6,0" Classes="ABBox">
+          <Grid Grid.Row="1" ColumnDefinitions="30*, 55*, 15*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Parent Proc:"/>
             <ComboBox Grid.Column="1" Items="{Binding ProcList}" SelectedItem="{Binding CurrentProc.Parent, Mode=TwoWay}">
               <ComboBox.ItemTemplate>
@@ -73,7 +73,7 @@
             </ComboBox>
             <Button Grid.Column="2" Content="✖️Clear" Command="{Binding ClearParent}"/>
           </Grid>
-          <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6,0" Classes="ABBox">
+          <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Proc Desc:"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentProc.Description, Mode=TwoWay}"/>
           </Grid>
@@ -82,9 +82,10 @@
               <DataTemplate>
                 <TextBlock>
                   <TextBlock.Text>
-                    <MultiBinding StringFormat=" {0} {1}; // {2}">
-                      <Binding Path="Type.Identifier"/>
+                    <MultiBinding StringFormat=" {0}: {1}{2}; // {3}">
                       <Binding Path="Identifier"/>
+                      <Binding Path="Type.Identifier"/>
+                      <Binding Path="PubStr"/>
                       <Binding Path="Description"/>
                     </MultiBinding>
                   </TextBlock.Text>
@@ -93,15 +94,15 @@
             </ListBox.ItemTemplate>
           </ListBox>
           <Grid Grid.Row="4" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
-            <Button Grid.Column="0" Content="➕Create New Parameter" Command="{Binding CreateAttribute}"
+            <Button Grid.Column="0" Content="➕Create New Property" Command="{Binding CreateAttribute}"
                 CommandParameter="{Binding CurrentProc}"/>
-            <Button Grid.Column="1" Content="➖Delete Selected Parameter" Command="{Binding DeleteAttribute}"
+            <Button Grid.Column="1" Content="➖Delete Selected Property" Command="{Binding DeleteAttribute}"
                 CommandParameter="{Binding #AttrList.SelectedItem}"/>
             <Button Grid.Column="2" Content="🔼" Command="{Binding OnMoveUpAttr}" CommandParameter="{Binding #AttrList.SelectedIndex}"/>
             <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownAttr}" CommandParameter="{Binding #AttrList.SelectedIndex}"/>
           </Grid>
-          <Grid Grid.Row="5" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
-            <TextBlock Grid.Column="0" Text="Param Type:"/>
+          <Grid Grid.Row="5" ColumnDefinitions="30*, 70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Property Type:"/>
             <ComboBox Grid.Column="1" Items="{Binding TypeList}"
                   SelectedItem="{Binding #AttrList.SelectedItem.Type, Mode=TwoWay}">
               <ComboBox.ItemTemplate>
@@ -111,12 +112,16 @@
               </ComboBox.ItemTemplate>
             </ComboBox>
           </Grid>
-          <Grid Grid.Row="6" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
-            <TextBlock Grid.Column="0" Text="Param Name:"/>
+          <Grid Grid.Row="6" ColumnDefinitions="30*, 70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Property Name:"/>
             <TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Identifier, Mode=TwoWay}"/>
           </Grid>
-          <Grid Grid.Row="7" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
-            <TextBlock Grid.Column="0" Text="Param Desc:"/>
+          <Grid Grid.Row="7" ColumnDefinitions="30*, 70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Property Vis:"/>
+            <CheckBox Grid.Column="1" IsThreeState="False" IsChecked="{Binding #AttrList.SelectedItem.Pub, Mode=TwoWay}"/>
+          </Grid>
+          <Grid Grid.Row="8" ColumnDefinitions="30*, 70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Property Desc:"/>
             <TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Description, Mode=TwoWay}"/>
           </Grid>
         </Grid>

@@ -18,11 +18,12 @@
   </UserControl.Styles>
 
   <UserControl.Resources>
-    <SolidColorBrush x:Key="MyColor" Color="#AADDFF" />
+    <SolidColorBrush x:Key="OutColor" Color="#AADDFF"/>
+    <SolidColorBrush x:Key="InColor" Color="#7BBFEA"/>
   </UserControl.Resources>
 
   <Grid Name="RootGrid" RowDefinitions="2,20,1,*,*,*,*,2" ColumnDefinitions="*,2,*"
-        Background="{StaticResource MyColor}" MinWidth="120" MinHeight="60">
+        Background="{StaticResource OutColor}" MinWidth="120" MinHeight="60">
     <v:Anchor_V Grid.Row="0" Grid.Column="1" DataContext="{Binding Anchor_VMs[0]}"/>
     <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal">
       <TextBlock Text=" Type " FontWeight="Bold"/>
@@ -34,10 +35,10 @@
     <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                Background="Black" HorizontalAlignment="Stretch"/>
     <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
-               Text=" Props:" IsVisible="{Binding Type.HaveAttr}" Background="Azure"/>
+               Text=" Props:" IsVisible="{Binding Type.HaveAttr}" Background="{StaticResource InColor}"/>
     <ListBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
              Items="{Binding Type.Attributes}" IsEnabled="True" IsVisible="{Binding Type.HaveAttr}"
-             Background="{StaticResource MyColor}" BorderBrush="{StaticResource MyColor}" Padding="0" Margin="0">
+             Background="{StaticResource OutColor}" BorderBrush="{StaticResource OutColor}" Padding="0" Margin="0">
       <ListBox.ItemTemplate>
         <DataTemplate>
           <!--使用多源绑定-->
@@ -63,10 +64,10 @@
     </ListBox>
     <!--<TextBlock Grid.Row="4" Background="Black" IsVisible="{Binding Type.HaveMethod}"/>-->
     <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"
-               Text=" Methods:" IsVisible="{Binding Type.HaveMethod}" Background="Azure"/>
+               Text=" Methods:" IsVisible="{Binding Type.HaveMethod}" Background="{StaticResource InColor}"/>
     <ListBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3"
              Items="{Binding Type.Methods}" IsEnabled="True" IsVisible="{Binding Type.HaveMethod}"
-             Background="{StaticResource MyColor}" BorderBrush="{StaticResource MyColor}">
+             Background="{StaticResource OutColor}" BorderBrush="{StaticResource OutColor}">
       <ListBox.ItemTemplate>
         <DataTemplate>
           <TextBlock>

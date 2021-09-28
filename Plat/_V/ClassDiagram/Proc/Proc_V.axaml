@@ -41,7 +41,9 @@
       <ListBox.ItemTemplate>
         <DataTemplate>
           <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
-            <TextBlock Text="   "/>
+            <TextBlock Text=" "/>
+            <TextBlock Text="{Binding PubStr}"/>
+            <TextBlock Text=" "/>
             <TextBlock Text="{Binding Identifier}"/>
             <!--<TextBlock Text="[]" IsVisible="{Binding IsArray}"/>-->
             <TextBlock Text=": "/>

@@ -25,6 +25,8 @@ namespace Plat._C
         public static ObservableCollection<Proc> procs = new ObservableCollection<Proc>();
         // 系统中所有的初始知识
         public static ObservableCollection<IK> iks = new ObservableCollection<IK>();
+        // 系统中所有的公理
+        public static ObservableCollection<Axiom> axioms = new ObservableCollection<Axiom>();
         // 系统中所有的逻辑Channel组
         public static ObservableCollection<LogicChanGroup> logicChanGroups = new ObservableCollection<LogicChanGroup>();
         // 系统中所有的Process Graph面板的VM（在创建Proc时同步创建一个Process Graph面板）

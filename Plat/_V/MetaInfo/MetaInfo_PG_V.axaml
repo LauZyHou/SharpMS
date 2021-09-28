@@ -21,5 +21,8 @@
     <TabItem Header="IK">
       <v:IKPanel_V DataContext="{Binding IKPanel_VM}"/>
     </TabItem>
+    <TabItem Header="Axiom">
+      <v:AxiomPanel_V DataContext="{Binding AxiomPanel_VM}"/>
+    </TabItem>
 	</TabControl>
 </UserControl>

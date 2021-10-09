@@ -2,6 +2,9 @@
 
 namespace Plat._M
 {
+    /// <summary>
+    /// 通用的公式类（公理公式、操作步等
+    /// </summary>
     public class Formula : ReactiveObject
     {
         private string content;

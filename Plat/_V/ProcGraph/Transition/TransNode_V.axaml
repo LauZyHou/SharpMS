@@ -4,7 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="170" d:DesignHeight="40"
              x:Class="Plat._V.TransNode_V">
-  <Grid RowDefinitions="20, *" MinHeight="30" MinWidth="170">
+  <UserControl.Styles>
+    <Style Selector="TextBlock">
+      <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="ListBoxItem">
+      <Setter Property="IsHitTestVisible" Value="False"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+  </UserControl.Styles>
+  
+  <Grid RowDefinitions="20,*,*" MinHeight="30" MinWidth="170">
     <TextBlock Grid.Row="0" Background="LightBlue"
                TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center">
       <TextBlock.Text>
@@ -14,8 +25,18 @@
         </MultiBinding>
       </TextBlock.Text>
     </TextBlock>
-    <ListBox Grid.Row="1" Opacity="0.5">
-
+    <TextBlock Grid.Row="1" Text="{Binding LocTrans.Guard.Content, Mode=OneWay}" Background="LightSteelBlue"/>
+    <ListBox Grid.Row="2" Items="{Binding LocTrans.Actions, Mode=OneWay}" BorderBrush="Black" BorderThickness="1">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding Content, Mode=OneWay}"/>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
     </ListBox>
+    <Grid.ContextMenu>
+      <ContextMenu>
+        <MenuItem Header="Edit" Command="{Binding OnEdit}"/>
+      </ContextMenu>
+    </Grid.ContextMenu>
   </Grid>
 </UserControl>

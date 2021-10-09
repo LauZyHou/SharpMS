@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Plat._V.TransNode_EW_V"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Edit Location Transition on Process Graph"
+        WindowStartupLocation="CenterOwner">
+  <Window.Styles>
+    <Style Selector="TextBlock">
+      <Setter Property="HorizontalAlignment" Value="Left"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="20"/>
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="20"/>
+    </Style>
+    <Style Selector="Grid.ABBox > Button">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="Grid.ABBox > Button > TextBlock">
+      <Setter Property="FontSize" Value="16"/>
+    </Style>
+    <Style Selector="ListBox TextBlock">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+  </Window.Styles>
+  
+  <Grid RowDefinitions="8*,8*,8*,8*,44*,8*,8*,8*" Margin="10">
+    <TextBlock Grid.Row="0" Text="Guard (Constraint and Description):"/>
+    <TextBox Grid.Row="1" Text="{Binding LocTrans.Guard.Content, Mode=TwoWay}"/>
+    <TextBox Grid.Row="2" Text="{Binding LocTrans.Guard.Description, Mode=TwoWay}"/>
+    <TextBlock Grid.Row="3" Text="Action List:"/>
+    <ListBox Name="ActionList" Grid.Row="4" Items="{Binding LocTrans.Actions}"
+             SelectedItem="{Binding CurrentAction, Mode=OneWayToSource}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock>
+            <TextBlock.Text>
+              <MultiBinding StringFormat=" {0} // {1}">
+                <Binding Path="Content"/>
+                <Binding Path="Description"/>
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <Grid Grid.Row="5" Classes="ABBox" ColumnDefinitions="40*,40*,10*,10*">
+      <Button Grid.Column="0" Content="➕Add New Action" Command="{Binding OnAddNewAction}"/>
+      <Button Grid.Column="1" Content="➖Delete Selected Action" Command="{Binding OnDeleteSelectedAction}"/>
+      <Button Grid.Column="2" Content="🔼" Command="{Binding OnMoveUpAction}" CommandParameter="{Binding #ActionList.SelectedIndex}"/>
+      <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownAction}" CommandParameter="{Binding #ActionList.SelectedIndex}"/>
+    </Grid>
+    <TextBox Grid.Row="6" Text="{Binding CurrentAction.Content, Mode=TwoWay}"/>
+    <TextBox Grid.Row="7" Text="{Binding CurrentAction.Description, Mode=TwoWay}"/>
+  </Grid>
+</Window>

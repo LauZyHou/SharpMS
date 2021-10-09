@@ -1,4 +1,5 @@
 ﻿using Plat._M;
+using Plat._V;
 using Plat._VM;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace Plat._C
     {
         // 主窗体VM
         public static MainWindow_VM mainWindow_VM;
+        // 主窗体V
+        public static MainWindow_V mainWindow_V;
         // 系统中所有的数据类型
         public static ObservableCollection<_M.Type> types = new ObservableCollection<_M.Type>();
         // 系统中所有的环境模板

@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="clr-namespace:Plat._V;assembly=Plat"
+             Width="48" Height="48"
+             x:Class="Plat._V.ProcInst_V">
+  <Grid Width="40" Height="40">
+    <Ellipse Stroke="Black" Fill="White" StrokeThickness="2"/>
+    <Grid RowDefinitions="1*,1*,1*,2*,1*,1*,1*" ColumnDefinitions="1*,1*,1*,2*,1*,1*,1*" Margin="-2">
+      <v:Anchor_V DataContext="{Binding Anchor_VMs[0]}" Grid.Row="0" Grid.Column="3"/>
+      <v:Anchor_V DataContext="{Binding Anchor_VMs[1]}" Grid.Row="1" Grid.Column="5"/>
+      <v:Anchor_V DataContext="{Binding Anchor_VMs[2]}" Grid.Row="3" Grid.Column="6"/>
+      <v:Anchor_V DataContext="{Binding Anchor_VMs[3]}" Grid.Row="5" Grid.Column="5"/>
+      <v:Anchor_V DataContext="{Binding Anchor_VMs[4]}" Grid.Row="6" Grid.Column="3"/>
+      <v:Anchor_V DataContext="{Binding Anchor_VMs[5]}" Grid.Row="5" Grid.Column="1"/>
+      <v:Anchor_V DataContext="{Binding Anchor_VMs[6]}" Grid.Row="3" Grid.Column="0"/>
+      <v:Anchor_V DataContext="{Binding Anchor_VMs[7]}" Grid.Row="1" Grid.Column="1"/>
+      <TextBlock Text="{Binding ProcInst.Id}" Grid.Row="2" Grid.Column="2"
+                 TextAlignment="Center" Grid.RowSpan="3" Grid.ColumnSpan="3"
+                 VerticalAlignment="Center" HorizontalAlignment="Center"/>
+    </Grid>
+    <Grid.ContextMenu>
+      <ContextMenu>
+        <MenuItem Header="Delete" Command="{Binding OnDelete}"/>
+      </ContextMenu>
+    </Grid.ContextMenu>
+  </Grid>
+</UserControl>

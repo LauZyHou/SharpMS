@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Plat._M
 {
     /// <summary>
-    /// 拓扑结点Model
+    /// 【作废】拓扑结点Model
     /// </summary>
     public class TopoNode : ReactiveObject
     {

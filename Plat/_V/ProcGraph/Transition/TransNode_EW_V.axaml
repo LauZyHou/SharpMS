@@ -37,7 +37,7 @@
     <TextBlock Grid.Row="0" Text="Guard (Constraint and Description):"/>
     <TextBox Grid.Row="1" Text="{Binding LocTrans.Guard.Content, Mode=TwoWay}"/>
     <TextBox Grid.Row="2" Text="{Binding LocTrans.Guard.Description, Mode=TwoWay}"/>
-    <TextBlock Grid.Row="3" Text="Action List:"/>
+    <TextBlock Grid.Row="3" Text="Action (Opeartion and Description) List:"/>
     <ListBox Name="ActionList" Grid.Row="4" Items="{Binding LocTrans.Actions}"
              SelectedItem="{Binding CurrentAction, Mode=OneWayToSource}">
       <ListBox.ItemTemplate>

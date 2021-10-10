@@ -20,14 +20,18 @@ namespace Plat._V
 
         #region Command Callback
 
-        /// <summary>
-        /// ÓÒ¼ü²Ëµ¥°´ÏÂCreate Topo Node
-        /// </summary>
         private void OnCreateTopoNode()
         {
             TopoNode_VM topoNode_VM = new TopoNode_VM(clkPos.X, clkPos.Y, VM);
             VM.DragDrop_VMs.Add(topoNode_VM);
             ResourceManager.UpdateTip("Create a topology node.");
+        }
+
+        private void OnCreateProcInst()
+        {
+            ProcInst_VM procInst_VM = new ProcInst_VM(clkPos.X, clkPos.Y, VM);
+            VM.DragDrop_VMs.Add(procInst_VM);
+            ResourceManager.UpdateTip("Create a process instance topo node.");
         }
 
         #endregion

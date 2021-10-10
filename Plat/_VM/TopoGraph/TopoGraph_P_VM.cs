@@ -21,7 +21,7 @@ namespace Plat._VM
         public override void CreateLinker(Anchor_VM src, Anchor_VM dst)
         {
             // 无箭头边
-            DashCrossLine_VM linker_VM = new DashCrossLine_VM(src, dst, this);
+            Linker_VM linker_VM = new Linker_VM(src, dst, this);
             src.LinkerVM = dst.LinkerVM = linker_VM;
             this.DragDrop_VMs.Add(linker_VM);
             // todo extmsg

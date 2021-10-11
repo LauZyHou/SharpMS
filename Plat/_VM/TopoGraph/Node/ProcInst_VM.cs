@@ -50,7 +50,7 @@ namespace Plat._VM
 
         public override string ToString()
         {
-            return procInst.Proc is null ? "NullNode" : procInst.Proc.Identifier;
+            return procInst.Proc is null ? "NullProc" : procInst.Proc.Identifier;
         }
     }
 }

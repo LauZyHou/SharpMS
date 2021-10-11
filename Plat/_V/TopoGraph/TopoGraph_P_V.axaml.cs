@@ -34,6 +34,13 @@ namespace Plat._V
             ResourceManager.UpdateTip("Create a process instance topo node.");
         }
 
+        private void OnCreateEnvInst()
+        {
+            EnvInst_VM envInst_VM = new EnvInst_VM(clkPos.X, clkPos.Y, VM);
+            VM.DragDrop_VMs.Add(envInst_VM);
+            ResourceManager.UpdateTip("Create an environment instance topo node.");
+        }
+
         #endregion
 
         /// <summary>

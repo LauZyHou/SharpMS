@@ -30,8 +30,12 @@ namespace Plat._VM
         {
             Debug.Assert(src is TopAnchor_VM && dst is BotAnchor_VM);
             Linker_VM arrow_VM = new Linker_VM(src, dst, this);
-            // 只记录src的linker
+            // 记录src的linker
             src.LinkerVM = arrow_VM;
+            // 增添dst的linker（因为是Bot所以加到Set里）
+            BotAnchor_VM botDst = (BotAnchor_VM)dst;
+            botDst.AddLinker(arrow_VM);
+            // 加到DD表里
             this.DragDrop_VMs.Add(arrow_VM);
             ResourceManager.UpdateTip($"Create a linker on class diag.");
         }
@@ -45,11 +49,15 @@ namespace Plat._VM
             if (item is Linker_VM)
             {
                 Linker_VM linker_VM = (Linker_VM)item;
-                this.DragDrop_VMs.Remove(linker_VM);
-                // 只清理src的linker
                 Debug.Assert(linker_VM.Source is TopAnchor_VM && linker_VM.Dest is BotAnchor_VM);
+                // 清理src的linker
                 TopAnchor_VM src = (TopAnchor_VM)linker_VM.Source;
                 src.LinkerVM = null;
+                // 清理dst的linker
+                BotAnchor_VM dst = (BotAnchor_VM)linker_VM.Dest;
+                dst.RemoveLinker(linker_VM);
+                // 从DD表里删掉
+                this.DragDrop_VMs.Remove(linker_VM);
                 ResourceManager.UpdateTip("Delete a linker on class diagram.");
                 return;
             }

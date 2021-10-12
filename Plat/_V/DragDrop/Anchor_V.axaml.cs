@@ -34,8 +34,8 @@ namespace Plat._V
             // 找到这个锚点所在的Drag Drop Panel
             DragDrop_P_VM panelVM = VM.PanelVM;
 
-            // 类图有单独的处理逻辑
-            if (panelVM is ClassDiagram_P_VM)
+            // 类图、拓扑图用了Top和Bot，走单独的处理逻辑
+            if (panelVM is ClassDiagram_P_VM || panelVM is TopoGraph_P_VM)
             {
                 // 当前点的是top锚点
                 if (VM is TopAnchor_VM)

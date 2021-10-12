@@ -1,6 +1,7 @@
 ﻿using Plat._C;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,6 @@ namespace Plat._VM
     /// </summary>
     public class TopoGraph_P_VM : DragDrop_P_VM
     {
-
         /// <summary>
         /// 创建Liner（拓扑边）
         /// </summary>
@@ -20,12 +20,17 @@ namespace Plat._VM
         /// <param name="dst"></param>
         public override void CreateLinker(Anchor_VM src, Anchor_VM dst)
         {
+            Debug.Assert(src is TopAnchor_VM && dst is BotAnchor_VM);
             // 无箭头边
             Linker_VM linker_VM = new Linker_VM(src, dst, this);
-            src.LinkerVM = dst.LinkerVM = linker_VM;
+            // src设linker
+            src.LinkerVM = linker_VM;
+            // dst加linker
+            BotAnchor_VM botDst = (BotAnchor_VM)dst;
+            botDst.AddLinker(linker_VM);
+            // DD表里加linker
             this.DragDrop_VMs.Add(linker_VM);
             // todo extmsg
-
             ResourceManager.UpdateTip($"Create topology edge on topology graph, from [{src.HostVM}] to [{dst.HostVM}].");
         }
 
@@ -44,7 +49,13 @@ namespace Plat._VM
             if (item is Linker_VM)
             {
                 Linker_VM linker_VM = (Linker_VM)item;
-                linker_VM.Source.LinkerVM = linker_VM.Dest.LinkerVM = null;
+                Debug.Assert(linker_VM.Source is TopAnchor_VM && linker_VM.Dest is BotAnchor_VM);
+                // src删linker
+                linker_VM.Source.LinkerVM = null;
+                // dst移除linker
+                BotAnchor_VM dstBot = (BotAnchor_VM)linker_VM.Dest;
+                dstBot.RemoveLinker(linker_VM);
+                // DD表里移除linker
                 this.DragDrop_VMs.Remove(linker_VM);
                 // todo extmsg
                 ResourceManager.UpdateTip($"Remove a topology edge on topology graph panel.");

@@ -1,0 +1,62 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Icon="/Assets/avalonia-logo.ico"
+        x:Class="Plat._V.EnvInst_EW_V"
+        Title="Edit Environment Instance Node In Topology Graph"
+        WindowStartupLocation="CenterOwner">
+  
+  <Window.Styles>
+    <Style Selector="TextBlock">
+      <Setter Property="HorizontalAlignment" Value="Left"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="20"/>
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="20"/>
+    </Style>
+    <Style Selector="Grid.ABBox > Button">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="Grid.ABBox > Button > TextBlock">
+      <Setter Property="FontSize" Value="16"/>
+    </Style>
+    <Style Selector="ListBox TextBlock">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="ComboBox">
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="ComboBox TextBlock">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+  </Window.Styles>
+
+  <Grid ColumnDefinitions="49*,2*,49*" Margin="10">
+    <Grid Grid.Column="0" RowDefinitions="8*,8*,8*,8*,8*,60*">
+      <Grid Grid.Row="0" ColumnDefinitions="70*,30*" Classes="ABBox">
+        <TextBlock Grid.Column="0" Text="ID (As Topology Node):"/>
+        <TextBlock Grid.Column="1" Text="{Binding EnvInst.IdStr, Mode=OneWay}"/>
+      </Grid>
+      <TextBlock Grid.Row="1" Text="From Environment Template:"/>
+      <ComboBox Grid.Row="2" Items="{Binding EnvList}" SelectedItem="{Binding EnvInst.Env, Mode=TwoWay}"/>
+      <TextBlock Grid.Row="3" Text="Environment Instance Description:"/>
+      <TextBox Grid.Row="4" Text="{Binding EnvInst.Desc, Mode=TwoWay}"/>
+    </Grid>
+    <Grid Grid.Column="2">
+
+    </Grid>
+  </Grid>
+</Window>

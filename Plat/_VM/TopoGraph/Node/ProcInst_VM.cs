@@ -1,4 +1,6 @@
-﻿using Plat._M;
+﻿using Plat._C;
+using Plat._M;
+using Plat._V;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +42,16 @@ namespace Plat._VM
         #endregion
 
         #region Command Callback
+
+        private void OnEdit()
+        {
+            ProcInst_EW_V procInst_EW_V = new ProcInst_EW_V()
+            {
+                DataContext = new ProcInst_EW_VM(this.procInst)
+            };
+            procInst_EW_V.ShowDialog(ResourceManager.mainWindow_V);
+            ResourceManager.UpdateTip($"Open the edit window for the process instance node in topology graph.");
+        }
 
         private void OnDelete()
         {

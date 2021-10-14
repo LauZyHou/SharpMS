@@ -20,6 +20,9 @@ namespace Plat._V
 
         #region Command Callback
 
+        /// <summary>
+        /// [deprecated]
+        /// </summary>
         private void OnCreateTopoNode()
         {
             TopoNode_VM topoNode_VM = new TopoNode_VM(clkPos.X, clkPos.Y, VM);
@@ -29,8 +32,15 @@ namespace Plat._V
 
         private void OnCreateProcInst()
         {
+            // 创建ProcInst
             ProcInst_VM procInst_VM = new ProcInst_VM(clkPos.X, clkPos.Y, VM);
+            // 创建相应的NodeTag
+            ProcInst_NT_VM procInst_NT_VM = new ProcInst_NT_VM(clkPos.X, clkPos.Y + 60, VM, procInst_VM.ProcInst);
+            // 通过ExtMsg关联
+            procInst_VM.ExtMsg = procInst_NT_VM;
+            // 加到DD表里
             VM.DragDrop_VMs.Add(procInst_VM);
+            VM.DragDrop_VMs.Add(procInst_NT_VM);
             ResourceManager.UpdateTip("Create a process instance topo node.");
         }
 

@@ -22,6 +22,7 @@ namespace Plat._VM
         private readonly DragDrop_P_VM panelVM;
         private double h;
         private double w;
+        private object? extMsg;
 
         public DragDrop_VM(double x, double y, DragDrop_P_VM panelVM)
         {
@@ -57,6 +58,12 @@ namespace Plat._VM
         /// 宽
         /// </summary>
         public double W { get => w; set => this.RaiseAndSetIfChanged(ref w, value); }
+        /// <summary>
+        /// DD VM携带的额外信息，可在具体实现时作不同用途而用
+        /// 原用于Linker，现在可以是任何DD VM都能携带
+        /// 大多时候这个东西也是一个DD VM
+        /// </summary>
+        public Object? ExtMsg { get => extMsg; set => extMsg = value; }
 
         #region 可继承功能
 

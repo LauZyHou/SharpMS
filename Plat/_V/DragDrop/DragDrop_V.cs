@@ -47,7 +47,14 @@ namespace Plat._V
 
             isPressed = true;
             clkPos = e.GetPosition(parentIVisual);
+            // 记录自己的旧位置
             VM.OldPos = VM.Pos;
+            // 记录吸附对象的旧位置
+            if (VM.ExtMsg is not null && VM.ExtMsg is DragDrop_VM)
+            {
+                DragDrop_VM attachedVM = (DragDrop_VM)VM.ExtMsg;
+                attachedVM.OldPos = attachedVM.Pos;
+            }
 
             // 记录每个锚点的旧位置
             foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
@@ -84,13 +91,18 @@ namespace Plat._V
                 // 更新元素新位置
                 //VM.Pos = new Point(VM.OldPos.X + deltaX, VM.OldPos.Y + deltaY);
                 VM.Pos = VM.OldPos + deltaPos;
-
+                // 更新元素上吸附的ExtMsg的位置（随动）
+                if (VM.ExtMsg is not null && VM.ExtMsg is DragDrop_VM)
+                {
+                    DragDrop_VM attachedVM = (DragDrop_VM)VM.ExtMsg;
+                    attachedVM.Pos = attachedVM.OldPos + deltaPos;
+                }
 
                 // 对所有锚点也要更新到新位置
                 foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
                 {
                     anchor_VM.Pos = anchor_VM.OldPos + deltaPos;
-                    // 锚点位置更新时，还要刷新锚点的Linker上吸附的ExtMsg的位置
+                    // 锚点位置更新时，还要刷新锚点的Linker上吸附的ExtMsg的位置（随动）
                     // 我们认为Linker上吸附的东西是放在Linker中央的，所以deltaPos要除以2来给它更新
                     // 注意只有吸附的ExtMsg是DragDrop_VM才对其X/Y作更新
                     if (anchor_VM.LinkerVM is not null

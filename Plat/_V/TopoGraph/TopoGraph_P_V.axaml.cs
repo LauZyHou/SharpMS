@@ -41,14 +41,21 @@ namespace Plat._V
             // 加到DD表里
             VM.DragDrop_VMs.Add(procInst_VM);
             VM.DragDrop_VMs.Add(procInst_NT_VM);
-            ResourceManager.UpdateTip("Create a process instance topo node.");
+            ResourceManager.UpdateTip("Create a process instance topo node (with corresponding node tag).");
         }
 
         private void OnCreateEnvInst()
         {
+            // 创建EnvInst
             EnvInst_VM envInst_VM = new EnvInst_VM(clkPos.X, clkPos.Y, VM);
+            // 创建相应的NodeTag
+            EnvInst_NT_VM envInst_NT_VM = new EnvInst_NT_VM(clkPos.X, clkPos.Y + 60, VM, envInst_VM.EnvInst);
+            // 通过ExtMsg关联
+            envInst_VM.ExtMsg = envInst_NT_VM;
+            // 加到DD表里
             VM.DragDrop_VMs.Add(envInst_VM);
-            ResourceManager.UpdateTip("Create an environment instance topo node.");
+            VM.DragDrop_VMs.Add(envInst_NT_VM);
+            ResourceManager.UpdateTip("Create an environment instance topo node (with corresponding node tag).");
         }
 
         #endregion

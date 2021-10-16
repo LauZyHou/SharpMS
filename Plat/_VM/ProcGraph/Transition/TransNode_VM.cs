@@ -13,9 +13,8 @@ namespace Plat._VM
     /// <summary>
     /// Transition结点的ViewModel
     /// </summary>
-    public class TransNode_VM : DragDrop_VM
+    public class TransNode_VM : CT_VM
     {
-        private Linker_VM attachedLinker;
         private readonly LocTrans locTrans;
 
         /// <summary>
@@ -26,19 +25,12 @@ namespace Plat._VM
         /// <param name="panelVM"></param>
         /// <param name="linker_VM">所吸附的Linker</param>
         public TransNode_VM(double x, double y, DragDrop_P_VM panelVM, Linker_VM linker_VM)
-            : base(x, y, panelVM)
+            : base(x, y, panelVM, linker_VM)
         {
-            // 互相引用
-            this.attachedLinker = linker_VM;
-            linker_VM.ExtMsg = this;
             // 初始化迁移信息
             this.locTrans = new LocTrans();
         }
 
-        /// <summary>
-        /// 所吸附的Linker
-        /// </summary>
-        public Linker_VM AttachedLinker { get => attachedLinker; set => this.RaiseAndSetIfChanged(ref attachedLinker, value); }
         /// <summary>
         /// Location迁移信息
         /// </summary>

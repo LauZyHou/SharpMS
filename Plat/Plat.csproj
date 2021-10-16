@@ -33,9 +33,4 @@
       <DependentUpon>ProcGraph_P_V.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="_M\TopoGraph\Edge\" />
-    <Folder Include="_VM\TopoGraph\Edge\" />
-    <Folder Include="_V\TopoGraph\Edge\" />
-  </ItemGroup>
 </Project>

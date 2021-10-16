@@ -60,13 +60,21 @@ namespace Plat._V
             foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
             {
                 anchor_VM.OldPos = anchor_VM.Pos;
+                // I类锚点（单Linker，即TopAnchor）
                 // 如果锚点的Linker上吸附了DragDrop_VM，也要记录其旧位置
-                if (anchor_VM.LinkerVM is not null
+                if (anchor_VM is TopAnchor_VM
+                        && anchor_VM.LinkerVM is not null
                         && anchor_VM.LinkerVM.ExtMsg is not null
                         && anchor_VM.LinkerVM.ExtMsg is DragDrop_VM)
                 {
                     DragDrop_VM attachedVM = (DragDrop_VM)anchor_VM.LinkerVM.ExtMsg;
                     attachedVM.OldPos = attachedVM.Pos;
+                }
+                // II类锚点（多Linker，即BotAnchor）
+                else if (anchor_VM is BotAnchor_VM)
+                {
+                    BotAnchor_VM botAnchor_VM = (BotAnchor_VM)anchor_VM;
+                    botAnchor_VM.FlushLinkersExtMsgOldPos();
                 }
             }
             //ResourceManager.mainWindowVM.Tips = "鼠标按下，记录图形位置：" + oldLocation;
@@ -102,15 +110,25 @@ namespace Plat._V
                 foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
                 {
                     anchor_VM.Pos = anchor_VM.OldPos + deltaPos;
+
                     // 锚点位置更新时，还要刷新锚点的Linker上吸附的ExtMsg的位置（随动）
                     // 我们认为Linker上吸附的东西是放在Linker中央的，所以deltaPos要除以2来给它更新
                     // 注意只有吸附的ExtMsg是DragDrop_VM才对其X/Y作更新
-                    if (anchor_VM.LinkerVM is not null
+
+                    // I类锚点（单Linker，即TopAnchor）
+                    if (anchor_VM is TopAnchor_VM
+                        && anchor_VM.LinkerVM is not null
                         && anchor_VM.LinkerVM.ExtMsg is not null
                         && anchor_VM.LinkerVM.ExtMsg is DragDrop_VM)
                     {
                         DragDrop_VM attachedVM = (DragDrop_VM)anchor_VM.LinkerVM.ExtMsg;
                         attachedVM.Pos = attachedVM.OldPos + deltaPos / 2;
+                    }
+                    // II类锚点（多Linker，即BotAnchor）
+                    else if (anchor_VM is BotAnchor_VM)
+                    {
+                        BotAnchor_VM botAnchor_VM = (BotAnchor_VM)anchor_VM;
+                        botAnchor_VM.MoveLinkersExtMsgPosByOldPosPlusBais(deltaPos / 2);
                     }
                 }
 

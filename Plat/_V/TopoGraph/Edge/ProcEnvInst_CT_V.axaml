@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="40" d:DesignHeight="20"
+             x:Class="Plat._V.ProcEnvInst_CT_V">
+  <UserControl.Styles>
+    <Style Selector="ListBoxItem">
+      <Setter Property="IsHitTestVisible" Value="False"/>
+      <Setter Property="Padding" Value="0"/>
+    </Style>
+  </UserControl.Styles>
+
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="OutColor" Color="#CCFFEE" />
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="20,*" Background="{StaticResource OutColor}">
+    <TextBlock Grid.Row="0" Text="Okk"/>
+    <ListBox Grid.Row="1" Items="{Binding ProcEnvInst.PortChanInsts}" Background="Transparent">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
+            <TextBlock Text=" "/>
+            <TextBlock Text="{Binding Port.Identifier}"/>
+            <TextBlock Text=" "/>
+            <TextBlock Text="{Binding Chan.Identifier}"/>
+            <TextBlock Text=" "/>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </Grid>
+</UserControl>

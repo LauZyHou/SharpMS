@@ -1,4 +1,5 @@
-﻿using Avalonia.Media;
+﻿using Avalonia;
+using Avalonia.Media;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,10 @@ namespace Plat._VM
         {
             this.linker_VMs = new HashSet<Linker_VM>();
         }
-        
-        // 有了Wrapper不再需要对外直接访问容器的接口
+
+        // 有了Wrapper对增减而言不再需要对外直接访问容器的接口
+        // 但是在锚点移动时需要更新这些Linker的ExtMsg
+        // 干脆由这里来刷新所有Linker的Pos之类的
         // public HashSet<Linker_VM> Linker_VMs => linker_VMs;
 
         #region Wrapper
@@ -50,6 +53,35 @@ namespace Plat._VM
         {
             this.linker_VMs.Remove(linker_VM);
             this.RaisePropertyChanged(nameof(Color)); // 为了加这个刷新颜色
+        }
+
+        /// <summary>
+        /// 刷新所有linker的ExtMsg的OldPos为其Pos
+        /// </summary>
+        public void FlushLinkersExtMsgOldPos()
+        {
+            foreach (Linker_VM linker_VM in this.linker_VMs)
+            {
+                if (linker_VM.ExtMsg is null)
+                    continue;
+                DragDrop_VM attachedVM = (DragDrop_VM)linker_VM.ExtMsg;
+                attachedVM.OldPos = attachedVM.Pos;
+            }
+        }
+
+        /// <summary>
+        /// 根据一个加偏置来更新所有linker吸附的ExtMsg的Pos
+        /// </summary>
+        /// <param name="bais"></param>
+        public void MoveLinkersExtMsgPosByOldPosPlusBais(Point bais)
+        {
+            foreach (Linker_VM linker_VM in this.linker_VMs)
+            {
+                if (linker_VM.ExtMsg is null)
+                    continue;
+                DragDrop_VM attachedVM = (DragDrop_VM)linker_VM.ExtMsg;
+                attachedVM.Pos = attachedVM.OldPos + bais;
+            }
         }
 
         #endregion

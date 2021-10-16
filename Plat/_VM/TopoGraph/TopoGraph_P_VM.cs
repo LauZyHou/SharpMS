@@ -28,9 +28,17 @@ namespace Plat._VM
             // dst加linker
             BotAnchor_VM botDst = (BotAnchor_VM)dst;
             botDst.AddLinker(linker_VM);
-            // DD表里加linker
+            // DD表里加上这个linker
             this.DragDrop_VMs.Add(linker_VM);
-            // todo extmsg
+            // 拓扑图上Proc和Env之间的CT_VM
+            ProcEnvInst_CT_VM procEnvInst_CT_VM = new ProcEnvInst_CT_VM(
+                (src.Pos.X + dst.Pos.X) / 2,
+                (src.Pos.Y + dst.Pos.Y) / 2,
+                this,
+                linker_VM
+            );
+            // DD表里加上这个吸附物
+            this.DragDrop_VMs.Add(procEnvInst_CT_VM);
             ResourceManager.UpdateTip($"Create topology edge on topology graph, from [{src.HostVM}] to [{dst.HostVM}].");
         }
 

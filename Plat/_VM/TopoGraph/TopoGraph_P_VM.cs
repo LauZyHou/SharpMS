@@ -39,6 +39,8 @@ namespace Plat._VM
             );
             // DD表里加上这个吸附物
             this.DragDrop_VMs.Add(procEnvInst_CT_VM);
+            // 里面的Model加到全局表里
+            ResourceManager.procEnvInsts.Add(procEnvInst_CT_VM.ProcEnvInst);
             ResourceManager.UpdateTip($"Create topology edge on topology graph, from [{src.HostVM}] to [{dst.HostVM}].");
         }
 
@@ -65,7 +67,16 @@ namespace Plat._VM
                 dstBot.RemoveLinker(linker_VM);
                 // DD表里移除linker
                 this.DragDrop_VMs.Remove(linker_VM);
-                // todo extmsg
+                // 删除ExtMsg以及全局表中Model
+                if (linker_VM.ExtMsg is not null)
+                {
+                    if (linker_VM.ExtMsg is ProcEnvInst_CT_VM)
+                    {
+                        ProcEnvInst_CT_VM procEnvInst_CT_VM = (ProcEnvInst_CT_VM)linker_VM.ExtMsg;
+                        this.DragDrop_VMs.Remove(procEnvInst_CT_VM);
+                        ResourceManager.procEnvInsts.Remove(procEnvInst_CT_VM.ProcEnvInst);
+                    }
+                }
                 ResourceManager.UpdateTip($"Remove a topology edge on topology graph panel.");
                 return;
             }

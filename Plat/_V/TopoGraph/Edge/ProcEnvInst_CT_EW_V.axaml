@@ -1,0 +1,113 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Plat._V.ProcEnvInst_CT_EW_V"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Edit Process-Environment Coordinate Tag On Topology Graph"
+        WindowStartupLocation="CenterOwner">
+  <Window.Styles>
+    <Style Selector="TextBlock">
+      <Setter Property="HorizontalAlignment" Value="Left"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="20"/>
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="20"/>
+    </Style>
+    <Style Selector="Grid.ABBox > Button">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="Grid.ABBox > Button > TextBlock">
+      <Setter Property="FontSize" Value="16"/>
+    </Style>
+    <Style Selector="ListBox TextBlock">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="ComboBox">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+  </Window.Styles>
+
+  <Grid RowDefinitions="8*,8*,60*,8*,8*,8*" Margin="10">
+    <Grid Grid.Row="0" ColumnDefinitions="30*,70*" Classes="ABBox">
+      <TextBlock Grid.Column="0" Text="Process:"/>
+      <TextBlock Grid.Column="1" Text="{Binding ProcEnvInst.ProcInst.Proc.Identifier, Mode=OneWay}"/>
+    </Grid>
+    <Grid Grid.Row="1" ColumnDefinitions="30*,70*" Classes="ABBox">
+      <TextBlock Grid.Column="0" Text="Environment:"/>
+      <TextBlock Grid.Column="1" Text="{Binding ProcEnvInst.EnvInst.Env.Identifier, Mode=OneWay}"/>
+    </Grid>
+    <!--端口-信道关联-->
+    <ListBox Grid.Row="2" Name="PortChanInstList"
+             Items="{Binding ProcEnvInst.PortChanInsts}"
+             SelectedItem="{Binding CurrentPortChanInst, Mode=OneWayToSource}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock>
+            <TextBlock.Text>
+              <MultiBinding StringFormat=" {0} {1}-{2}">
+                <Binding Path="Port.InOutString"/>
+                <Binding Path="Port.Identifier"/>
+                <Binding Path="Chan.Identifier"/>
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <Grid Grid.Row="3" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
+      <Button Grid.Column="0" Content="➕Create New Port-Chan Inst" Command="{Binding OnCreateNewPortChanInst}"/>
+      <Button Grid.Column="1" Content="➖Delete Selected Port-Chan Inst" Command="{Binding OnDeleteSelectedPortChanInst}"/>
+      <Button Grid.Column="2" Content="🔼" Command="{Binding OnMoveUpPortChanInst}" CommandParameter="{Binding #PortChanInstList.SelectedIndex}"/>
+      <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownPortChanInst}" CommandParameter="{Binding #PortChanInstList.SelectedIndex}"/>
+    </Grid>
+    <Grid Grid.Row="4" ColumnDefinitions="30*,70*" Classes="ABBox">
+      <TextBlock Grid.Column="0" Text="Port:"/>
+      <ComboBox Grid.Column="1" Items="{Binding ProcEnvInst.ProcInst.Proc.Ports, Mode=OneWay}"
+                SelectedItem="{Binding CurrentPortChanInst.Port, Mode=TwoWay}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock>
+              <TextBlock.Text>
+                <MultiBinding StringFormat=" {0}[{1}]">
+                  <Binding Path="Identifier"/>
+                  <Binding Path="InOutString"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+    </Grid>
+    <Grid Grid.Row="5" ColumnDefinitions="30*,70*" Classes="ABBox">
+      <TextBlock Grid.Column="0" Text="Channel:"/>
+      <ComboBox Grid.Column="1" Items="{Binding ProcEnvInst.EnvInst.Env.Channels, Mode=OneWay}"
+                SelectedItem="{Binding CurrentPortChanInst.Chan, Mode=TwoWay}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock>
+              <TextBlock.Text>
+                <MultiBinding StringFormat=" {0} {1} [{2}]">
+                  <Binding Path="PubStr"/>
+                  <Binding Path="Identifier"/>
+                  <Binding Path="Capacity"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+    </Grid>
+  </Grid>
+</Window>

@@ -2,12 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="40" d:DesignHeight="20"
+             mc:Ignorable="d" d:DesignWidth="80" d:DesignHeight="20"
              x:Class="Plat._V.ProcEnvInst_CT_V">
   <UserControl.Styles>
     <Style Selector="ListBoxItem">
       <Setter Property="IsHitTestVisible" Value="False"/>
       <Setter Property="Padding" Value="0"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
     </Style>
   </UserControl.Styles>
 
@@ -15,20 +16,25 @@
     <SolidColorBrush x:Key="OutColor" Color="#CCFFEE" />
   </UserControl.Resources>
 
-  <Grid RowDefinitions="20,*" Background="{StaticResource OutColor}">
-    <TextBlock Grid.Row="0" Text="Okk"/>
-    <ListBox Grid.Row="1" Items="{Binding ProcEnvInst.PortChanInsts}" Background="Transparent">
+  <Grid RowDefinitions="20,*">
+    <TextBlock Grid.Row="0" Text="Proc->Env" Background="#99CC99" HorizontalAlignment="Center"/>
+    <ListBox Grid.Row="1" Items="{Binding ProcEnvInst.PortChanInsts}" Background="{StaticResource OutColor}">
       <ListBox.ItemTemplate>
         <DataTemplate>
-          <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
+          <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0" HorizontalAlignment="Center">
             <TextBlock Text=" "/>
             <TextBlock Text="{Binding Port.Identifier}"/>
-            <TextBlock Text=" "/>
+            <TextBlock Text="->"/>
             <TextBlock Text="{Binding Chan.Identifier}"/>
             <TextBlock Text=" "/>
           </StackPanel>
         </DataTemplate>
       </ListBox.ItemTemplate>
     </ListBox>
+    <Grid.ContextMenu>
+      <ContextMenu>
+        <MenuItem Header="Edit" Command="{Binding OnEdit}"/>
+      </ContextMenu>
+    </Grid.ContextMenu>
   </Grid>
 </UserControl>

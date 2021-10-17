@@ -34,6 +34,8 @@ namespace Plat._C
         public static ObservableCollection<LogicChanGroup> logicChanGroups = new ObservableCollection<LogicChanGroup>();
         // 系统中所有的Process Graph面板的VM（在创建Proc时同步创建一个Process Graph面板）
         public static ObservableCollection<ProcGraph_P_VM> procGraph_P_VMs = new ObservableCollection<ProcGraph_P_VM>();
+        // 所有ProcEnvInst
+        public static ObservableCollection<ProcEnvInst> procEnvInsts = new ObservableCollection<ProcEnvInst>();
         /// <summary>
         /// 锚点是否可见
         /// </summary>

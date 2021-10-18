@@ -38,8 +38,8 @@
           <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
             <TextBlock Text="   "/>
             <TextBlock Text="{Binding Identifier}"/>
-            <!--<TextBlock Text="[]" IsVisible="{Binding IsArray}"/>-->
             <TextBlock Text=": "/>
+            <TextBlock Text="[]" IsVisible="{Binding IsArray}"/>
             <TextBlock Text="{Binding Type.Identifier}"/>
             <TextBlock Text=" "/>
           </StackPanel>

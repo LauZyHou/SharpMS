@@ -48,8 +48,9 @@
     </Grid>
     <!--IK customize-->
     <TabControl Grid.Column="2">
+      <!--GlbIni-->
       <TabItem Header="Desc/For Global">
-        <Grid RowDefinitions="8*,60*,8*,8*,8*,8*">
+        <Grid RowDefinitions="8*,52*,8*,8*,8*,8*,8*">
           <Grid Grid.Row="0" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="IK Name:"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentIK.Identifier, Mode=TwoWay}"/>
@@ -57,7 +58,17 @@
           <ListBox Name="AttrList" Grid.Row="1" Items="{Binding CurrentIK.Attributes}" SelectedItem="{Binding CurrentAttr, Mode=OneWayToSource}">
             <ListBox.ItemTemplate>
               <DataTemplate>
-                <TextBlock>
+                <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
+                  <TextBlock Text="   "/>
+                  <TextBlock Text="{Binding Identifier}"/>
+                  <TextBlock Text=": "/>
+                  <TextBlock Text="[]" IsVisible="{Binding IsArray}"/>
+                  <TextBlock Text="{Binding Type.Identifier}"/>
+                  <TextBlock Text=" //"/>
+                  <TextBlock Text="{Binding Description}"/>
+                  <TextBlock Text=" "/>
+                </StackPanel>
+                <!--<TextBlock>
                   <TextBlock.Text>
                     <MultiBinding StringFormat=" {0}:{1} // {2}">
                       <Binding Path="Identifier"/>
@@ -65,7 +76,7 @@
                       <Binding Path="Description"/>
                     </MultiBinding>
                   </TextBlock.Text>
-                </TextBlock>
+                </TextBlock>-->
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
@@ -90,11 +101,16 @@
             </ComboBox>
           </Grid>
           <Grid Grid.Row="5" ColumnDefinitions="30*,70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Is Array:"/>
+            <CheckBox Grid.Column="1" IsThreeState="False" IsChecked="{Binding CurrentAttr.IsArray, Mode=TwoWay}"/>
+          </Grid>
+          <Grid Grid.Row="6" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Desc:"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentAttr.Description, Mode=TwoWay}"/>
           </Grid>
         </Grid>
       </TabItem>
+      <!--TmpIni-->
       <TabItem Header="For Template">
         <Grid RowDefinitions="52*,8*,40*">
           <ListBox Grid.Row="0" Name="TempIKList" Items="{Binding CurrentIK.AttrPairs}" SelectedItem="{Binding CurrentAttrPair, Mode=OneWayToSource}">
@@ -323,6 +339,7 @@
           </TabControl>
         </Grid>
       </TabItem>
+      <!--AtkIni-->
       <TabItem Header="For Attacker">
         
       </TabItem>

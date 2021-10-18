@@ -57,11 +57,18 @@
     <Style Selector="ListBox#panel ListBoxItem:pointerover > ContentPresenter">
       <Setter Property="Background" Value="Transparent"/>
     </Style>
+    <Style Selector="Button">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
   </UserControl.Styles>
 
-  <Grid RowDefinitions="30, *">
-    <Grid Grid.Row="0" ColumnDefinitions="80, *" Background="WhiteSmoke">
-      <Button Grid.Column="0" Content="test" HorizontalAlignment="Center" VerticalContentAlignment="Stretch"/>
+  <Grid RowDefinitions="30,*">
+    <Grid Grid.Row="0" ColumnDefinitions="140,140,*" Background="WhiteSmoke">
+      <Button Grid.Column="0" Content="🖼️Export PNG"/>
+      <Button Grid.Column="1" Content="🖼️Export SVG"/>
     </Grid>
     <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
       <ListBox Name="panel" Items="{Binding DragDrop_VMs}" Height="2000" Width="2800"/>

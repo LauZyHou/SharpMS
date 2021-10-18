@@ -80,7 +80,19 @@
           <ListBox Grid.Row="3" Name="AttrList" Items="{Binding CurrentProc.Attributes}">
             <ListBox.ItemTemplate>
               <DataTemplate>
-                <TextBlock>
+                <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
+                  <TextBlock Text=" "/>
+                  <TextBlock Text="{Binding PubStr}"/>
+                  <TextBlock Text=" "/>
+                  <TextBlock Text="{Binding Identifier}"/>
+                  <TextBlock Text=": "/>
+                  <TextBlock Text="[]" IsVisible="{Binding IsArray}"/>
+                  <TextBlock Text="{Binding Type.Identifier}"/>
+                  <TextBlock Text=" //"/>
+                  <TextBlock Text="{Binding Description}"/>
+                  <TextBlock Text=" "/>
+                </StackPanel>
+                <!--<TextBlock>
                   <TextBlock.Text>
                     <MultiBinding StringFormat=" {0}: {1}{2}; // {3}">
                       <Binding Path="Identifier"/>
@@ -89,7 +101,7 @@
                       <Binding Path="Description"/>
                     </MultiBinding>
                   </TextBlock.Text>
-                </TextBlock>
+                </TextBlock>-->
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
@@ -116,9 +128,11 @@
             <TextBlock Grid.Column="0" Text="Property Name:"/>
             <TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Identifier, Mode=TwoWay}"/>
           </Grid>
-          <Grid Grid.Row="7" ColumnDefinitions="30*, 70*" Classes="ABBox">
+          <Grid Grid.Row="7" ColumnDefinitions="25*,25*,25*,25*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Property Vis:"/>
             <CheckBox Grid.Column="1" IsThreeState="False" IsChecked="{Binding #AttrList.SelectedItem.Pub, Mode=TwoWay}"/>
+            <TextBlock Grid.Column="2" Text="Is Array:"/>
+            <CheckBox Grid.Column="3" IsThreeState="False" IsChecked="{Binding #AttrList.SelectedItem.IsArray, Mode=TwoWay}"/>
           </Grid>
           <Grid Grid.Row="8" ColumnDefinitions="30*, 70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Property Desc:"/>

@@ -12,21 +12,32 @@ namespace Plat._M
     /// </summary>
     public class VisAttr : ReactiveObject
     {
-        private string identifier;
         private Type type;
+        private string identifier;
+        private bool isArray;
         private string description;
         private bool pub;
 
-        public VisAttr(string identifier, Type type, string description = "", bool pub = false)
+        public VisAttr(string identifier, Type type, bool isArray = false, bool pub = false, string description = "")
         {
             this.identifier = identifier;
             this.type = type;
-            this.description = description;
+            this.isArray = isArray;
             this.pub = pub;
+            this.description = description;
         }
 
         public Type Type { get => type; set => this.RaiseAndSetIfChanged(ref type, value); }
         public string Identifier { get => identifier; set => this.RaiseAndSetIfChanged(ref identifier, value); }
+        public bool IsArray
+        {
+            get => isArray;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref isArray, value);
+                this.RaisePropertyChanged(nameof(IsArray));
+            }
+        }
         public string Description { get => description; set => this.RaiseAndSetIfChanged(ref description, value); }
         public bool Pub
         {
@@ -38,6 +49,16 @@ namespace Plat._M
             }
         }
 
+        #region XXX Str
+
+        public string ArrayStr
+        {
+            get
+            {
+                return this.isArray ? "[]" : "";
+            }
+        }
+
         public string PubStr
         {
             get
@@ -45,5 +66,7 @@ namespace Plat._M
                 return this.pub ? "+" : "-";
             }
         }
+
+        #endregion
     }
 }

@@ -38,7 +38,7 @@ namespace Plat._M
 
         public override string ToString()
         {
-            return $"{this.identifier}: {(this.isArray ? "[]" : "")}{this.type.Identifier}";
+            return $"{this.identifier}: {(this.isArray ? "[]" : "")}{this.type.Identifier} ";
         }
     }
 }

@@ -25,5 +25,18 @@ namespace Plat._VM
 
         public ProcInst ProcInst => procInst;
         public ObservableCollection<Proc> ProcList => procList;
+
+        #region Command
+
+        /// <summary>
+        /// 清除当前ProcInst例化的模板Proc
+        /// </summary>
+        private void OnClearProc()
+        {
+            this.procInst.Proc = null;
+            ResourceManager.UpdateTip($"Clear the template of process instance.");
+        }
+
+        #endregion
     }
 }

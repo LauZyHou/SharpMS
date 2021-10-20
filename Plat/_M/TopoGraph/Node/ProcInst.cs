@@ -1,5 +1,6 @@
 ﻿using Plat._C;
 using ReactiveUI;
+using System.Collections.ObjectModel;
 
 namespace Plat._M
 {
@@ -9,10 +10,12 @@ namespace Plat._M
     public class ProcInst : TopoInst
     {
         private Proc? proc;
+        private readonly ObservableCollection<Instance> properties;
 
         public ProcInst()
-            :base()
+            : base()
         {
+            this.properties = new ObservableCollection<Instance>();
         }
 
         /// <summary>
@@ -32,7 +35,36 @@ namespace Plat._M
                         procEnvInst.PortChanInsts.Clear();
                     }
                 }
+                // 重新生成实例的Properties
+                this.properties.Clear();
+                if (proc is null)
+                {
+                    return;
+                }
+                foreach (VisAttr attr in proc.Attributes)
+                {
+                    Instance instance;
+                    if (attr.IsArray) // 数组类型
+                    {
+                        instance = new ArrayInstance(attr.Type, attr.Identifier, attr.IsArray);
+                    }
+                    else if (attr.Type.IsBase) // 值类型
+                    {
+                        instance = new ValueInstance(attr.Type, attr.Identifier, attr.IsArray);
+                    }
+                    else // 引用类型
+                    {
+                        instance = ReferenceInstance.build(attr.Type, attr.Identifier, attr.IsArray);
+                    }
+                    this.properties.Add(instance);
+                }
+                // Tips
+                ResourceManager.UpdateTip($"Process template switched for process instance. (1) Clear edge. (2) Regen instance.");
             }
         }
+        /// <summary>
+        /// 例化参数表
+        /// </summary>
+        public ObservableCollection<Instance> Properties => properties;
     }
 }

@@ -55,7 +55,7 @@ namespace Plat._M
                     {
                         instance = new ArrayInstance(attr.Type, attr.Identifier, attr.IsArray);
                     }
-                    else if (type.IsBase) // 基本类型
+                    else if (attr.Type.IsBase) // 基本类型
                     {
                         instance = new ValueInstance(attr.Type, attr.Identifier, attr.IsArray);
                     }

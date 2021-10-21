@@ -71,7 +71,7 @@
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Grid.Column="2" Content="✖️Clear" Command="{Binding ClearParent}"/>
+            <Button Grid.Column="2" Content="❎Clear" Command="{Binding ClearParent}"/>
           </Grid>
           <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Proc Desc:"/>

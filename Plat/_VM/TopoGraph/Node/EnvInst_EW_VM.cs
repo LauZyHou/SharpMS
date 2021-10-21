@@ -25,5 +25,18 @@ namespace Plat._VM
 
         public EnvInst EnvInst => envInst;
         public ObservableCollection<Env> EnvList => envList;
+
+        #region Command
+
+        /// <summary>
+        /// 清除当前EnvInst例化的模板Env
+        /// </summary>
+        private void OnClearEnv()
+        {
+            this.envInst.Env = null;
+            ResourceManager.UpdateTip($"Clear the template of environment instance.");
+        }
+
+        #endregion
     }
 }

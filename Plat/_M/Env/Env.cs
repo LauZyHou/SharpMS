@@ -63,7 +63,7 @@ namespace Plat._M
         /// </summary>
         public string Description { get => description; set => this.RaiseAndSetIfChanged(ref description, value); }
 
-        #region Have xxx 属性=
+        #region Have xxx 属性
 
         public bool HaveParent
         {

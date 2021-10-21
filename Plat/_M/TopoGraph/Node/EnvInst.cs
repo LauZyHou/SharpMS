@@ -1,5 +1,6 @@
 ﻿using Plat._C;
 using ReactiveUI;
+using System.Collections.ObjectModel;
 
 namespace Plat._M
 {
@@ -9,10 +10,12 @@ namespace Plat._M
     public class EnvInst : TopoInst
     {
         private Env? env;
+        private readonly ObservableCollection<Instance> properties;
 
         public EnvInst()
-            :base()
+            : base()
         {
+            this.properties = new ObservableCollection<Instance>();
         }
 
         /// <summary>
@@ -32,7 +35,37 @@ namespace Plat._M
                         procEnvInst.PortChanInsts.Clear();
                     }
                 }
+                // 重新生成实例的Properties
+                this.properties.Clear();
+                if (env is null)
+                {
+                    return;
+                }
+                foreach (VisAttr attr in env.Attributes)
+                {
+                    Instance instance;
+                    if (attr.IsArray) // 数组类型
+                    {
+                        instance = new ArrayInstance(attr.Type, attr.Identifier, attr.IsArray);
+                    }
+                    else if (attr.Type.IsBase) // 值类型
+                    {
+                        instance = new ValueInstance(attr.Type, attr.Identifier, attr.IsArray);
+                    }
+                    else // 引用类型
+                    {
+                        instance = ReferenceInstance.build(attr.Type, attr.Identifier, attr.IsArray);
+                    }
+                    this.properties.Add(instance);
+                }
+                // Tips
+                ResourceManager.UpdateTip($"Environment template switched for environment instance. (1) Clear edge. (2) Regen instance.");
             }
         }
+
+        /// <summary>
+        /// 由Attributes例化而来的参数表
+        /// </summary>
+        public ObservableCollection<Instance> Properties => properties;
     }
 }

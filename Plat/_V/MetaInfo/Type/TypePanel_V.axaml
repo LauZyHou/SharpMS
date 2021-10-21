@@ -72,7 +72,7 @@
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Grid.Column="2" Content="✖️Clear" Command="{Binding ClearParentType}"
+            <Button Grid.Column="2" Content="❎Clear" Command="{Binding ClearParentType}"
                 CommandParameter="{Binding #TypeList.SelectedItem}" IsEnabled="{Binding !CurrentType.IsBase}"/>
           </Grid>
           <ListBox Grid.Row="3" Name="AttrList" Items="{Binding CurrentType.Attributes}">

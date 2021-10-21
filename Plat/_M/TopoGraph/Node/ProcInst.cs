@@ -63,7 +63,7 @@ namespace Plat._M
             }
         }
         /// <summary>
-        /// 例化参数表
+        /// 由Attributes例化而来的参数表
         /// </summary>
         public ObservableCollection<Instance> Properties => properties;
     }

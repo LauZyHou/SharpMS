@@ -77,7 +77,7 @@
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Grid.Column="2" Content="✖️Clear" Command="{Binding ClearParentEnv}"/>
+            <Button Grid.Column="2" Content="❎Clear" Command="{Binding ClearParentEnv}"/>
           </Grid>
           <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Env Desc:"/>

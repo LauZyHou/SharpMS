@@ -35,29 +35,34 @@ namespace Plat._M
                         procEnvInst.PortChanInsts.Clear();
                     }
                 }
-                // 重新生成实例的Properties
+                // 重新生成实例的Properties（需要考虑Proc级的继承关系
                 this.properties.Clear();
                 if (proc is null)
                 {
                     return;
                 }
-                foreach (VisAttr attr in proc.Attributes)
+                Proc? hyperProc = proc;
+                do
                 {
-                    Instance instance;
-                    if (attr.IsArray) // 数组类型
+                    foreach (VisAttr attr in hyperProc.Attributes)
                     {
-                        instance = new ArrayInstance(attr.Type, attr.Identifier, attr.IsArray);
+                        Instance instance;
+                        if (attr.IsArray) // 数组类型
+                        {
+                            instance = new ArrayInstance(attr.Type, attr.Identifier, attr.IsArray);
+                        }
+                        else if (attr.Type.IsBase) // 值类型
+                        {
+                            instance = new ValueInstance(attr.Type, attr.Identifier, attr.IsArray);
+                        }
+                        else // 引用类型
+                        {
+                            instance = ReferenceInstance.build(attr.Type, attr.Identifier, attr.IsArray);
+                        }
+                        this.properties.Add(instance);
                     }
-                    else if (attr.Type.IsBase) // 值类型
-                    {
-                        instance = new ValueInstance(attr.Type, attr.Identifier, attr.IsArray);
-                    }
-                    else // 引用类型
-                    {
-                        instance = ReferenceInstance.build(attr.Type, attr.Identifier, attr.IsArray);
-                    }
-                    this.properties.Add(instance);
-                }
+                    hyperProc = hyperProc.Parent;
+                } while (hyperProc is not null);
                 // Tips
                 ResourceManager.UpdateTip($"Process template switched for process instance. (1) Clear edge. (2) Regen instance.");
             }

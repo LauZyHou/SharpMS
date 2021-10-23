@@ -100,8 +100,8 @@
         <TreeDataTemplate DataType="m:ArrayInstance" ItemsSource="{Binding ArrayItems}">
           <StackPanel Orientation="Horizontal">
             <TextBlock Text="{Binding .}"/>
-            <Button Command="{Binding PushItem}" Content="⏬"/>
-            <Button Command="{Binding PopItem}" Content="⏫"/>
+            <Button Command="{Binding PushItem}" Content="➕"/>
+            <Button Command="{Binding PopItem}" Content="➖"/>
           </StackPanel>
         </TreeDataTemplate>
         <!--值类型为叶子-->

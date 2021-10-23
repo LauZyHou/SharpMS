@@ -35,29 +35,34 @@ namespace Plat._M
                         procEnvInst.PortChanInsts.Clear();
                     }
                 }
-                // 重新生成实例的Properties
+                // 重新生成实例的Properties（需要考虑Env级的继承关系
                 this.properties.Clear();
                 if (env is null)
                 {
                     return;
                 }
-                foreach (VisAttr attr in env.Attributes)
+                Env? hyperEnv = env;
+                do
                 {
-                    Instance instance;
-                    if (attr.IsArray) // 数组类型
+                    foreach (VisAttr attr in hyperEnv.Attributes)
                     {
-                        instance = new ArrayInstance(attr.Type, attr.Identifier, attr.IsArray);
+                        Instance instance;
+                        if (attr.IsArray) // 数组类型
+                        {
+                            instance = new ArrayInstance(attr.Type, attr.Identifier, attr.IsArray);
+                        }
+                        else if (attr.Type.IsBase) // 值类型
+                        {
+                            instance = new ValueInstance(attr.Type, attr.Identifier, attr.IsArray);
+                        }
+                        else // 引用类型
+                        {
+                            instance = ReferenceInstance.build(attr.Type, attr.Identifier, attr.IsArray);
+                        }
+                        this.properties.Add(instance);
                     }
-                    else if (attr.Type.IsBase) // 值类型
-                    {
-                        instance = new ValueInstance(attr.Type, attr.Identifier, attr.IsArray);
-                    }
-                    else // 引用类型
-                    {
-                        instance = ReferenceInstance.build(attr.Type, attr.Identifier, attr.IsArray);
-                    }
-                    this.properties.Add(instance);
-                }
+                    hyperEnv = hyperEnv.Parent;
+                } while (hyperEnv is not null);
                 // Tips
                 ResourceManager.UpdateTip($"Environment template switched for environment instance. (1) Clear edge. (2) Regen instance.");
             }

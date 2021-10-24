@@ -10,7 +10,7 @@ namespace Plat._V
     /// <summary>
     /// Initial Knowledge Panel View Model
     /// </summary>
-    public partial class IKPanel_V : DragDrop_P_V
+    public partial class IKPanel_V : UserControl
     {
         public IKPanel_V()
         {

@@ -8,12 +8,12 @@ namespace Plat._VM
     /// <summary>
     /// Initial Knowledge Panel View Model
     /// </summary>
-    public class IKPanel_VM : DragDrop_P_VM
+    public class IKPanel_VM : ViewModelBase
     {
         private IK? currentIK;
         private readonly ObservableCollection<Type> typeList;
         private readonly ObservableCollection<IK> iKList;
-        private Attribute? currentAttr;
+        private ValAttr? currentAttr;
         private AttrPair? currentAttrPair;
         private readonly ObservableCollection<Proc> procList;
         private readonly ObservableCollection<Env> envList;
@@ -41,7 +41,7 @@ namespace Plat._VM
         /// <summary>
         /// 当前选中的Attribute
         /// </summary>
-        public Attribute? CurrentAttr { get => currentAttr; set => this.RaiseAndSetIfChanged(ref currentAttr, value); }
+        public ValAttr? CurrentAttr { get => currentAttr; set => this.RaiseAndSetIfChanged(ref currentAttr, value); }
         /// <summary>
         /// 当前选中的AttrPair，用于Proc型IK
         /// </summary>
@@ -110,7 +110,7 @@ namespace Plat._VM
                 ResourceManager.UpdateTip($"An IK must be selected!");
                 return;
             }
-            this.currentIK.Attributes.Add(new Attribute("newAttr", Type.TYPE_BOOL));
+            this.currentIK.Attributes.Add(new ValAttr("newAttr", Type.TYPE_BOOL));
             ResourceManager.UpdateTip($"Create new global attribute.");
         }
 
@@ -160,7 +160,7 @@ namespace Plat._VM
                 return;
             }
             int pos = (int)attrPos;
-            Attribute attr = this.currentIK.Attributes[pos];
+            ValAttr attr = this.currentIK.Attributes[pos];
             this.currentIK.Attributes.RemoveAt(pos);
             this.currentIK.Attributes.Insert(pos - 1, attr);
             ResourceManager.UpdateTip($"Move up the global attribute [{attr.Identifier}] for IK [{this.currentIK.Identifier}].");
@@ -193,7 +193,7 @@ namespace Plat._VM
                 return;
             }
             int pos = (int)attrPos;
-            Attribute attr = this.currentIK.Attributes[pos];
+            ValAttr attr = this.currentIK.Attributes[pos];
             this.currentIK.Attributes.RemoveAt(pos);
             this.currentIK.Attributes.Insert(pos + 1, attr);
             ResourceManager.UpdateTip($"Move down the global attribute [{attr.Identifier}] for IK [{this.currentIK.Identifier}].");
@@ -285,16 +285,5 @@ namespace Plat._VM
         }
 
         #endregion
-
-
-        public override void CreateLinker(Anchor_VM src, Anchor_VM dst)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void DeleteDragDropItem(DragDrop_VM item)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

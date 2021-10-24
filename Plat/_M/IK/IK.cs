@@ -9,13 +9,13 @@ namespace Plat._M
     public class IK : ReactiveObject
     {
         private string identifier;
-        private readonly ObservableCollection<Attribute> attributes;
+        private readonly ObservableCollection<ValAttr> attributes;
         private readonly ObservableCollection<AttrPair> attrPairs;
 
         public IK(string identifier)
         {
             this.identifier = identifier;
-            this.attributes = new ObservableCollection<Attribute>();
+            this.attributes = new ObservableCollection<ValAttr>();
             this.attrPairs = new ObservableCollection<AttrPair>();
         }
 
@@ -23,7 +23,7 @@ namespace Plat._M
         /// <summary>
         /// 全局初始知识的属性
         /// </summary>
-        public ObservableCollection<Attribute> Attributes => attributes;
+        public ObservableCollection<ValAttr> Attributes => attributes;
         /// <summary>
         /// 模板初始知识的<模板,属性>序偶
         /// </summary>

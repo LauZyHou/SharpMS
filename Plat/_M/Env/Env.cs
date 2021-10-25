@@ -14,6 +14,7 @@ namespace Plat._M
     /// </summary>
     public class Env : ReactiveObject
     {
+        private static int _id = 0;
         private string identifier;
         private ObservableCollection<VisAttr> attributes;
         private ObservableCollection<Channel> channels;
@@ -21,6 +22,23 @@ namespace Plat._M
         private Env? parent;
         private string description;
 
+        /// <summary>
+        /// 无参构造
+        /// </summary>
+        public Env()
+        {
+            this.identifier = $"E{++_id}";
+            this.pub = true;
+            this.attributes = new ObservableCollection<VisAttr>();
+            this.channels = new ObservableCollection<Channel>();
+            this.description = "";
+        }
+
+        /// <summary>
+        /// 带标识符的构造
+        /// </summary>
+        /// <param name="identifier">环境标识</param>
+        /// <param name="pub">环境是否公开</param>
         public Env(string identifier, bool pub = true)
         {
             this.identifier = identifier;

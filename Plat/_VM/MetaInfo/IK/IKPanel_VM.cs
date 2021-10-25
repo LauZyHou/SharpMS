@@ -62,7 +62,7 @@ namespace Plat._VM
         /// </summary>
         private void OnCreateNewIK()
         {
-            IK ik = new IK("NewIK");
+            IK ik = new IK();
             this.iKList.Add(ik);
             // 同步操作结果到类图
             ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;
@@ -110,7 +110,7 @@ namespace Plat._VM
                 ResourceManager.UpdateTip($"An IK must be selected!");
                 return;
             }
-            this.currentIK.Attributes.Add(new ValAttr("newAttr", Type.TYPE_BOOL));
+            this.currentIK.Attributes.Add(new ValAttr());
             ResourceManager.UpdateTip($"Create new global attribute.");
         }
 

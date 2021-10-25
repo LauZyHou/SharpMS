@@ -34,7 +34,7 @@ namespace Plat._VM
         /// </summary>
         private void CreateEnv()
         {
-            Env env = new Env("NewEnv");
+            Env env = new Env();
             this.envList.Add(env);
             // 同步操作结果到类图
             ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;
@@ -82,7 +82,7 @@ namespace Plat._VM
                 ResourceManager.UpdateTip("A env must be selected!");
                 return;
             }
-            currentEnv.Attributes.Add(new _M.VisAttr("NewAttr", _M.Type.TYPE_BOOL));
+            currentEnv.Attributes.Add(new _M.VisAttr());
             ResourceManager.UpdateTip($"Create a new attr on env [{currentEnv.Identifier}].");
         }
 
@@ -115,7 +115,7 @@ namespace Plat._VM
                 ResourceManager.UpdateTip("A env must be selected!");
                 return;
             }
-            currentEnv.Channels.Add(new Channel("NewChan", 1, false));
+            currentEnv.Channels.Add(new Channel());
             ResourceManager.UpdateTip($"Add new channel for env [{currentEnv.Identifier}].");
         }
 

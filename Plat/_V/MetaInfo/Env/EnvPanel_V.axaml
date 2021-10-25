@@ -39,9 +39,9 @@
           <DataTemplate>
             <TextBlock>
               <TextBlock.Text>
-                <MultiBinding StringFormat=" {0}(Pub={1}) // {2}">
+                <MultiBinding StringFormat=" {0} ◁ {1} // {2}">
                   <Binding Path="Identifier"/>
-                  <Binding Path="Pub"/>
+                  <Binding Path="Parent.Identifier"/>
                   <Binding Path="Description"/>
                 </MultiBinding>
               </TextBlock.Text>
@@ -94,7 +94,7 @@
                   <TextBlock Text=": "/>
                   <TextBlock Text="[]" IsVisible="{Binding IsArray}"/>
                   <TextBlock Text="{Binding Type.Identifier}"/>
-                  <TextBlock Text=" //"/>
+                  <TextBlock Text=" // "/>
                   <TextBlock Text="{Binding Description}"/>
                   <TextBlock Text=" "/>
                 </StackPanel>
@@ -139,16 +139,17 @@
       </TabItem>
       <!--Channel Tab-->
       <TabItem Header="Chans">
-        <Grid RowDefinitions="60*, 10*, 10*, 10*, 10*">
+        <Grid RowDefinitions="60*,8*,8*,8*,8*,8*">
           <ListBox Grid.Row="0" Name="ChanList" Items="{Binding CurrentEnv.Channels}">
             <ListBox.ItemTemplate>
               <DataTemplate>
                 <TextBlock>
                   <TextBlock.Text>
-                    <MultiBinding StringFormat=" {0} {1}[{2}]">
+                    <MultiBinding StringFormat=" {0} {1}[{2}] // {3}">
                       <Binding Path="PubStr"/>
                       <Binding Path="Identifier"/>
                       <Binding Path="Capacity"/>
+                      <Binding Path="Description"/>
                     </MultiBinding>
                   </TextBlock.Text>
                 </TextBlock>
@@ -163,17 +164,21 @@
             <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownChan}" CommandParameter="{Binding #ChanList.SelectedIndex}"/>
           </Grid>
           <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Classes="ABBox">
-            <TextBlock Grid.Column="0" Text="Channel Name"/>
+            <TextBlock Grid.Column="0" Text="Channel Name:"/>
             <TextBox Grid.Column="1" Text="{Binding #ChanList.SelectedItem.Identifier, Mode=TwoWay}"/>
           </Grid>
           <Grid Grid.Row="3" ColumnDefinitions="30*, 70*" Classes="ABBox">
-            <TextBlock Grid.Column="0" Text="Channel Capacity"/>
+            <TextBlock Grid.Column="0" Text="Channel Capacity:"/>
             <NumericUpDown Grid.Column="1" Value="{Binding #ChanList.SelectedItem.Capacity, Mode=TwoWay}"/>
           </Grid>
           <Grid Grid.Row="4" ColumnDefinitions="30*, 70*" Classes="ABBox">
-            <TextBlock Grid.Column="0" Text="Channel Visible"/>
+            <TextBlock Grid.Column="0" Text="Channel Visible:"/>
             <CheckBox Grid.Column="1" IsThreeState="False"
                       IsChecked="{Binding #ChanList.SelectedItem.Pub, Mode=TwoWay}"/>
+          </Grid>
+          <Grid Grid.Row="5" ColumnDefinitions="30*,70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Channel Desc:"/>
+            <TextBox Grid.Column="1" Text="{Binding #ChanList.SelectedItem.Description, Mode=TwoWay}"/>
           </Grid>
         </Grid>
       </TabItem>

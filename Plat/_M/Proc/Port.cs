@@ -9,15 +9,31 @@ namespace Plat._M
 {
     public class Port : ReactiveObject
     {
+        private static int _id = 0;
         private string identifier;
         private bool isOut;
         private string description;
 
-        public Port(string identifier, bool isOut = true)
+        /// <summary>
+        /// 无参构造
+        /// </summary>
+        public Port()
+        {
+            this.identifier = $"p{++_id}";
+            this.isOut = true;
+            this.description = "";
+        }
+
+        /// <summary>
+        /// 带标识的构造
+        /// </summary>
+        /// <param name="identifier">端口标识</param>
+        /// <param name="isOut">是否是出端口</param>
+        public Port(string identifier, bool isOut = true, string description = "")
         {
             this.identifier = identifier;
             this.isOut = isOut;
-            this.description = "";
+            this.description = description;
         }
 
         public string Identifier { get => identifier; set => this.RaiseAndSetIfChanged(ref identifier, value); }

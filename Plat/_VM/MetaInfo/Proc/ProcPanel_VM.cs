@@ -82,7 +82,7 @@ namespace Plat._VM
         /// </summary>
         private void CreateProc()
         {
-            Proc proc = new Proc("NewProc");
+            Proc proc = new Proc();
             this.procList.Add(proc);
             // 同步到ProcGraph组
             ProcGraph_P_VM procGraph_P_VM = new ProcGraph_P_VM(new ProcGraph(proc));
@@ -103,7 +103,7 @@ namespace Plat._VM
             {
                 return;
             }
-            proc.Attributes.Add(new VisAttr("newAttr", Type.TYPE_INT));
+            proc.Attributes.Add(new VisAttr());
             ResourceManager.UpdateTip($"Create a new parameter for process [{proc.Identifier}].");
         }
 
@@ -131,7 +131,7 @@ namespace Plat._VM
                 ResourceManager.UpdateTip($"A process must be selected!");
                 return;
             }
-            Caller c = new Caller("newMethod", Type.TYPE_BOOL);
+            Caller c = new Caller();
             this.currentProc.Methods.Add(c);
             ResourceManager.UpdateTip($"Add a new method for process [{this.currentProc.Identifier}].");
         }
@@ -333,7 +333,7 @@ namespace Plat._VM
                 ResourceManager.UpdateTip($"A process must be selected!");
                 return;
             }
-            this.currentProc.Ports.Add(new Port("NewPort"));
+            this.currentProc.Ports.Add(new Port());
             ResourceManager.UpdateTip($"Create a new port on process [{this.currentProc.Identifier}].");
         }
 

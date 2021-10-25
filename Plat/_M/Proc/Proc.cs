@@ -13,6 +13,7 @@ namespace Plat._M
     /// </summary>
     public class Proc : ReactiveObject
     {
+        private static int _id = 0;
         private string identifier;
         private string description;
         private ObservableCollection<VisAttr> attributes;
@@ -20,6 +21,23 @@ namespace Plat._M
         private ObservableCollection<Port> ports;
         private Proc? parent;
 
+        /// <summary>
+        /// 无参构造
+        /// </summary>
+        public Proc()
+        {
+            this.identifier = $"P{++_id}";
+            this.description = "";
+            this.attributes = new ObservableCollection<VisAttr>();
+            this.methods = new ObservableCollection<Caller>();
+            this.ports = new ObservableCollection<Port>();
+        }
+
+        /// <summary>
+        /// 带有标识的构造
+        /// </summary>
+        /// <param name="identifier">进程模板标识</param>
+        /// <param name="description">注解描述</param>
         public Proc(string identifier, string description = "")
         {
             this.identifier = identifier;

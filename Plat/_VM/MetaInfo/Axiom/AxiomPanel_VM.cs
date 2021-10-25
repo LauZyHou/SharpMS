@@ -29,7 +29,7 @@ namespace Plat._VM
         /// </summary>
         private void OnCreateNewAxiom()
         {
-            Axiom axiom = new Axiom("NewAxiom");
+            Axiom axiom = new Axiom();
             ResourceManager.axioms.Add(axiom);
             // 同步操作结果到类图
             ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;

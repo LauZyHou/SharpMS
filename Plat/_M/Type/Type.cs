@@ -13,6 +13,7 @@ namespace Plat._M
     /// </summary>
     public class Type : ReactiveObject
     {
+        private static int _id = 0;
         private string identifier;
         private string description;
         private Type? parent;
@@ -20,6 +21,25 @@ namespace Plat._M
         private ObservableCollection<Caller> methods;
         private readonly bool isBase;
 
+        /// <summary>
+        /// 无参构造
+        /// </summary>
+        public Type()
+        {
+            this.identifier = $"T{++_id}";
+            this.description = "";
+            this.isBase = false;
+            this.parent = null;
+            this.attributes = new ObservableCollection<Attribute>();
+            this.methods = new ObservableCollection<Caller>();
+        }
+
+        /// <summary>
+        /// 带名构造
+        /// </summary>
+        /// <param name="identifier">类型标识</param>
+        /// <param name="description">注解描述</param>
+        /// <param name="isBase">是否是基本类型</param>
         public Type(string identifier, string description = "", bool isBase = false)
         {
             this.identifier = identifier;

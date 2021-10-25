@@ -13,16 +13,34 @@ namespace Plat._M
     /// </summary>
     public class Caller : ReactiveObject
     {
+        private static int _id = 0;
         private readonly ObservableCollection<Type> paramTypes;
         private string identifier;
         private Type returnType;
         private string description;
 
-        public Caller(string identifier, Type returnType)
+        /// <summary>
+        /// 无参构造
+        /// </summary>
+        public Caller()
+        {
+            this.identifier = $"Fun{++_id}";
+            this.returnType = Type.TYPE_BOOL;
+            this.description = "";
+            this.paramTypes = new ObservableCollection<Type>();
+        }
+
+        /// <summary>
+        /// 指定调用名和返回类型的构造
+        /// </summary>
+        /// <param name="identifier">函数或方法名</param>
+        /// <param name="returnType">返回值类型</param>
+        /// <param name="description">注解描述</param>
+        public Caller(string identifier, Type returnType, string description = "")
         {
             this.identifier = identifier;
             this.returnType = returnType;
-            this.description = "";
+            this.description = description;
             this.paramTypes = new ObservableCollection<Type>();
         }
 

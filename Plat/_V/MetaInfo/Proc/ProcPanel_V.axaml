@@ -39,10 +39,11 @@
 					<DataTemplate>
 						<TextBlock>
 							<TextBlock.Text>
-								<MultiBinding StringFormat=" {0} // {1}">
-									<Binding Path="Identifier"/>
-									<Binding Path="Description"/>
-								</MultiBinding>
+                <MultiBinding StringFormat=" {0} ◁ {1} // {2}">
+                  <Binding Path="Identifier"/>
+                  <Binding Path="Parent.Identifier"/>
+                  <Binding Path="Description"/>
+                </MultiBinding>
 							</TextBlock.Text>
 						</TextBlock>
 					</DataTemplate>
@@ -88,7 +89,7 @@
                   <TextBlock Text=": "/>
                   <TextBlock Text="[]" IsVisible="{Binding IsArray}"/>
                   <TextBlock Text="{Binding Type.Identifier}"/>
-                  <TextBlock Text=" //"/>
+                  <TextBlock Text=" // "/>
                   <TextBlock Text="{Binding Description}"/>
                   <TextBlock Text=" "/>
                 </StackPanel>
@@ -141,7 +142,7 @@
         </Grid>
       </TabItem>
       <TabItem Header="Methods">
-        <Grid RowDefinitions="40*, 10*, 10*, 10*, 30*">
+        <Grid RowDefinitions="39*,8*,8*,8*,8*,29*">
           <!--大函数表-->
           <ListBox Grid.Row="0" Name="MethodList" Items="{Binding CurrentProc.Methods}"
                    SelectedItem="{Binding CurrentMethod, Mode=OneWayToSource}">
@@ -168,12 +169,12 @@
             <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownMethod}" CommandParameter="{Binding #MethodList.SelectedIndex}"/>
           </Grid>
           <!--函数名-->
-          <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
+          <Grid Grid.Row="2" ColumnDefinitions="30*, 70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Method Name:"/>
             <TextBox Grid.Column="1" Text="{Binding #MethodList.SelectedItem.Identifier, Mode=TwoWay}"/>
           </Grid>
           <!--返回值-->
-          <Grid Grid.Row="3" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
+          <Grid Grid.Row="3" ColumnDefinitions="30*, 70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Return Type:"/>
             <ComboBox Grid.Column="1" Items="{Binding TypeList}" SelectedItem="{Binding #MethodList.SelectedItem.ReturnType, Mode=TwoWay}">
               <ComboBox.ItemTemplate>
@@ -183,8 +184,13 @@
               </ComboBox.ItemTemplate>
             </ComboBox>
           </Grid>
+          <!--方法描述-->
+          <Grid Grid.Row="4" ColumnDefinitions="30*,70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="Method Desc:"/>
+            <TextBox Grid.Column="1" Text="{Binding #MethodList.SelectedItem.Description, Mode=TwoWay}"/>
+          </Grid>
           <!--底下关于方法参数的Grid-->
-          <Grid Grid.Row="4" RowDefinitions="10*, 10*, 10*" ColumnDefinitions="25*, 10*, 5*" Margin="0, 0, 0, 20">
+          <Grid Grid.Row="5" RowDefinitions="10*, 10*, 10*" ColumnDefinitions="25*, 10*, 5*" Margin="0, 0, 0, 20">
             <ListBox Name="ParamList" Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
                      Items="{Binding #MethodList.SelectedItem.ParamTypes}">
               <ListBox.ItemTemplate>

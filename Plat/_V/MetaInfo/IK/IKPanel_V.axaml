@@ -37,7 +37,14 @@
       <ListBox Name="IKList" Grid.Row="1" Items="{Binding IKList}" SelectedItem="{Binding CurrentIK, Mode=OneWayToSource}">
         <ListBox.ItemTemplate>
           <DataTemplate>
-            <TextBlock Text="{Binding Identifier}"/>
+            <TextBlock>
+              <TextBlock.Text>
+                <MultiBinding StringFormat=" {0} // {1}">
+                  <Binding Path="Identifier"/>
+                  <Binding Path="Description"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
           </DataTemplate>
         </ListBox.ItemTemplate>
       </ListBox>
@@ -50,12 +57,16 @@
     <TabControl Grid.Column="2">
       <!--GlbIni-->
       <TabItem Header="Desc/For Global">
-        <Grid RowDefinitions="8*,44*,8*,8*,8*,8*,8*,8*">
+        <Grid RowDefinitions="8*,8*,36*,8*,8*,8*,8*,8*,8*">
           <Grid Grid.Row="0" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="IK Name:"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentIK.Identifier, Mode=TwoWay}"/>
           </Grid>
-          <ListBox Name="AttrList" Grid.Row="1" Items="{Binding CurrentIK.Attributes}" SelectedItem="{Binding CurrentAttr, Mode=OneWayToSource}">
+          <Grid Grid.Row="1" ColumnDefinitions="30*,70*" Classes="ABBox">
+            <TextBlock Grid.Column="0" Text="IK Desc:"/>
+            <TextBox Grid.Column="1" Text="{Binding CurrentIK.Description, Mode=TwoWay}"/>
+          </Grid>
+          <ListBox Name="AttrList" Grid.Row="2" Items="{Binding CurrentIK.Attributes}" SelectedItem="{Binding CurrentAttr, Mode=OneWayToSource}">
             <ListBox.ItemTemplate>
               <DataTemplate>
                 <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0">
@@ -73,17 +84,17 @@
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
-          <Grid Grid.Row="2" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
+          <Grid Grid.Row="3" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
             <Button Grid.Column="0" Content="➕Create Global Attribute" Command="{Binding OnCreateGlobalAttr}"/>
             <Button Grid.Column="1" Content="➖Delete Selected Attribute" Command="{Binding OnDeleteGlobalAttr}"/>
             <Button Grid.Column="2" Content="🔼" Command="{Binding OnMoveUpGlobalAttr}" CommandParameter="{Binding #AttrList.SelectedIndex}"/>
             <Button Grid.Column="3" Content="🔽" Command="{Binding OnMoveDownGlobalAttr}" CommandParameter="{Binding #AttrList.SelectedIndex}"/>
           </Grid>
-          <Grid Grid.Row="3" ColumnDefinitions="30*,70*" Classes="ABBox">
+          <Grid Grid.Row="4" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Name:"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentAttr.Identifier, Mode=TwoWay}"/>
           </Grid>
-          <Grid Grid.Row="4" ColumnDefinitions="30*,70*" Classes="ABBox">
+          <Grid Grid.Row="5" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Type:"/>
             <ComboBox Grid.Column="1" Items="{Binding TypeList}" SelectedItem="{Binding CurrentAttr.Type}">
               <ComboBox.ItemTemplate>
@@ -93,15 +104,15 @@
               </ComboBox.ItemTemplate>
             </ComboBox>
           </Grid>
-          <Grid Grid.Row="5" ColumnDefinitions="30*,70*" Classes="ABBox">
+          <Grid Grid.Row="6" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Is Array:"/>
             <CheckBox Grid.Column="1" IsThreeState="False" IsChecked="{Binding CurrentAttr.IsArray, Mode=TwoWay}"/>
           </Grid>
-          <Grid Grid.Row="6" ColumnDefinitions="30*,70*" Classes="ABBox">
+          <Grid Grid.Row="7" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Value:"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentAttr.Value, Mode=TwoWay}"/>
           </Grid>
-          <Grid Grid.Row="7" ColumnDefinitions="30*,70*" Classes="ABBox">
+          <Grid Grid.Row="8" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Desc:"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentAttr.Description, Mode=TwoWay}"/>
           </Grid>

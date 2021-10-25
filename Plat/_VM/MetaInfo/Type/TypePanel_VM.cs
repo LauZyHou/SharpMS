@@ -14,7 +14,6 @@ namespace Plat._VM
     /// </summary>
     public class TypePanel_VM : ViewModelBase
     {
-
         private Type? currentType;
         private ObservableCollection<Type> typeList;
         private Caller? currentMethod;
@@ -78,7 +77,7 @@ namespace Plat._VM
         /// </summary>
         private void CreateType()
         {
-            Type type = new Type("NewType");
+            Type type = new Type();
             this.typeList.Add(type);
             // 同步操作结果到类图
             ClassDiagram_P_VM classDiagram_P_VM = ResourceManager.mainWindow_VM.ClassDiagram_P_VM;
@@ -110,7 +109,7 @@ namespace Plat._VM
                 ResourceManager.UpdateTip("A custom data type must be selected!");
                 return;
             }
-            type.Attributes.Add(new Attribute("newAttr", Type.TYPE_INT));
+            type.Attributes.Add(new Attribute());
             ResourceManager.UpdateTip($"Create a new attribute for type [{type.Identifier}].");
         }
 
@@ -139,7 +138,7 @@ namespace Plat._VM
                 ResourceManager.UpdateTip("A custom data type must be selected!");
                 return;
             }
-            currentType.Methods.Add(new Caller("NewMethod", Type.TYPE_BOOL));
+            currentType.Methods.Add(new Caller());
             ResourceManager.UpdateTip($"Create a new method on type [{currentType.Identifier}].");
         }
 

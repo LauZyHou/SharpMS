@@ -54,5 +54,23 @@ namespace Plat._VM
                 ResourceManager.anchorVisible.OnNext(value);
             }
         }
+        #region Command
+
+        private void OnOpen()
+        {
+
+        }
+
+        private void OnSaveAs()
+        {
+
+        }
+
+        private void OnAboutSharpMS()
+        {
+            ResourceManager.UpdateTip("Get more info at https://github.com/LauZyHou/SharpMS");
+        }
+
+        #endregion
     }
 }

@@ -13,7 +13,9 @@ namespace Plat._M
     /// </summary>
     public class Type : ReactiveObject
     {
-        private static int _id = 0;
+        public static int _id = 0;
+
+        private int id;
         private string identifier;
         private string description;
         private Type? parent;
@@ -26,7 +28,7 @@ namespace Plat._M
         /// </summary>
         public Type()
         {
-            this.identifier = $"T{++_id}";
+            this.identifier = $"T{this.id = ++_id}";
             this.description = "";
             this.isBase = false;
             this.parent = null;
@@ -42,6 +44,7 @@ namespace Plat._M
         /// <param name="isBase">是否是基本类型</param>
         public Type(string identifier, string description = "", bool isBase = false)
         {
+            this.id = ++_id;
             this.identifier = identifier;
             this.description = description;
             this.isBase = isBase;
@@ -50,6 +53,7 @@ namespace Plat._M
             this.methods = new ObservableCollection<Caller>();
         }
 
+        public int Id { get => id; set => id = value; }
         /// <summary>
         /// 类型的标识符，如Int、Msg
         /// </summary>

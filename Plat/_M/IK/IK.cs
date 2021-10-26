@@ -8,7 +8,9 @@ namespace Plat._M
     /// </summary>
     public class IK : ReactiveObject
     {
-        private static int _id = 0;
+        public static int _id = 0;
+
+        private int id;
         private string identifier;
         private readonly ObservableCollection<ValAttr> attributes;
         private readonly ObservableCollection<AttrPair> attrPairs;
@@ -19,7 +21,7 @@ namespace Plat._M
         /// </summary>
         public IK()
         {
-            this.identifier = $"Ik{++_id}";
+            this.identifier = $"Ik{this.id = ++_id}";
             this.description = "";
             this.attributes = new ObservableCollection<ValAttr>();
             this.attrPairs = new ObservableCollection<AttrPair>();
@@ -32,12 +34,14 @@ namespace Plat._M
         /// <param name="description">注解描述</param>
         public IK(string identifier, string description = "")
         {
+            this.id = ++_id;
             this.identifier = identifier;
             this.description = description;
             this.attributes = new ObservableCollection<ValAttr>();
             this.attrPairs = new ObservableCollection<AttrPair>();
         }
 
+        public int Id { get => id; set => id = value; }
         /// <summary>
         /// 初始知识标识
         /// </summary>

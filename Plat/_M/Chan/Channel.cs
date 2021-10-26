@@ -12,7 +12,9 @@ namespace Plat._M
     /// </summary>
     public class Channel : ReactiveObject
     {
-        private static int _id = 0;
+        public static int _id = 0;
+
+        private int id;
         private string identifier;
         private bool pub;
         private int capacity;
@@ -23,7 +25,7 @@ namespace Plat._M
         /// </summary>
         public Channel()
         {
-            this.identifier = $"c{++_id}";
+            this.identifier = $"c{this.id = ++_id}";
             this.capacity = 1;
             this.pub = true;
             this.description = "";
@@ -38,12 +40,14 @@ namespace Plat._M
         /// <param name="description">注解描述</param>
         public Channel(string identifier, int capacity, bool pub = true, string description = "")
         {
+            this.id = ++_id;
             this.identifier = identifier;
             this.capacity = capacity;
             this.pub = pub;
             this.description = description;
         }
 
+        public int Id { get => id; set => id = value; }
         /// <summary>
         /// 信道模板名
         /// </summary>

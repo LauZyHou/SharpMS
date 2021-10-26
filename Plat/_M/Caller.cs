@@ -13,7 +13,9 @@ namespace Plat._M
     /// </summary>
     public class Caller : ReactiveObject
     {
-        private static int _id = 0;
+        public static int _id = 0;
+
+        private int id;
         private readonly ObservableCollection<Type> paramTypes;
         private string identifier;
         private Type returnType;
@@ -24,7 +26,7 @@ namespace Plat._M
         /// </summary>
         public Caller()
         {
-            this.identifier = $"Fun{++_id}";
+            this.identifier = $"Fun{this.id = ++_id}";
             this.returnType = Type.TYPE_BOOL;
             this.description = "";
             this.paramTypes = new ObservableCollection<Type>();
@@ -38,12 +40,14 @@ namespace Plat._M
         /// <param name="description">注解描述</param>
         public Caller(string identifier, Type returnType, string description = "")
         {
+            this.id = ++_id;
             this.identifier = identifier;
             this.returnType = returnType;
             this.description = description;
             this.paramTypes = new ObservableCollection<Type>();
         }
 
+        public int Id { get => id; set => id = value; }
         /// <summary>
         /// 函数/方法名
         /// </summary>

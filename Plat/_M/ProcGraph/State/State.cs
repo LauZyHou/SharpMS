@@ -13,17 +13,26 @@ namespace Plat._M
     public class State : ReactiveObject
     {
         public static int _id = 0;
+
+        private int id;
         private string name;
-        private readonly int id;
 
         /// <summary>
-        /// 用户创建状态
+        /// 无参构造
+        /// </summary>
+        public State()
+        {
+            this.name = $"S{this.id = ++_id}";
+        }
+
+        /// <summary>
+        /// 有名构造
         /// </summary>
         /// <param name="name"></param>
         public State(string name)
         {
+            this.id = ++_id;
             this.name = name;
-            this.id = _id++;
         }
 
         /// <summary>
@@ -38,13 +47,13 @@ namespace Plat._M
         }
 
         /// <summary>
+        /// 状态的自增id
+        /// </summary>
+        public int Id { get => id; set => id = value; }
+        /// <summary>
         /// 状态的名字
         /// </summary>
         public string Name { get => name; set => this.RaiseAndSetIfChanged(ref name, value); }
-        /// <summary>
-        /// 状态的自增id
-        /// </summary>
-        public int Id => id;
         public override string ToString()
         {
             return name;

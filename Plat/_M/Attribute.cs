@@ -12,7 +12,9 @@ namespace Plat._M
     /// </summary>
     public class Attribute : ReactiveObject
     {
-        private static int _id = 0;
+        public static int _id = 0;
+
+        private int id;
         private string identifier;
         private Type type;
         private bool isArray;
@@ -23,7 +25,7 @@ namespace Plat._M
         /// </summary>
         public Attribute()
         {
-            this.identifier = $"v{++_id}";
+            this.identifier = $"v{this.id = ++_id}";
             this.type = Type.TYPE_INT;
             this.isArray = false;
             this.description = "";
@@ -38,12 +40,14 @@ namespace Plat._M
         /// <param name="description">注解描述</param>
         public Attribute(string identifier, Type type, bool isArray = false, string description = "")
         {
+            this.id = ++_id;
             this.identifier = identifier;
             this.type = type;
             this.isArray = isArray;
             this.description = description;
         }
 
+        public int Id { get => id; set => id = value; }
         public Type Type { get => type; set => this.RaiseAndSetIfChanged(ref type, value); }
         public string Identifier { get => identifier; set => this.RaiseAndSetIfChanged(ref identifier, value); }
         public bool IsArray

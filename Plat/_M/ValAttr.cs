@@ -25,10 +25,10 @@ namespace Plat._M
         /// <param name="type">数据类型</param>
         /// <param name="isArray">是否是数组</param>
         /// <param name="description">注解描述</param>
-        public ValAttr(string identifier, Type type, bool isArray = false, string description = "")
+        public ValAttr(string identifier, Type type, bool isArray = false, string val = "", string description = "")
             :base(identifier, type, isArray, description)
         {
-            this.val = "";
+            this.val = val;
         }
 
         public string Value { get => val; set => this.RaiseAndSetIfChanged(ref val, value); }

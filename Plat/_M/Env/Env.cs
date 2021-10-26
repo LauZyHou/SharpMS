@@ -14,7 +14,9 @@ namespace Plat._M
     /// </summary>
     public class Env : ReactiveObject
     {
-        private static int _id = 0;
+        public static int _id = 0;
+
+        private int id;
         private string identifier;
         private ObservableCollection<VisAttr> attributes;
         private ObservableCollection<Channel> channels;
@@ -27,7 +29,7 @@ namespace Plat._M
         /// </summary>
         public Env()
         {
-            this.identifier = $"E{++_id}";
+            this.identifier = $"E{this.id = ++_id}";
             this.pub = true;
             this.attributes = new ObservableCollection<VisAttr>();
             this.channels = new ObservableCollection<Channel>();
@@ -41,6 +43,7 @@ namespace Plat._M
         /// <param name="pub">环境是否公开</param>
         public Env(string identifier, bool pub = true)
         {
+            this.id = ++_id;
             this.identifier = identifier;
             this.pub = pub;
             this.attributes = new ObservableCollection<VisAttr>();
@@ -48,6 +51,7 @@ namespace Plat._M
             this.description = "";
         }
 
+        public int Id { get => id; set => id = value; }
         /// <summary>
         /// 环境的标识符（在拓扑图里需要唯一
         /// </summary>

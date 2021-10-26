@@ -12,6 +12,9 @@ namespace Plat._M
     /// </summary>
     public class AttrPair : ReactiveObject
     {
+        public static int _id = 0;
+
+        private int id;
         private Proc? procA;
         private VisAttr? procAttrA;
         private Proc? procB;
@@ -30,6 +33,7 @@ namespace Plat._M
         /// <param name="procAttrB"></param>
         public AttrPair(Proc procA, VisAttr procAttrA, Proc procB, VisAttr procAttrB)
         {
+            this.id = ++_id;
             this.procA = procA;
             this.procAttrA = procAttrA;
             this.procB = procB;
@@ -45,6 +49,7 @@ namespace Plat._M
         /// <param name="envAttrB"></param>
         public AttrPair(Env envA, VisAttr envAttrA, Env envB, VisAttr envAttrB)
         {
+            this.id = ++_id;
             this.envA = envA;
             this.envAttrA = envAttrA;
             this.envB = envB;
@@ -60,12 +65,14 @@ namespace Plat._M
         /// <param name="envAttrB"></param>
         public AttrPair(Proc procA, VisAttr procAttrA, Env envB, VisAttr envAttrB)
         {
+            this.id = ++_id;
             this.procA = procA;
             this.procAttrA = procAttrA;
             this.envB = envB;
             this.envAttrB = envAttrB;
         }
 
+        public int Id { get => id; set => id = value; }
         public Proc? ProcA
         {
             get => procA;

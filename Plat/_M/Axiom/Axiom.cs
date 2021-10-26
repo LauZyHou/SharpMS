@@ -5,9 +5,11 @@ namespace Plat._M
 {
     public class Axiom : ReactiveObject
     {
-        private static int _id = 0;
-        private readonly ObservableCollection<Formula> formulas;
+        public static int _id = 0;
+
+        private int id;
         private string identifier;
+        private readonly ObservableCollection<Formula> formulas;
         private string description;
 
         /// <summary>
@@ -15,7 +17,7 @@ namespace Plat._M
         /// </summary>
         public Axiom()
         {
-            this.identifier = $"Ax{++_id}";
+            this.identifier = $"Ax{this.id = ++_id}";
             this.description = "";
             this.formulas = new ObservableCollection<Formula>();
         }
@@ -27,11 +29,13 @@ namespace Plat._M
         /// <param name="description"></param>
         public Axiom(string identifier, string description = "")
         {
+            this.id = ++_id;
             this.identifier = identifier;
             this.description = description;
             this.formulas = new ObservableCollection<Formula>();
         }
 
+        public int Id { get => id; set => id = value; }
         public string Identifier { get => identifier; set => this.RaiseAndSetIfChanged(ref identifier, value); }
         public ObservableCollection<Formula> Formulas => formulas;
         public string Description { get => description; set => this.RaiseAndSetIfChanged(ref description, value); }

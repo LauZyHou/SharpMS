@@ -13,7 +13,9 @@ namespace Plat._M
     /// </summary>
     public class Proc : ReactiveObject
     {
-        private static int _id = 0;
+        public static int _id = 0;
+
+        private int id;
         private string identifier;
         private string description;
         private ObservableCollection<VisAttr> attributes;
@@ -26,7 +28,7 @@ namespace Plat._M
         /// </summary>
         public Proc()
         {
-            this.identifier = $"P{++_id}";
+            this.identifier = $"P{this.id = ++_id}";
             this.description = "";
             this.attributes = new ObservableCollection<VisAttr>();
             this.methods = new ObservableCollection<Caller>();
@@ -40,6 +42,7 @@ namespace Plat._M
         /// <param name="description">注解描述</param>
         public Proc(string identifier, string description = "")
         {
+            this.id = ++_id;
             this.identifier = identifier;
             this.description = description;
             this.attributes = new ObservableCollection<VisAttr>();
@@ -47,6 +50,7 @@ namespace Plat._M
             this.ports = new ObservableCollection<Port>();
         }
 
+        public int Id { get => id; set => id = value; }
         /// <summary>
         /// 进程的标识符，就是进程的唯一名字
         /// </summary>

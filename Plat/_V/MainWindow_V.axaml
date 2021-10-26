@@ -23,10 +23,12 @@
 
     <Menu Grid.Row="0" MinHeight="23" Background="LightGray">
       <MenuItem Header="File">
-
+        <MenuItem Header="Open" Command="{Binding OnOpen}"/>
+        <MenuItem Header="Save"/>
+        <MenuItem Header="Save As" Command="{Binding OnSaveAs}"/>
       </MenuItem>
       <MenuItem Header="Help">
-
+        <MenuItem Header="About SharpMS" Command="{Binding OnAboutSharpMS}"/>
       </MenuItem>
     </Menu>
 

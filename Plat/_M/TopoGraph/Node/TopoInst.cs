@@ -8,7 +8,8 @@ namespace Plat._M
     public abstract class TopoInst : ReactiveObject
     {
         public static int _id = 0;
-        private readonly int id;
+
+        private int id;
         private string desc;
 
         public TopoInst()
@@ -17,7 +18,7 @@ namespace Plat._M
             this.desc = "";
         }
 
-        public int Id => id;
+        public int Id { get => id; set => id = value; }
         public string Desc { get => desc; set => this.RaiseAndSetIfChanged(ref desc, value); }
 
         #region As String

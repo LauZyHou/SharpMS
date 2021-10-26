@@ -8,7 +8,8 @@ namespace Plat._M
     public class PortChanInst : ReactiveObject
     {
         public static int _id = 0;
-        private readonly int id;
+
+        private int id;
         private Port? port;
         private Channel? chan;
 
@@ -17,7 +18,7 @@ namespace Plat._M
             this.id = ++_id;
         }
 
-        public int Id => id;
+        public int Id { get => id; set => id = value; }
         public Port? Port { get => port; set => this.RaiseAndSetIfChanged(ref port, value); }
         public Channel? Chan { get => chan; set => this.RaiseAndSetIfChanged(ref chan, value); }
     }

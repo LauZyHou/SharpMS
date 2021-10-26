@@ -9,7 +9,9 @@ namespace Plat._M
 {
     public class Port : ReactiveObject
     {
-        private static int _id = 0;
+        public static int _id = 0;
+
+        private int id;
         private string identifier;
         private bool isOut;
         private string description;
@@ -19,7 +21,7 @@ namespace Plat._M
         /// </summary>
         public Port()
         {
-            this.identifier = $"p{++_id}";
+            this.identifier = $"p{this.id = ++_id}";
             this.isOut = true;
             this.description = "";
         }
@@ -31,11 +33,13 @@ namespace Plat._M
         /// <param name="isOut">是否是出端口</param>
         public Port(string identifier, bool isOut = true, string description = "")
         {
+            this.id = ++_id;
             this.identifier = identifier;
             this.isOut = isOut;
             this.description = description;
         }
 
+        public int Id { get => id; set => id = value; }
         public string Identifier { get => identifier; set => this.RaiseAndSetIfChanged(ref identifier, value); }
         public bool IsOut
         {

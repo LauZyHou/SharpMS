@@ -8,17 +8,22 @@ namespace Plat._M
     /// </summary>
     public class ProcEnvInst : ReactiveObject
     {
+        public static int _id = 0;
+
+        private int id;
         private ProcInst procInst;
         private EnvInst envInst;
         private readonly ObservableCollection<PortChanInst> portChanInsts;
 
         public ProcEnvInst(ProcInst procInst, EnvInst envInst)
         {
+            this.id = ++_id;
             this.procInst = procInst;
             this.envInst = envInst;
             this.portChanInsts = new ObservableCollection<PortChanInst>();
         }
 
+        public int Id { get => id; set => id = value; }
         /// <summary>
         /// Porc实例引用
         /// </summary>

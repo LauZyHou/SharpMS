@@ -13,15 +13,20 @@ namespace Plat._M
     /// </summary>
     public class LocTrans : ReactiveObject
     {
+        public static int _id = 0;
+
+        private int id;
         private readonly ObservableCollection<Formula> actions;
         private Formula guard;
 
         public LocTrans()
         {
+            this.id = ++_id;
             this.guard = new Formula("");
             this.actions = new ObservableCollection<Formula>();
         }
 
+        public int Id { get => id; set => id = value; }
         /// <summary>
         /// 迁移条件
         /// </summary>

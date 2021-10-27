@@ -60,9 +60,9 @@ namespace Plat._V
             foreach (Anchor_VM anchor_VM in VM.Anchor_VMs)
             {
                 anchor_VM.OldPos = anchor_VM.Pos;
-                // I类锚点（单Linker，即TopAnchor）
+                // I类锚点（单Linker，即TopAnchor或普通的Anchor_VM）
                 // 如果锚点的Linker上吸附了DragDrop_VM，也要记录其旧位置
-                if (anchor_VM is TopAnchor_VM
+                if (anchor_VM is not BotAnchor_VM
                         && anchor_VM.LinkerVM is not null
                         && anchor_VM.LinkerVM.ExtMsg is not null
                         && anchor_VM.LinkerVM.ExtMsg is DragDrop_VM)
@@ -115,8 +115,8 @@ namespace Plat._V
                     // 我们认为Linker上吸附的东西是放在Linker中央的，所以deltaPos要除以2来给它更新
                     // 注意只有吸附的ExtMsg是DragDrop_VM才对其X/Y作更新
 
-                    // I类锚点（单Linker，即TopAnchor）
-                    if (anchor_VM is TopAnchor_VM
+                    // I类锚点（单Linker，即TopAnchor或普通的Anchor_VM）
+                    if (anchor_VM is not BotAnchor_VM
                         && anchor_VM.LinkerVM is not null
                         && anchor_VM.LinkerVM.ExtMsg is not null
                         && anchor_VM.LinkerVM.ExtMsg is DragDrop_VM)

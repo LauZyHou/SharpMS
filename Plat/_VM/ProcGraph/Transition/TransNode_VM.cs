@@ -25,7 +25,7 @@ namespace Plat._VM
         /// <param name="panelVM"></param>
         /// <param name="linker_VM">所吸附的Linker</param>
         public TransNode_VM(double x, double y, DragDrop_P_VM panelVM, Linker_VM linker_VM)
-            : base(x, y, panelVM, linker_VM)
+            :base(x, y, panelVM, linker_VM)
         {
             // 初始化迁移信息
             this.locTrans = new LocTrans();

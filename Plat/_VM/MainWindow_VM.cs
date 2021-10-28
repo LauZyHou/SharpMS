@@ -1,8 +1,10 @@
+using Avalonia.Controls;
 using Plat._C;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Plat._VM
 {
@@ -54,11 +56,20 @@ namespace Plat._VM
                 ResourceManager.anchorVisible.OnNext(value);
             }
         }
+
         #region Command
 
-        private void OnOpen()
+        private async Task OnOpen()
         {
+            // 用户操作保存对话框并返回待保存位置
+            string savePath = await PersistenceManager.OpenDialogAndGetSavePathFromUser();
+            if (string.IsNullOrEmpty(savePath))
+            {
+                ResourceManager.UpdateTip("Cancel saving operation.");
+                return;
+            }
 
+            ResourceManager.UpdateTip($"Save model to {savePath}");
         }
 
         private void OnSaveAs()

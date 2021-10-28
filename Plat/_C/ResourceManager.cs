@@ -16,9 +16,9 @@ namespace Plat._C
     /// </summary>
     public class ResourceManager
     {
-        // 主窗体VM
+        // 主窗体View Model
         public static MainWindow_VM mainWindow_VM;
-        // 主窗体V
+        // 主窗体View
         public static MainWindow_V mainWindow_V;
         // 系统中所有的数据类型
         public static ObservableCollection<_M.Type> types = new ObservableCollection<_M.Type>();

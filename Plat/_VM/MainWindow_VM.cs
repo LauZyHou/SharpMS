@@ -59,7 +59,19 @@ namespace Plat._VM
 
         #region Command
 
-        private async Task OnOpen()
+        /// <summary>
+        /// 点击 Open，作打开操作
+        /// </summary>
+        private void OnOpen()
+        {
+            
+        }
+
+        /// <summary>
+        /// 点击 Save As，作另存为操作
+        /// </summary>
+        /// <returns></returns>
+        private async Task OnSaveAs()
         {
             // 用户操作保存对话框并返回待保存位置
             string savePath = await PersistenceManager.OpenDialogAndGetSavePathFromUser();
@@ -68,15 +80,17 @@ namespace Plat._VM
                 ResourceManager.UpdateTip("Cancel saving operation.");
                 return;
             }
-
-            ResourceManager.UpdateTip($"Save model to {savePath}");
+            bool saveRes = PersistenceManager.SaveProjectModelAsXmlFile(savePath);
+            if (!saveRes)
+            {
+                ResourceManager.UpdateTip($"Try to save model with path = {savePath}, fail!");
+            }
+            ResourceManager.UpdateTip($"Successfully save model with path = {savePath}");
         }
-
-        private void OnSaveAs()
-        {
-
-        }
-
+        
+        /// <summary>
+        /// 点击 About SharpMS
+        /// </summary>
         private void OnAboutSharpMS()
         {
             ResourceManager.UpdateTip("Get more info at https://github.com/LauZyHou/SharpMS");

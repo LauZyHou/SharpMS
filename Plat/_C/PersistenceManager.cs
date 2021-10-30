@@ -34,7 +34,7 @@ namespace Plat._C
 
         #endregion
 
-        #region XML Generation and Parsing
+        #region XML Generation
 
         /// <summary>
         /// 将项目模型保存为XML文件
@@ -51,13 +51,44 @@ namespace Plat._C
             xmlWriter.Formatting = Formatting.Indented;
             xmlWriter.WriteStartElement("SharpMS"); // Root开头
 
+            //
+            // 各类模型的静态全局标识（_id）
+            //
+            #region Static-Ids
+
+            xmlWriter.WriteStartElement("Static-Ids");
+
+            XmlWriteStaticId(xmlWriter, nameof(Axiom), Axiom._id);
+            XmlWriteStaticId(xmlWriter, nameof(Channel), Channel._id);
+            XmlWriteStaticId(xmlWriter, nameof(Env), Env._id);
+            XmlWriteStaticId(xmlWriter, nameof(AttrPair), AttrPair._id);
+            XmlWriteStaticId(xmlWriter, nameof(IK), IK._id);
+            XmlWriteStaticId(xmlWriter, nameof(Port), Port._id);
+            XmlWriteStaticId(xmlWriter, nameof(Proc), Proc._id);
+            XmlWriteStaticId(xmlWriter, nameof(State), State._id);
+            XmlWriteStaticId(xmlWriter, nameof(LocTrans), LocTrans._id);
+            XmlWriteStaticId(xmlWriter, nameof(PortChanInst), PortChanInst._id);
+            XmlWriteStaticId(xmlWriter, nameof(ProcEnvInst), ProcEnvInst._id);
+            XmlWriteStaticId(xmlWriter, nameof(TopoInst), TopoInst._id); // = EnvInst._id = ProcInst._id
+            XmlWriteStaticId(xmlWriter, nameof(Type), Type._id);
+            XmlWriteStaticId(xmlWriter, nameof(Attribute), Attribute._id); // = ValAttr._id = VisAttr._id
+            XmlWriteStaticId(xmlWriter, nameof(Caller), Caller._id);
+            XmlWriteStaticId(xmlWriter, nameof(Formula), Formula._id);
+
+            xmlWriter.WriteEndElement();
+
+            #endregion
+
+            //
+            // 数据类型
+            //
             #region MetaInfo-Types
 
-            xmlWriter.WriteStartElement("MetaInfo-Types");
+            xmlWriter.WriteStartElement($"MetaInfo-{nameof(Type)}s");
 
             foreach (Type type in ResourceManager.types)
             {
-                xmlWriter.WriteStartElement("Type");
+                xmlWriter.WriteStartElement(nameof(Type));
 
                 xmlWriter.WriteAttributeString("id", type.Id.ToString());
                 xmlWriter.WriteAttributeString("identifier", type.Identifier);
@@ -80,6 +111,38 @@ namespace Plat._C
 
             #endregion
 
+            //
+            // 环境模板
+            //
+            #region MetaInfo-Envs
+
+            xmlWriter.WriteStartElement($"MetaInfo-{nameof(Env)}s");
+
+            foreach (Env env in ResourceManager.envs)
+            {
+                xmlWriter.WriteStartElement(nameof(Env));
+
+                xmlWriter.WriteAttributeString("id", env.Id.ToString());
+                xmlWriter.WriteAttributeString("identifier", env.Identifier);
+                xmlWriter.WriteAttributeString("pub", env.Pub.ToString());
+                xmlWriter.WriteAttributeString("parentId", env.Parent?.Id.ToString());
+                xmlWriter.WriteAttributeString("description", env.Description);
+                foreach (VisAttr visAttr in env.Attributes)
+                {
+                    XmlWriteAttribute(xmlWriter, visAttr, useLabel: nameof(VisAttr));
+                }
+                foreach (Channel channel in env.Channels)
+                {
+                    XmlWriteChannel(xmlWriter, channel);
+                }
+
+                xmlWriter.WriteEndElement();
+            }
+
+            xmlWriter.WriteEndElement();
+
+            #endregion
+
             xmlWriter.WriteEndElement(); // Root结尾
             xmlWriter.Flush();
             xmlWriter.Close();
@@ -87,6 +150,21 @@ namespace Plat._C
             return true;
         }
 
+        /// <summary>
+        /// XML持久化指定Model类的静态id
+        /// </summary>
+        /// <param name="xmlWriter">XML写入器</param>
+        /// <param name="className">Model类名</param>
+        /// <param name="idValue">其静态字段[_id]的取值</param>
+        private static void XmlWriteStaticId(XmlTextWriter xmlWriter, string className, int idValue)
+        {
+            xmlWriter.WriteStartElement($"SID");
+
+            xmlWriter.WriteAttributeString("className", className);
+            xmlWriter.WriteAttributeString("idValue", idValue.ToString());
+
+            xmlWriter.WriteEndElement();
+        }
 
         /// <summary>
         /// XML持久化指定的Attribute
@@ -103,6 +181,14 @@ namespace Plat._C
             xmlWriter.WriteAttributeString("typeId", attribute.Type.Id.ToString());
             xmlWriter.WriteAttributeString("isArray", attribute.IsArray.ToString());
             xmlWriter.WriteAttributeString("description", attribute.Description);
+            if (attribute is VisAttr)
+            {
+                xmlWriter.WriteAttributeString("pub", ((VisAttr)attribute).Pub.ToString());
+            }
+            if (attribute is ValAttr)
+            {
+                xmlWriter.WriteAttributeString("value", ((ValAttr)attribute).Value);
+            }
 
             xmlWriter.WriteEndElement();
         }
@@ -130,6 +216,25 @@ namespace Plat._C
 
                 xmlWriter.WriteEndElement();
             }
+
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化Channel
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="channel"></param>
+        /// <param name="useLabel"></param>
+        private static void XmlWriteChannel(XmlTextWriter xmlWriter, Channel channel, string useLabel = nameof(Channel))
+        {
+            xmlWriter.WriteStartElement(useLabel);
+
+            xmlWriter.WriteAttributeString("id", channel.Id.ToString());
+            xmlWriter.WriteAttributeString("identifier", channel.Identifier);
+            xmlWriter.WriteAttributeString("pub", channel.Pub.ToString());
+            xmlWriter.WriteAttributeString("capacity", channel.Capacity.ToString());
+            xmlWriter.WriteAttributeString("description", channel.Description);
 
             xmlWriter.WriteEndElement();
         }

@@ -101,7 +101,7 @@ namespace Plat._C
                 }
                 foreach (Caller caller in type.Methods)
                 {
-                    XmlWriteCaller(xmlWriter, caller, "Method");
+                    XmlWriteCaller(xmlWriter, caller, useLabel: "Method");
                 }
 
                 xmlWriter.WriteEndElement();
@@ -134,6 +134,41 @@ namespace Plat._C
                 foreach (Channel channel in env.Channels)
                 {
                     XmlWriteChannel(xmlWriter, channel);
+                }
+
+                xmlWriter.WriteEndElement();
+            }
+
+            xmlWriter.WriteEndElement();
+
+            #endregion
+
+            //
+            // 进程模板
+            //
+            #region MetaInfo-Procs
+
+            xmlWriter.WriteStartElement($"MetaInfo-{nameof(Proc)}s");
+
+            foreach (Proc proc in ResourceManager.procs)
+            {
+                xmlWriter.WriteStartElement(nameof(Proc));
+
+                xmlWriter.WriteAttributeString("id", proc.Id.ToString());
+                xmlWriter.WriteAttributeString("identifier", proc.Identifier);
+                xmlWriter.WriteAttributeString("parentId", proc.Parent?.Id.ToString());
+                xmlWriter.WriteAttributeString("description", proc.Description);
+                foreach (VisAttr visAttr in proc.Attributes)
+                {
+                    XmlWriteAttribute(xmlWriter, visAttr, useLabel: nameof(VisAttr));
+                }
+                foreach (Caller caller in proc.Methods)
+                {
+                    XmlWriteCaller(xmlWriter, caller, useLabel: "Method");
+                }
+                foreach (Port port in proc.Ports)
+                {
+                    XmlWritePort(xmlWriter, port);
                 }
 
                 xmlWriter.WriteEndElement();
@@ -235,6 +270,24 @@ namespace Plat._C
             xmlWriter.WriteAttributeString("pub", channel.Pub.ToString());
             xmlWriter.WriteAttributeString("capacity", channel.Capacity.ToString());
             xmlWriter.WriteAttributeString("description", channel.Description);
+
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化Port
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="port"></param>
+        /// <param name="useLable"></param>
+        private static void XmlWritePort(XmlTextWriter xmlWriter, Port port, string useLabel = nameof(Port))
+        {
+            xmlWriter.WriteStartElement(useLabel);
+
+            xmlWriter.WriteAttributeString("id", port.Id.ToString());
+            xmlWriter.WriteAttributeString("identifier", port.Identifier);
+            xmlWriter.WriteAttributeString("isOut", port.IsOut.ToString());
+            xmlWriter.WriteAttributeString("description", port.Description);
 
             xmlWriter.WriteEndElement();
         }

@@ -178,6 +178,61 @@ namespace Plat._C
 
             #endregion
 
+            //
+            // 初始知识
+            //
+            #region MetaInfo-IKs
+
+            xmlWriter.WriteStartElement($"MetaInfo-{nameof(IK)}s");
+
+            foreach (IK ik in ResourceManager.iks)
+            {
+                xmlWriter.WriteStartElement(nameof(IK));
+
+                xmlWriter.WriteAttributeString("id", ik.Id.ToString());
+                xmlWriter.WriteAttributeString("identifier", ik.Identifier);
+                xmlWriter.WriteAttributeString("description", ik.Description);
+                foreach (ValAttr valAttr in ik.Attributes)
+                {
+                    XmlWriteAttribute(xmlWriter, valAttr, useLabel: nameof(ValAttr));
+                }
+                foreach (AttrPair attrPair in ik.AttrPairs)
+                {
+                    XmlWriteAttrPair(xmlWriter, attrPair);
+                }
+
+                xmlWriter.WriteEndElement();
+            }
+
+            xmlWriter.WriteEndElement();
+
+            #endregion
+
+            //
+            // 公理
+            //
+            #region MetaInfo-Axioms
+
+            xmlWriter.WriteStartElement($"MetaInfo-{nameof(Axiom)}s");
+
+            foreach (Axiom axiom in ResourceManager.axioms)
+            {
+                xmlWriter.WriteStartElement(nameof(Axiom));
+                xmlWriter.WriteAttributeString("id", axiom.Id.ToString());
+                xmlWriter.WriteAttributeString("identifier", axiom.Identifier);
+                xmlWriter.WriteAttributeString("description", axiom.Description);
+                foreach (Formula formula in axiom.Formulas)
+                {
+                    XmlWriteFormula(xmlWriter, formula);
+                }
+
+                xmlWriter.WriteEndElement();
+            }
+
+            xmlWriter.WriteEndElement();
+
+            #endregion
+
             xmlWriter.WriteEndElement(); // Root结尾
             xmlWriter.Flush();
             xmlWriter.Close();
@@ -288,6 +343,46 @@ namespace Plat._C
             xmlWriter.WriteAttributeString("identifier", port.Identifier);
             xmlWriter.WriteAttributeString("isOut", port.IsOut.ToString());
             xmlWriter.WriteAttributeString("description", port.Description);
+
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化IK的AttrPair
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="attrPair"></param>
+        /// <param name="useLabel"></param>
+        private static void XmlWriteAttrPair(XmlTextWriter xmlWriter, AttrPair attrPair, string useLabel = nameof(AttrPair))
+        {
+            xmlWriter.WriteStartElement(useLabel);
+
+            xmlWriter.WriteAttributeString("id", attrPair.Id.ToString());
+            xmlWriter.WriteAttributeString("procAId", attrPair.ProcA?.Id.ToString());
+            xmlWriter.WriteAttributeString("procAttrAId", attrPair.ProcAttrA?.Id.ToString());
+            xmlWriter.WriteAttributeString("procBId", attrPair.ProcB?.Id.ToString());
+            xmlWriter.WriteAttributeString("procAttrBId", attrPair.ProcAttrB?.Id.ToString());
+            xmlWriter.WriteAttributeString("envAId", attrPair.EnvA?.Id.ToString());
+            xmlWriter.WriteAttributeString("envAttrAId", attrPair.EnvAttrA?.Id.ToString());
+            xmlWriter.WriteAttributeString("envBId", attrPair.EnvB?.Id.ToString());
+            xmlWriter.WriteAttributeString("envAttrBId", attrPair.EnvAttrB?.Id.ToString());
+
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化Formula（用于Axiom等
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="formula"></param>
+        /// <param name="useLabel"></param>
+        private static void XmlWriteFormula(XmlTextWriter xmlWriter, Formula formula, string useLabel = nameof(Formula))
+        {
+            xmlWriter.WriteStartElement(useLabel);
+
+            xmlWriter.WriteAttributeString("id", formula.Id.ToString());
+            xmlWriter.WriteAttributeString("content", formula.Content);
+            xmlWriter.WriteAttributeString("description", formula.Description);
 
             xmlWriter.WriteEndElement();
         }

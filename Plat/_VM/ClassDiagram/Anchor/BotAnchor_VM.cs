@@ -84,6 +84,20 @@ namespace Plat._VM
             }
         }
 
+        /// <summary>
+        /// 获取所有linker_VM的id
+        /// </summary>
+        /// <returns></returns>
+        public List<int> FetchLinkersIds()
+        {
+            List<int> res = new List<int>();
+            foreach (Linker_VM linker_VM in linker_VMs)
+            {
+                res.Add(linker_VM.Id);
+            }
+            return res;
+        }
+
         #endregion
 
         /// <summary>

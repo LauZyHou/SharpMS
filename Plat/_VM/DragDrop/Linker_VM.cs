@@ -12,16 +12,20 @@ namespace Plat._VM
     /// </summary>
     public class Linker_VM : DragDrop_VM
     {
+        public static int _id = 0;
+        private int id;
         private Anchor_VM source;
         private Anchor_VM dest;
 
         public Linker_VM(Anchor_VM source, Anchor_VM dest, DragDrop_P_VM panelVM)
             : base(0, 0, panelVM)
         {
+            this.id = ++_id;
             this.source = source;
             this.dest = dest;
         }
 
+        public int Id { get => id; set => id = value; }
         /// <summary>
         /// 源锚点引用
         /// </summary>

@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Plat._M;
+using Plat._VM;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Xml;
@@ -74,6 +75,8 @@ namespace Plat._C
             XmlWriteStaticId(xmlWriter, nameof(Attribute), Attribute._id); // = ValAttr._id = VisAttr._id
             XmlWriteStaticId(xmlWriter, nameof(Caller), Caller._id);
             XmlWriteStaticId(xmlWriter, nameof(Formula), Formula._id);
+            XmlWriteStaticId(xmlWriter, nameof(Anchor_VM), Anchor_VM._id);
+            XmlWriteStaticId(xmlWriter, nameof(Linker_VM), Linker_VM._id);
 
             xmlWriter.WriteEndElement();
 
@@ -92,7 +95,7 @@ namespace Plat._C
 
                 xmlWriter.WriteAttributeString("id", type.Id.ToString());
                 xmlWriter.WriteAttributeString("identifier", type.Identifier);
-                xmlWriter.WriteAttributeString("parentId", type.Parent?.Id.ToString());
+                xmlWriter.WriteAttributeString("parent-Ref", type.Parent?.Id.ToString());
                 xmlWriter.WriteAttributeString("description", type.Description);
                 xmlWriter.WriteAttributeString("isBase", type.IsBase.ToString());
                 foreach (Attribute attribute in type.Attributes)
@@ -125,7 +128,7 @@ namespace Plat._C
                 xmlWriter.WriteAttributeString("id", env.Id.ToString());
                 xmlWriter.WriteAttributeString("identifier", env.Identifier);
                 xmlWriter.WriteAttributeString("pub", env.Pub.ToString());
-                xmlWriter.WriteAttributeString("parentId", env.Parent?.Id.ToString());
+                xmlWriter.WriteAttributeString("parent-Ref", env.Parent?.Id.ToString());
                 xmlWriter.WriteAttributeString("description", env.Description);
                 foreach (VisAttr visAttr in env.Attributes)
                 {
@@ -156,7 +159,7 @@ namespace Plat._C
 
                 xmlWriter.WriteAttributeString("id", proc.Id.ToString());
                 xmlWriter.WriteAttributeString("identifier", proc.Identifier);
-                xmlWriter.WriteAttributeString("parentId", proc.Parent?.Id.ToString());
+                xmlWriter.WriteAttributeString("parent-Ref", proc.Parent?.Id.ToString());
                 xmlWriter.WriteAttributeString("description", proc.Description);
                 foreach (VisAttr visAttr in proc.Attributes)
                 {
@@ -233,6 +236,22 @@ namespace Plat._C
 
             #endregion
 
+            //
+            // 类图元素排列
+            //
+            #region ClassDiagram
+
+            xmlWriter.WriteStartElement($"ClassDiagram");
+
+            foreach (DragDrop_VM dragDrop_VM in ResourceManager.mainWindow_VM.ClassDiagram_P_VM.DragDrop_VMs)
+            {
+                XmlWriteClassDiagramItem(xmlWriter, dragDrop_VM);
+            }
+
+            xmlWriter.WriteEndElement();
+
+            #endregion
+
             xmlWriter.WriteEndElement(); // Root结尾
             xmlWriter.Flush();
             xmlWriter.Close();
@@ -251,7 +270,7 @@ namespace Plat._C
             xmlWriter.WriteStartElement($"SID");
 
             xmlWriter.WriteAttributeString("className", className);
-            xmlWriter.WriteAttributeString("idValue", idValue.ToString());
+            xmlWriter.WriteAttributeString("_id", idValue.ToString());
 
             xmlWriter.WriteEndElement();
         }
@@ -268,7 +287,7 @@ namespace Plat._C
 
             xmlWriter.WriteAttributeString("id", attribute.Id.ToString());
             xmlWriter.WriteAttributeString("identifier", attribute.Identifier);
-            xmlWriter.WriteAttributeString("typeId", attribute.Type.Id.ToString());
+            xmlWriter.WriteAttributeString("type-Ref", attribute.Type.Id.ToString());
             xmlWriter.WriteAttributeString("isArray", attribute.IsArray.ToString());
             xmlWriter.WriteAttributeString("description", attribute.Description);
             if (attribute is VisAttr)
@@ -295,14 +314,14 @@ namespace Plat._C
 
             xmlWriter.WriteAttributeString("id", caller.Id.ToString());
             xmlWriter.WriteAttributeString("identifier", caller.Identifier);
-            xmlWriter.WriteAttributeString("returnTypeId", caller.ReturnType.Id.ToString());
+            xmlWriter.WriteAttributeString("returnType-Ref", caller.ReturnType.Id.ToString());
             xmlWriter.WriteAttributeString("description", caller.Description);
 
             foreach (Type type in caller.ParamTypes)
             {
                 xmlWriter.WriteStartElement("ParamType");
 
-                xmlWriter.WriteAttributeString("typeId", type.Id.ToString());
+                xmlWriter.WriteAttributeString("type-Ref", type.Id.ToString());
 
                 xmlWriter.WriteEndElement();
             }
@@ -358,14 +377,14 @@ namespace Plat._C
             xmlWriter.WriteStartElement(useLabel);
 
             xmlWriter.WriteAttributeString("id", attrPair.Id.ToString());
-            xmlWriter.WriteAttributeString("procAId", attrPair.ProcA?.Id.ToString());
-            xmlWriter.WriteAttributeString("procAttrAId", attrPair.ProcAttrA?.Id.ToString());
-            xmlWriter.WriteAttributeString("procBId", attrPair.ProcB?.Id.ToString());
-            xmlWriter.WriteAttributeString("procAttrBId", attrPair.ProcAttrB?.Id.ToString());
-            xmlWriter.WriteAttributeString("envAId", attrPair.EnvA?.Id.ToString());
-            xmlWriter.WriteAttributeString("envAttrAId", attrPair.EnvAttrA?.Id.ToString());
-            xmlWriter.WriteAttributeString("envBId", attrPair.EnvB?.Id.ToString());
-            xmlWriter.WriteAttributeString("envAttrBId", attrPair.EnvAttrB?.Id.ToString());
+            xmlWriter.WriteAttributeString("procA-Ref", attrPair.ProcA?.Id.ToString());
+            xmlWriter.WriteAttributeString("procAttrA-Ref", attrPair.ProcAttrA?.Id.ToString());
+            xmlWriter.WriteAttributeString("procB-Ref", attrPair.ProcB?.Id.ToString());
+            xmlWriter.WriteAttributeString("procAttrB-Ref", attrPair.ProcAttrB?.Id.ToString());
+            xmlWriter.WriteAttributeString("envA-Ref", attrPair.EnvA?.Id.ToString());
+            xmlWriter.WriteAttributeString("envAttrA-Ref", attrPair.EnvAttrA?.Id.ToString());
+            xmlWriter.WriteAttributeString("envB-Ref", attrPair.EnvB?.Id.ToString());
+            xmlWriter.WriteAttributeString("envAttrB-Ref", attrPair.EnvAttrB?.Id.ToString());
 
             xmlWriter.WriteEndElement();
         }
@@ -383,6 +402,132 @@ namespace Plat._C
             xmlWriter.WriteAttributeString("id", formula.Id.ToString());
             xmlWriter.WriteAttributeString("content", formula.Content);
             xmlWriter.WriteAttributeString("description", formula.Description);
+
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化类图中的DD VM
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="dragDrop_VM"></param>
+        private static void XmlWriteClassDiagramItem(XmlTextWriter xmlWriter, DragDrop_VM dragDrop_VM)
+        {
+            // 每种DDVM特定的部分
+            if (dragDrop_VM is Type_VM)
+            {
+                Type_VM type_VM = (Type_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(Type_VM));
+                xmlWriter.WriteAttributeString("type-Ref", type_VM.Type.Id.ToString());
+            }
+            else if (dragDrop_VM is Env_VM)
+            {
+                Env_VM env_VM = (Env_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(Env_VM));
+                xmlWriter.WriteAttributeString("env-Ref", env_VM.Env.Id.ToString());
+            }
+            else if (dragDrop_VM is Axiom_VM)
+            {
+                Axiom_VM axiom_VM = (Axiom_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(Axiom_VM));
+                xmlWriter.WriteAttributeString("axiom-Ref", axiom_VM.Axiom.Id.ToString());
+            }
+            else if (dragDrop_VM is Proc_VM)
+            {
+                Proc_VM proc_VM = (Proc_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(Proc_VM));
+                xmlWriter.WriteAttributeString("proc-Ref", proc_VM.Proc.Id.ToString());
+            }
+            else if (dragDrop_VM is IK_VM)
+            {
+                IK_VM ik_VM = (IK_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(IK_VM));
+                xmlWriter.WriteAttributeString("ik-Ref", ik_VM.IK.Id.ToString());
+            }
+            else if (dragDrop_VM is Linker_VM)
+            {
+                Linker_VM linker_VM = (Linker_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(Linker_VM));
+                xmlWriter.WriteAttributeString("id", linker_VM.Id.ToString());
+                xmlWriter.WriteAttributeString("source-Ref", linker_VM.Source.Id.ToString());
+                xmlWriter.WriteAttributeString("dest-Ref", linker_VM.Dest.Id.ToString());
+            }
+            else
+            {
+                throw new System.NotImplementedException();
+            }
+
+            // DDVM通用的部分（位置信息和周身锚点）
+            XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
+            foreach (Anchor_VM anchor_VM in dragDrop_VM.Anchor_VMs)
+            {
+                XmlWriteAnchor(xmlWriter, anchor_VM);
+            }
+
+            // 结尾符
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化拖拽VM的一些拖拽信息
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="dragDrop_VM"></param>
+        private static void XmlWriteDragDropPos(XmlTextWriter xmlWriter, DragDrop_VM dragDrop_VM)
+        {
+            xmlWriter.WriteAttributeString("x", dragDrop_VM.Pos.X.ToString());
+            xmlWriter.WriteAttributeString("y", dragDrop_VM.Pos.Y.ToString());
+            //xmlWriter.WriteAttributeString("h", dragDrop_VM.H.ToString());
+            //xmlWriter.WriteAttributeString("w", dragDrop_VM.W.ToString());
+        }
+
+        /// <summary>
+        /// XML持久化锚点
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="anchor_VM"></param>
+        private static void XmlWriteAnchor(XmlTextWriter xmlWriter, Anchor_VM anchor_VM)
+        {
+            string useLabel = nameof(Anchor_VM);
+            if (anchor_VM is TopAnchor_VM)
+            {
+                useLabel = nameof(TopAnchor_VM);
+            }
+            else if (anchor_VM is BotAnchor_VM)
+            {
+                useLabel = nameof(BotAnchor_VM);
+            }
+            xmlWriter.WriteStartElement(useLabel);
+
+            xmlWriter.WriteAttributeString("id", anchor_VM.Id.ToString());
+            XmlWriteDragDropPos(xmlWriter, anchor_VM);
+            if (anchor_VM is BotAnchor_VM) // 多Linker
+            {
+                BotAnchor_VM botAnchor_VM = (BotAnchor_VM)anchor_VM;
+                foreach (int id in botAnchor_VM.FetchLinkersIds())
+                {
+                    XmlWriteIdRef(xmlWriter, id, "Linker-Ref");
+                }
+            }
+            else if (anchor_VM.LinkerVM is not null) // 单Linker
+            {
+                XmlWriteIdRef(xmlWriter, anchor_VM.LinkerVM.Id, "Linker-Ref");
+            }
+
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化仅Id的引用
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="id"></param>
+        /// <param name="useLabel"></param>
+        private static void XmlWriteIdRef(XmlTextWriter xmlWriter, int id, string useLabel)
+        {
+            xmlWriter.WriteStartElement(useLabel);
+
+            xmlWriter.WriteAttributeString("id", id.ToString());
 
             xmlWriter.WriteEndElement();
         }

@@ -14,6 +14,8 @@ namespace Plat._VM
     /// </summary>
     public class Anchor_VM : DragDrop_VM
     {
+        public static int _id = 0;
+        private int id;
         private readonly DragDrop_VM hostVM;
         private Linker_VM? linkerVM;
         private bool isActive;
@@ -22,8 +24,9 @@ namespace Plat._VM
         /// for Design
         /// </summary>
         public Anchor_VM()
-            :base(0, 0, new ClassDiagram_P_VM())
+            : base(0, 0, new ClassDiagram_P_VM())
         {
+            this.id = ++_id;
             this.hostVM = new Type_VM();
         }
 
@@ -35,9 +38,11 @@ namespace Plat._VM
         public Anchor_VM(double x, double y, DragDrop_VM hostVM)
             : base(x, y, hostVM.PanelVM)
         {
+            this.id = ++_id;
             this.hostVM = hostVM;
         }
 
+        public int Id { get => id; set => id = value; }
         /// <summary>
         /// 锚点的宿主ViewModel，即该锚点吸附在的item组件VM
         /// </summary>

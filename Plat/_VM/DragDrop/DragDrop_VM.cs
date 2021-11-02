@@ -49,9 +49,12 @@ namespace Plat._VM
         /// <summary>
         /// 是否是Item而不是锚点或者连线，决定了View层的IsHitTestVisible属性
         /// </summary>
-        public bool IsItem => !(this is Anchor_VM || this is Linker_VM);
+        public bool IsItem => !(this is Anchor_VM || this is Linker_VM);        
         /// <summary>
         /// 高
+        /// 对于需要用到宽高的实现类，如Type_VM等锚点位置受其影响的DDVM
+        /// 会在实现类的View中设置对H和W的反向订阅，即将View层的值写到View Model的H和W中
+        /// 所以这两个属性一定是不用持久化的
         /// </summary>
         public double H { get => h; set => this.RaiseAndSetIfChanged(ref h, value); }
         /// <summary>

@@ -49,7 +49,7 @@ namespace Plat._VM
         /// <summary>
         /// 是否是Item而不是锚点或者连线，决定了View层的IsHitTestVisible属性
         /// </summary>
-        public bool IsItem => !(this is Anchor_VM || this is Linker_VM);        
+        public bool IsItem => !(this is Anchor_VM || this is Linker_VM);
         /// <summary>
         /// 高
         /// 对于需要用到宽高的实现类，如Type_VM等锚点位置受其影响的DDVM

@@ -77,6 +77,8 @@ namespace Plat._C
             XmlWriteStaticId(xmlWriter, nameof(Formula), Formula._id);
             XmlWriteStaticId(xmlWriter, nameof(Anchor_VM), Anchor_VM._id);
             XmlWriteStaticId(xmlWriter, nameof(Linker_VM), Linker_VM._id);
+            XmlWriteStaticId(xmlWriter, nameof(State), State._id);
+            XmlWriteStaticId(xmlWriter, nameof(LocTrans), LocTrans._id);
 
             xmlWriter.WriteEndElement();
 
@@ -246,6 +248,22 @@ namespace Plat._C
             foreach (DragDrop_VM dragDrop_VM in ResourceManager.mainWindow_VM.ClassDiagram_P_VM.DragDrop_VMs)
             {
                 XmlWriteClassDiagramItem(xmlWriter, dragDrop_VM);
+            }
+
+            xmlWriter.WriteEndElement();
+
+            #endregion
+
+            //
+            // 进程图元素排列
+            //
+            #region ProcGraphs
+
+            xmlWriter.WriteStartElement($"ProcGraphs");
+
+            foreach (ProcGraph_P_VM procGraph_P_VM in ResourceManager.mainWindow_VM.ProcGraph_PG_VM.ProcGraph_P_VMs)
+            {
+                XmlWriteProcGraph(xmlWriter, procGraph_P_VM);
             }
 
             xmlWriter.WriteEndElement();
@@ -446,11 +464,8 @@ namespace Plat._C
             }
             else if (dragDrop_VM is Linker_VM)
             {
-                Linker_VM linker_VM = (Linker_VM)dragDrop_VM;
-                xmlWriter.WriteStartElement(nameof(Linker_VM));
-                xmlWriter.WriteAttributeString("id", linker_VM.Id.ToString());
-                xmlWriter.WriteAttributeString("source-Ref", linker_VM.Source.Id.ToString());
-                xmlWriter.WriteAttributeString("dest-Ref", linker_VM.Dest.Id.ToString());
+                XmlWriteLinker(xmlWriter, (Linker_VM)dragDrop_VM);
+                return;
             }
             else
             {
@@ -529,6 +544,117 @@ namespace Plat._C
 
             xmlWriter.WriteAttributeString("id", id.ToString());
 
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化Linker及其子类
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="linker_VM"></param>
+        /// <param name="useLable"></param>
+        private static void XmlWriteLinker(XmlTextWriter xmlWriter, Linker_VM linker_VM, int? extId = null, string? extType = null)
+        {
+            if (linker_VM is Arrow_VM)
+            {
+                xmlWriter.WriteStartElement(nameof(Arrow_VM));
+            }
+            else
+            {
+                xmlWriter.WriteStartElement(nameof(Linker_VM));
+            }
+
+            xmlWriter.WriteAttributeString("id", linker_VM.Id.ToString());
+            xmlWriter.WriteAttributeString("source-Ref", linker_VM.Source.Id.ToString());
+            xmlWriter.WriteAttributeString("dest-Ref", linker_VM.Dest.Id.ToString());
+            if (extId is not null)
+            {
+                xmlWriter.WriteAttributeString("extMsg-Ref", extId.ToString());
+            }
+            if (extType is not null)
+            {
+                xmlWriter.WriteAttributeString("extType", extType);
+            }
+
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化进程图
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="procGraph_P_VM"></param>
+        private static void XmlWriteProcGraph(XmlTextWriter xmlWriter, ProcGraph_P_VM procGraph_P_VM)
+        {
+            xmlWriter.WriteStartElement($"ProcGraph");
+
+            xmlWriter.WriteAttributeString("proc-Ref", procGraph_P_VM.ProcGraph.Proc.Id.ToString());
+            foreach (DragDrop_VM dragDrop_VM in procGraph_P_VM.DragDrop_VMs)
+            {
+                XmlWriteProcGraphItem(xmlWriter, dragDrop_VM);
+            }
+
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化进程图中的DD VM
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="dragDrop_VM"></param>
+        private static void XmlWriteProcGraphItem(XmlTextWriter xmlWriter, DragDrop_VM dragDrop_VM)
+        {
+            // 每种DDVM特定的部分
+            if (dragDrop_VM is TinyState_VM)
+            {
+                TinyState_VM tinyState_VM = (TinyState_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(TinyState_VM));
+                xmlWriter.WriteAttributeString("id", tinyState_VM.State.Id.ToString());
+                xmlWriter.WriteAttributeString("name", tinyState_VM.State.Name);
+            }
+            else if (dragDrop_VM is InitState_VM)
+            {
+                xmlWriter.WriteStartElement(nameof(InitState_VM));
+            }
+            else if (dragDrop_VM is FinalState_VM)
+            {
+                xmlWriter.WriteStartElement(nameof(FinalState_VM));
+            }
+            else if (dragDrop_VM is Arrow_VM)
+            {
+                Arrow_VM arrow_VM = (Arrow_VM)dragDrop_VM;
+                TransNode_VM? extMsg = (TransNode_VM?)arrow_VM.ExtMsg;
+                XmlWriteLinker(xmlWriter, arrow_VM, extId: extMsg?.LocTrans.Id, extType: nameof(TransNode_VM));
+                return;
+            }
+            else if (dragDrop_VM is TransNode_VM)
+            {
+                TransNode_VM transNode_VM = (TransNode_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(TransNode_VM));
+                xmlWriter.WriteAttributeString("id", transNode_VM.LocTrans.Id.ToString());
+                xmlWriter.WriteAttributeString("attachedLinker-Ref", transNode_VM.AttachedLinker.Id.ToString());
+                XmlWriteDragDropPos(xmlWriter, dragDrop_VM); // bugfix: XML的Attr不能在子内容后面写
+                XmlWriteFormula(xmlWriter, transNode_VM.LocTrans.Guard, useLabel: "Guard");
+                foreach (Formula formula in transNode_VM.LocTrans.Actions)
+                {
+                    XmlWriteFormula(xmlWriter, formula, useLabel: "Action");
+                }
+                xmlWriter.WriteEndElement();
+                return;
+            }
+            else
+            {
+                throw new System.NotImplementedException();
+            }
+
+            // DDVM通用的部分（位置信息和周身锚点）
+            XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
+            foreach (Anchor_VM anchor_VM in dragDrop_VM.Anchor_VMs)
+            {
+                XmlWriteAnchor(xmlWriter, anchor_VM);
+            }
+
+            // 结尾符
             xmlWriter.WriteEndElement();
         }
 

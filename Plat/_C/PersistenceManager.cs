@@ -255,7 +255,7 @@ namespace Plat._C
             #endregion
 
             //
-            // 进程图元素排列
+            // 进程图
             //
             #region ProcGraphs
 
@@ -264,6 +264,22 @@ namespace Plat._C
             foreach (ProcGraph_P_VM procGraph_P_VM in ResourceManager.mainWindow_VM.ProcGraph_PG_VM.ProcGraph_P_VMs)
             {
                 XmlWriteProcGraph(xmlWriter, procGraph_P_VM);
+            }
+
+            xmlWriter.WriteEndElement();
+
+            #endregion
+
+            //
+            // 拓扑图
+            //
+            #region TopoGraphs
+
+            xmlWriter.WriteStartElement($"TopoGraph");
+
+            foreach (DragDrop_VM dragDrop_VM in ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs)
+            {
+                XmlWriteTopoGraphItem(xmlWriter, dragDrop_VM);
             }
 
             xmlWriter.WriteEndElement();
@@ -656,6 +672,150 @@ namespace Plat._C
 
             // 结尾符
             xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// XML持久化拓扑图中的DD VM
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="dragDrop_VM"></param>
+        private static void XmlWriteTopoGraphItem(XmlTextWriter xmlWriter, DragDrop_VM dragDrop_VM)
+        {
+            if (dragDrop_VM is ProcInst_VM) // Proc Inst
+            {
+                ProcInst_VM procInst_VM = (ProcInst_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(ProcInst_VM));
+                xmlWriter.WriteAttributeString("id", procInst_VM.ProcInst.Id.ToString());
+                XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
+                foreach (Instance instance in procInst_VM.ProcInst.Properties)
+                {
+                    XmlWriteInstance(xmlWriter, instance);
+                }
+                foreach (Anchor_VM anchor_VM in dragDrop_VM.Anchor_VMs)
+                {
+                    XmlWriteAnchor(xmlWriter, anchor_VM);
+                }
+                xmlWriter.WriteEndElement();
+                return;
+            }
+            else if (dragDrop_VM is EnvInst_VM) // Env Inst
+            {
+                EnvInst_VM envInst_VM = (EnvInst_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(EnvInst_VM));
+                xmlWriter.WriteAttributeString("id", envInst_VM.EnvInst.Id.ToString());
+                XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
+                foreach (Instance instance in envInst_VM.EnvInst.Properties)
+                {
+                    XmlWriteInstance(xmlWriter, instance);
+                }
+                foreach (Anchor_VM anchor_VM in dragDrop_VM.Anchor_VMs)
+                {
+                    XmlWriteAnchor(xmlWriter, anchor_VM);
+                }
+                xmlWriter.WriteEndElement();
+                return;
+            }
+            else if (dragDrop_VM is ProcEnvInst_CT_VM) // Proc Env Inst
+            {
+                ProcEnvInst_CT_VM procEnvInst_CT_VM = (ProcEnvInst_CT_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(ProcEnvInst_CT_VM));
+                xmlWriter.WriteAttributeString("id", procEnvInst_CT_VM.ProcEnvInst.Id.ToString());
+                xmlWriter.WriteAttributeString("procInst-Ref", procEnvInst_CT_VM.ProcEnvInst.ProcInst.Id.ToString());
+                xmlWriter.WriteAttributeString("envInst-Ref", procEnvInst_CT_VM.ProcEnvInst.EnvInst.Id.ToString());
+                XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
+                foreach (PortChanInst portChanInst in procEnvInst_CT_VM.ProcEnvInst.PortChanInsts)
+                {
+                    xmlWriter.WriteStartElement(nameof(PortChanInst));
+                    xmlWriter.WriteAttributeString("id", portChanInst.Id.ToString());
+                    xmlWriter.WriteAttributeString("port-Ref", portChanInst.Port?.Id.ToString());
+                    xmlWriter.WriteAttributeString("chan-Ref", portChanInst.Chan?.Id.ToString());
+                    xmlWriter.WriteEndElement();
+                }
+                xmlWriter.WriteEndElement();
+                return;
+            }
+            else if (dragDrop_VM is Linker_VM) // Linker
+            {
+                Linker_VM linker_VM = (Linker_VM)dragDrop_VM;
+                ProcEnvInst_CT_VM? extMsg = (ProcEnvInst_CT_VM?)linker_VM.ExtMsg;
+                XmlWriteLinker(xmlWriter, linker_VM, extId: extMsg?.ProcEnvInst.Id, extType: nameof(ProcEnvInst_CT_VM));
+                return;
+            }
+            else if (dragDrop_VM is ProcInst_NT_VM) // Proc Node Tag
+            {
+                ProcInst_NT_VM procInst_NT_VM = (ProcInst_NT_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(ProcInst_NT_VM));
+                xmlWriter.WriteAttributeString("proc-Ref", procInst_NT_VM.ProcInst.Id.ToString());
+                XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
+                xmlWriter.WriteEndElement();
+                return;
+            }
+            else if (dragDrop_VM is EnvInst_NT_VM) // Env Node Tag
+            {
+                EnvInst_NT_VM envInst_NT_VM = (EnvInst_NT_VM)dragDrop_VM;
+                xmlWriter.WriteStartElement(nameof(EnvInst_NT_VM));
+                xmlWriter.WriteAttributeString("env-Ref", envInst_NT_VM.EnvInst.Id.ToString());
+                XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
+                xmlWriter.WriteEndElement();
+                return;
+            }
+            else
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// XML持久化实例数据
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="instance"></param>
+        private static void XmlWriteInstance(XmlTextWriter xmlWriter, Instance instance)
+        {
+            if (instance is ValueInstance)
+            {
+                xmlWriter.WriteStartElement(nameof(ValueInstance));
+                XmlWriteInstanceCommonInfo(xmlWriter, instance);
+                ValueInstance valueInstance = (ValueInstance)instance;
+                xmlWriter.WriteAttributeString("value", valueInstance.Value);
+            }
+            else if (instance is ReferenceInstance)
+            {
+                xmlWriter.WriteStartElement(nameof(ReferenceInstance));
+                XmlWriteInstanceCommonInfo(xmlWriter, instance);
+                ReferenceInstance referenceInstance = (ReferenceInstance)instance;
+                foreach (Instance subInst in referenceInstance.Properties)
+                {
+                    XmlWriteInstance(xmlWriter, subInst);
+                }
+            }
+            else if (instance is ArrayInstance)
+            {
+                xmlWriter.WriteStartElement(nameof(ArrayInstance));
+                XmlWriteInstanceCommonInfo(xmlWriter, instance);
+                ArrayInstance arrayInstance = (ArrayInstance)instance;
+                foreach (Instance itemInst in arrayInstance.ArrayItems)
+                {
+                    XmlWriteInstance(xmlWriter, itemInst);
+                }
+            }
+            else
+            {
+                throw new System.NotImplementedException();
+            }
+            xmlWriter.WriteEndElement();
+        }
+        
+        /// <summary>
+        /// XML持久化Instance这个父类的共用信息
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="instance"></param>
+        private static void XmlWriteInstanceCommonInfo(XmlTextWriter xmlWriter, Instance instance)
+        {
+            xmlWriter.WriteAttributeString("type-Ref", instance.Type.Id.ToString());
+            xmlWriter.WriteAttributeString("identifier", instance.Identifier);
+            xmlWriter.WriteAttributeString("isArray", instance.IsArray.ToString());
         }
 
         #endregion

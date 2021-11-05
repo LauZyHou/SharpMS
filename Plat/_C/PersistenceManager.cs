@@ -27,10 +27,23 @@ namespace Plat._C
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Filters.Add(new FileDialogFilter() { Name = "SharpMS Model", Extensions = { ModelFilePostfix } });
             string result = await dialog.ShowAsync(ResourceManager.mainWindow_V);
-            // Linux bugfix：某些平台输入文件名不会自动补全后缀名,这里判断一下手动补上
+            // Linux bugfix: 某些平台输入文件名不会自动补全后缀名,这里判断一下手动补上
             if (string.IsNullOrEmpty(result) || result.EndsWith($".{ ModelFilePostfix }"))
                 return result;
             return result + $".{ ModelFilePostfix }";
+        }
+
+        /// <summary>
+        /// 打开对话框，由用户选择要载入的模型文件并返回路径
+        /// 在读取模型文件前执行的操作
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<string> OpenDialogAndGetLoadPathFromUser()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filters.Add(new FileDialogFilter() { Name = "SharpMS Model", Extensions = { ModelFilePostfix } });
+            string[] result = await dialog.ShowAsync(ResourceManager.mainWindow_V);
+            return result is null ? "" : string.Join(" ", result); // Linux bugfix: 直接关闭时不能返回null
         }
 
         #endregion
@@ -816,6 +829,41 @@ namespace Plat._C
             xmlWriter.WriteAttributeString("type-Ref", instance.Type.Id.ToString());
             xmlWriter.WriteAttributeString("identifier", instance.Identifier);
             xmlWriter.WriteAttributeString("isArray", instance.IsArray.ToString());
+        }
+
+        #endregion
+
+        #region XML Parsing
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static bool LoadProjectModelFromXmlFile(string filePath)
+        {
+            // 传过来的Path一定非空，而且以指定的后缀名结尾
+            Debug.Assert(filePath.EndsWith(ModelFilePostfix));
+
+            // 生成XML读取器
+            XmlDocument doc = new XmlDocument();
+            XmlReader reader;
+            try
+            {
+                reader = XmlReader.Create(filePath);
+                doc.Load(reader);
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
+
+            // 清除当前内存模型
+            ResourceManager.ClearAllResource();
+
+            // todo
+
+            return true;
         }
 
         #endregion

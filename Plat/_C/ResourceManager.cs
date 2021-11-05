@@ -57,5 +57,30 @@ namespace Plat._C
             }
             mainWindow_VM.Tip = $"#{++tipFlushNum} | {tip}";
         }
+
+        /// <summary>
+        /// 清除所有资源
+        /// 可用于读取模型文件前的清空操作
+        /// </summary>
+        public static void ClearAllResource()
+        {
+            // 类图
+            mainWindow_VM.ClassDiagram_P_VM.DragDrop_VMs.Clear();
+            mainWindow_VM.ClassDiagram_P_VM.ActiveAnchorVM = null;
+            // 进程图组
+            mainWindow_VM.ProcGraph_PG_VM.ProcGraph_P_VMs.Clear();
+            procGraph_P_VMs.Clear();
+            // 拓扑图
+            mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs.Clear();
+            procEnvInsts.Clear();
+            mainWindow_VM.TopoGraph_P_VM.ActiveAnchorVM = null;
+            // 元信息模型
+            types.Clear();
+            envs.Clear();
+            procs.Clear();
+            iks.Clear();
+            axioms.Clear();
+            // 不需要做静态id归零的操作，在读取XML时直接读入进来即可
+        }
     }
 }

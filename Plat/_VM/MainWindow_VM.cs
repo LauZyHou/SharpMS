@@ -60,11 +60,24 @@ namespace Plat._VM
         #region Command
 
         /// <summary>
-        /// 点击 Open，作打开操作
+        /// 点击 Load，作模型载入操作
         /// </summary>
-        private void OnOpen()
+        private async Task OnLoad()
         {
-            
+            // 用户操作读取对话框并返回读取文件名
+            string loadPath = await PersistenceManager.OpenDialogAndGetLoadPathFromUser();
+            if (string.IsNullOrEmpty(loadPath))
+            {
+                ResourceManager.UpdateTip("Cancel loading operation.");
+                return;
+            }
+            bool loadRes = PersistenceManager.LoadProjectModelFromXmlFile(loadPath);
+            if (!loadRes)
+            {
+                ResourceManager.UpdateTip($"Fail to load model from path = {loadPath}");
+                return;
+            }
+            ResourceManager.UpdateTip($"Successfully load model from path = {loadPath}");
         }
 
         /// <summary>
@@ -83,7 +96,8 @@ namespace Plat._VM
             bool saveRes = PersistenceManager.SaveProjectModelAsXmlFile(savePath);
             if (!saveRes)
             {
-                ResourceManager.UpdateTip($"Try to save model with path = {savePath}, fail!");
+                ResourceManager.UpdateTip($"Fail to save model with path = {savePath}");
+                return;
             }
             ResourceManager.UpdateTip($"Successfully save model with path = {savePath}");
         }

@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Plat._M;
 using Plat._VM;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Xml;
@@ -861,9 +862,194 @@ namespace Plat._C
             // 清除当前内存模型
             ResourceManager.ClearAllResource();
 
-            // todo
+            // id -> 模型 映射表
+            Dictionary<int, Axiom> axiomMap = new Dictionary<int, Axiom>();
+            Dictionary<int, Channel> channelMap = new Dictionary<int, Channel>();
+            Dictionary<int, Env> envMap = new Dictionary<int, Env>();
+            Dictionary<int, AttrPair> attrPairMap = new Dictionary<int, AttrPair>();
+            Dictionary<int, IK> ikMap = new Dictionary<int, IK>();
+            Dictionary<int, Port> portMap = new Dictionary<int, Port>();
+            Dictionary<int, Proc> procMap = new Dictionary<int, Proc>();
+            Dictionary<int, State> stateMap = new Dictionary<int, State>();
+            Dictionary<int, LocTrans> locTransMap = new Dictionary<int, LocTrans>();
+            Dictionary<int, PortChanInst> portChanInstMap = new Dictionary<int, PortChanInst>();
+            Dictionary<int, ProcEnvInst> procEnvInstMap = new Dictionary<int, ProcEnvInst>();
+            Dictionary<int, TopoInst> topoInstMap = new Dictionary<int, TopoInst>();
+            Dictionary<int, Type> typeMap = new Dictionary<int, Type>();
+            Dictionary<int, Attribute> attrMap = new Dictionary<int, Attribute>();
+            Dictionary<int, Caller> callerMap = new Dictionary<int, Caller>();
+            Dictionary<int, Formula> formulaMap = new Dictionary<int, Formula>();
+
+            //
+            // MetaInfo-Types
+            //
+            #region MetaInfo-Types
+
+            XmlNode? typesRoot = doc.SelectSingleNode($"SharpMS/MetaInfo-{nameof(Type)}s");
+            if (typesRoot is null)
+            {
+                return false;
+            }
+            foreach (XmlNode typeNode in typesRoot.ChildNodes)
+            {
+                XmlElement typeElement = (XmlElement)typeNode;
+                ParseTypeObj(typeElement, typeMap);
+            }
+            foreach (XmlNode typeNode in typesRoot.ChildNodes)
+            {
+                XmlElement typeElement = (XmlElement)typeNode;
+                ParseTypeInfo(typeElement, typeMap);
+            }
+
+            #endregion
+
+            //
+            // MetaInfo-Envs
+            //
+            #region MetaInfo-Envs
+
+            XmlNode? envsRoot = doc.SelectSingleNode($"SharpMS/MetaInfo-{nameof(Env)}s");
+            if (envsRoot is null)
+            {
+                return false;
+            }
+            foreach (XmlNode envNode in envsRoot.ChildNodes)
+            {
+                XmlElement envElement = (XmlElement)envNode;
+                // todo
+            }
+            foreach (XmlNode envNode in envsRoot.ChildNodes)
+            {
+                XmlElement envElement = (XmlElement)envNode;
+                // todo
+            }
+
+            #endregion
 
             return true;
+        }
+
+        /// <summary>
+        /// 解析Type（仅对象
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="typeMap"></param>
+        private static void ParseTypeObj(XmlElement element, Dictionary<int, Type> typeMap)
+        {
+            Debug.Assert(element.Name == nameof(Type));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string identifier = element.GetAttribute(nameof(identifier));
+            string description = element.GetAttribute(nameof(description));
+            bool isBase = bool.Parse(element.GetAttribute(nameof(isBase)));
+            Type type = new Type(identifier, description, isBase) { Id = id };
+
+            typeMap[id] = type;
+            ResourceManager.types.Add(type);
+        }
+
+        /// <summary>
+        /// 解析Type（完整信息
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="typeMap"></param>
+        private static void ParseTypeInfo(XmlElement element, Dictionary<int, Type> typeMap)
+        {
+            Debug.Assert(element.Name == nameof(Type));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            Type curType = typeMap[id];
+            // parent
+            int? parentId = ParseIntNullAttr(element, "parent-Ref");
+            if (parentId is not null)
+            {
+                curType.Parent = typeMap[(int)parentId];
+            }
+            // attributes & methods
+            foreach (XmlNode attrNode in element.ChildNodes)
+            {
+                XmlElement subElement = (XmlElement)attrNode;
+                switch (subElement.Name)
+                {
+                    case nameof(Attribute):
+                        curType.Attributes.Add(ParseAttribute(subElement, typeMap));
+                        break;
+                    case "Method":
+                        curType.Methods.Add(ParseCaller(subElement, typeMap));
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 解析一个可能为空的数值属性
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="attr"></param>
+        /// <returns></returns>
+        private static int? ParseIntNullAttr(XmlElement element, string attr)
+        {
+            string valStr = element.GetAttribute(attr);
+            if (string.IsNullOrEmpty(valStr))
+            {
+                return null;
+            }
+            return int.Parse(valStr);
+        }
+
+        /// <summary>
+        /// 解析Attribute
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="typeMap"></param>
+        /// <returns></returns>
+        private static Attribute ParseAttribute(XmlElement element, Dictionary<int, Type> typeMap)
+        {
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string identifier = element.GetAttribute(nameof(identifier));
+            int typeId = int.Parse(element.GetAttribute("type-Ref"));
+            bool isArray = bool.Parse(element.GetAttribute(nameof(isArray)));
+            string description = element.GetAttribute(nameof(description));
+            switch (element.Name)
+            {
+                case nameof(Attribute):
+                    Attribute attribute = new Attribute(identifier, typeMap[typeId], isArray, description) { Id = id };
+                    return attribute;
+                case nameof(VisAttr):
+                    bool pub = bool.Parse(element.GetAttribute(nameof(pub)));
+                    VisAttr visAttr = new VisAttr(identifier, typeMap[typeId], isArray, pub, description) { Id = id };
+                    return visAttr;
+                case nameof(ValAttr):
+                    string value = element.GetAttribute(nameof(value));
+                    ValAttr valAttr = new ValAttr(identifier, typeMap[typeId], isArray, value, description) { Id = id };
+                    return valAttr;
+                default:
+                    throw new System.NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// 解析Caller（Method或者Function
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="typeMap"></param>
+        /// <returns></returns>
+        private static Caller ParseCaller(XmlElement element, Dictionary<int, Type> typeMap)
+        {
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string identifier = element.GetAttribute(nameof(identifier));
+            int typeId = int.Parse(element.GetAttribute("returnType-Ref"));
+            string description = element.GetAttribute(nameof(description));
+            Caller caller = new Caller(identifier, typeMap[typeId], description) { Id = id };
+            foreach (XmlNode paramNode in element.ChildNodes) // ParamType
+            {
+                XmlElement paramElement = (XmlElement)paramNode;
+                int paramTypeId = int.Parse(paramElement.GetAttribute("type-Ref"));
+                caller.ParamTypes.Add(typeMap[paramTypeId]);
+            }
+            return caller;
         }
 
         #endregion

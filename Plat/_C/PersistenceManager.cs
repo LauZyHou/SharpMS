@@ -916,12 +916,12 @@ namespace Plat._C
             foreach (XmlNode envNode in envsRoot.ChildNodes)
             {
                 XmlElement envElement = (XmlElement)envNode;
-                // todo
+                ParseEnvObj(envElement, envMap);
             }
             foreach (XmlNode envNode in envsRoot.ChildNodes)
             {
                 XmlElement envElement = (XmlElement)envNode;
-                // todo
+                ParseEnvInfo(envElement, typeMap, envMap, channelMap);
             }
 
             #endregion
@@ -959,13 +959,13 @@ namespace Plat._C
 
             int id = int.Parse(element.GetAttribute(nameof(id)));
             Type curType = typeMap[id];
-            // parent
+            // Parent
             int? parentId = ParseIntNullAttr(element, "parent-Ref");
             if (parentId is not null)
             {
                 curType.Parent = typeMap[(int)parentId];
             }
-            // attributes & methods
+            // Attribute & Method
             foreach (XmlNode attrNode in element.ChildNodes)
             {
                 XmlElement subElement = (XmlElement)attrNode;
@@ -1050,6 +1050,83 @@ namespace Plat._C
                 caller.ParamTypes.Add(typeMap[paramTypeId]);
             }
             return caller;
+        }
+
+
+        /// <summary>
+        /// 解析Env（仅对象
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="envMap"></param>
+        private static void ParseEnvObj(XmlElement element, Dictionary<int, Env> envMap)
+        {
+            Debug.Assert(element.Name == nameof(Env));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string identifier = element.GetAttribute(nameof(identifier));
+            string description = element.GetAttribute(nameof(description));
+            bool pub = bool.Parse(element.GetAttribute(nameof(pub)));
+            Env env = new Env(identifier, pub, description) { Id = id };
+
+            envMap[id] = env;
+            ResourceManager.envs.Add(env);
+        }
+
+        /// <summary>
+        /// 解析Env（完整信息
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="envMap"></param>
+        private static void ParseEnvInfo(XmlElement element, 
+            Dictionary<int, Type> typeMap, 
+            Dictionary<int, Env> envMap,
+            Dictionary<int, Channel> channelMap)
+        {
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            Env env = envMap[id];
+            // Parent
+            int? parentId = ParseIntNullAttr(element, "parent-Ref");
+            if (parentId is not null)
+            {
+                env.Parent = envMap[(int)parentId];
+            }
+            // VisAttr and Channel
+            foreach (XmlNode subNode in element.ChildNodes)
+            {
+                XmlElement subElement = (XmlElement)subNode;
+                switch (subElement.Name)
+                {
+                    case nameof(VisAttr):
+                        env.Attributes.Add((VisAttr)ParseAttribute(subElement, typeMap));
+                        break;
+                    case nameof(Channel):
+                        env.Channels.Add(ParseChannel(subElement, channelMap));
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 解析Channel
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private static Channel ParseChannel(XmlElement element, Dictionary<int, Channel> channelMap)
+        {
+            Debug.Assert(element.Name == nameof(Channel));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string identifier = element.GetAttribute(nameof(identifier));
+            bool pub = bool.Parse(element.GetAttribute(nameof(pub)));
+            int capacity = int.Parse(element.GetAttribute(nameof(capacity)));
+            string description = element.GetAttribute(nameof(description));
+
+            Channel channel = new Channel(identifier, capacity, pub, description) { Id = id };
+            channelMap[id] = channel;
+
+            return channel;
         }
 
         #endregion

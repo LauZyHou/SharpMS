@@ -41,14 +41,14 @@ namespace Plat._M
         /// </summary>
         /// <param name="identifier">环境标识</param>
         /// <param name="pub">环境是否公开</param>
-        public Env(string identifier, bool pub = true)
+        public Env(string identifier, bool pub = true, string description = "")
         {
             this.id = ++_id;
             this.identifier = identifier;
             this.pub = pub;
             this.attributes = new ObservableCollection<VisAttr>();
             this.channels = new ObservableCollection<Channel>();
-            this.description = "";
+            this.description = description;
         }
 
         public int Id { get => id; set => id = value; }

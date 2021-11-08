@@ -926,6 +926,29 @@ namespace Plat._C
 
             #endregion
 
+            //
+            // MetaInfo-Procs
+            //
+            #region MetaInfo-Procs
+
+            XmlNode? procsRoot = doc.SelectSingleNode($"SharpMS/MetaInfo-{nameof(Proc)}s");
+            if (procsRoot is null)
+            {
+                return false;
+            }
+            foreach (XmlNode procNode in procsRoot.ChildNodes)
+            {
+                XmlElement procElement = (XmlElement)procNode;
+                ParseProcObj(procElement, procMap);
+            }
+            foreach (XmlNode procNode in procsRoot.ChildNodes)
+            {
+                XmlElement procElement = (XmlElement)procNode;
+                ParseProcInfo(procElement, typeMap, portMap, procMap);
+            }
+
+            #endregion
+
             return true;
         }
 
@@ -1127,6 +1150,86 @@ namespace Plat._C
             channelMap[id] = channel;
 
             return channel;
+        }
+
+        /// <summary>
+        /// 解析Proc（仅对象
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="procMap"></param>
+        private static void ParseProcObj(XmlElement element, Dictionary<int, Proc> procMap)
+        {
+            Debug.Assert(element.Name == nameof(Proc));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string identifier = element.GetAttribute(nameof(identifier));
+            string description = element.GetAttribute(nameof(description));
+            Proc proc = new Proc(identifier, description) { Id = id };
+
+            procMap[id] = proc;
+            ResourceManager.procs.Add(proc);
+        }
+
+        /// <summary>
+        /// 解析Proc（完整信息
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="typeMap"></param>
+        /// <param name="portMap"></param>
+        /// <param name="procMap"></param>
+        private static void ParseProcInfo(XmlElement element,
+            Dictionary<int, Type> typeMap,
+            Dictionary<int, Port> portMap,
+            Dictionary<int, Proc> procMap)
+        {
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            Proc proc = procMap[id];
+            // Parent
+            int? parentId = ParseIntNullAttr(element, "parent-Ref");
+            if (parentId is not null)
+            {
+                proc.Parent = procMap[(int)parentId];
+            }
+            // VisAttr, Method and Port
+            foreach (XmlNode subNode in element.ChildNodes)
+            {
+                XmlElement subElement = (XmlElement)subNode;
+                switch (subElement.Name)
+                {
+                    case nameof(VisAttr):
+                        proc.Attributes.Add((VisAttr)ParseAttribute(subElement, typeMap));
+                        break;
+                    case "Method":
+                        proc.Methods.Add(ParseCaller(subElement, typeMap));
+                        break;
+                    case nameof(Port):
+                        proc.Ports.Add(ParsePort(subElement, portMap));
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 解析Port
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="portMap"></param>
+        /// <returns></returns>
+        private static Port ParsePort(XmlElement element, Dictionary<int, Port> portMap)
+        {
+            Debug.Assert(element.Name == nameof(Port));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string identifier = element.GetAttribute(nameof(identifier));
+            bool isOut = bool.Parse(element.GetAttribute(nameof(isOut)));
+            string description = element.GetAttribute(nameof(description));
+
+            Port port = new Port(identifier, isOut, description) { Id = id };
+            portMap[id] = port;
+
+            return port;
         }
 
         #endregion

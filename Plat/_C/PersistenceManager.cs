@@ -881,7 +881,7 @@ namespace Plat._C
             Dictionary<int, Formula> formulaMap = new Dictionary<int, Formula>();
 
             //
-            // MetaInfo-Types
+            // 数据类型
             //
             #region MetaInfo-Types
 
@@ -898,13 +898,13 @@ namespace Plat._C
             foreach (XmlNode typeNode in typesRoot.ChildNodes)
             {
                 XmlElement typeElement = (XmlElement)typeNode;
-                ParseTypeInfo(typeElement, typeMap);
+                ParseTypeInfo(typeElement, typeMap, attrMap);
             }
 
             #endregion
 
             //
-            // MetaInfo-Envs
+            // 环境模板
             //
             #region MetaInfo-Envs
 
@@ -921,13 +921,13 @@ namespace Plat._C
             foreach (XmlNode envNode in envsRoot.ChildNodes)
             {
                 XmlElement envElement = (XmlElement)envNode;
-                ParseEnvInfo(envElement, typeMap, envMap, channelMap);
+                ParseEnvInfo(envElement, typeMap, envMap, channelMap, attrMap);
             }
 
             #endregion
 
             //
-            // MetaInfo-Procs
+            // 进程模板
             //
             #region MetaInfo-Procs
 
@@ -944,7 +944,25 @@ namespace Plat._C
             foreach (XmlNode procNode in procsRoot.ChildNodes)
             {
                 XmlElement procElement = (XmlElement)procNode;
-                ParseProcInfo(procElement, typeMap, portMap, procMap);
+                ParseProcInfo(procElement, typeMap, portMap, procMap, attrMap);
+            }
+
+            #endregion
+
+            //
+            // 初始知识
+            //
+            #region MetaInfo-IKs
+
+            XmlNode? iksRoot = doc.SelectSingleNode($"SharpMS/MetaInfo-{nameof(IK)}s");
+            if (iksRoot is null)
+            {
+                return false;
+            }
+            foreach (XmlNode ikNode in iksRoot.ChildNodes)
+            {
+                XmlElement ikElement = (XmlElement)ikNode;
+                ParseIK(ikElement, typeMap, procMap, envMap, ikMap, attrPairMap, attrMap);
             }
 
             #endregion
@@ -976,7 +994,9 @@ namespace Plat._C
         /// </summary>
         /// <param name="element"></param>
         /// <param name="typeMap"></param>
-        private static void ParseTypeInfo(XmlElement element, Dictionary<int, Type> typeMap)
+        private static void ParseTypeInfo(XmlElement element,
+            Dictionary<int, Type> typeMap,
+            Dictionary<int, Attribute> attrMap)
         {
             Debug.Assert(element.Name == nameof(Type));
 
@@ -995,7 +1015,7 @@ namespace Plat._C
                 switch (subElement.Name)
                 {
                     case nameof(Attribute):
-                        curType.Attributes.Add(ParseAttribute(subElement, typeMap));
+                        curType.Attributes.Add(ParseAttribute(subElement, typeMap, attrMap));
                         break;
                     case "Method":
                         curType.Methods.Add(ParseCaller(subElement, typeMap));
@@ -1028,7 +1048,9 @@ namespace Plat._C
         /// <param name="element"></param>
         /// <param name="typeMap"></param>
         /// <returns></returns>
-        private static Attribute ParseAttribute(XmlElement element, Dictionary<int, Type> typeMap)
+        private static Attribute ParseAttribute(XmlElement element,
+            Dictionary<int, Type> typeMap,
+            Dictionary<int, Attribute> attrMap)
         {
             int id = int.Parse(element.GetAttribute(nameof(id)));
             string identifier = element.GetAttribute(nameof(identifier));
@@ -1039,14 +1061,17 @@ namespace Plat._C
             {
                 case nameof(Attribute):
                     Attribute attribute = new Attribute(identifier, typeMap[typeId], isArray, description) { Id = id };
+                    attrMap[id] = attribute;
                     return attribute;
                 case nameof(VisAttr):
                     bool pub = bool.Parse(element.GetAttribute(nameof(pub)));
                     VisAttr visAttr = new VisAttr(identifier, typeMap[typeId], isArray, pub, description) { Id = id };
+                    attrMap[id] = visAttr;
                     return visAttr;
                 case nameof(ValAttr):
                     string value = element.GetAttribute(nameof(value));
                     ValAttr valAttr = new ValAttr(identifier, typeMap[typeId], isArray, value, description) { Id = id };
+                    attrMap[id] = valAttr;
                     return valAttr;
                 default:
                     throw new System.NotImplementedException();
@@ -1075,7 +1100,6 @@ namespace Plat._C
             return caller;
         }
 
-
         /// <summary>
         /// 解析Env（仅对象
         /// </summary>
@@ -1103,7 +1127,8 @@ namespace Plat._C
         private static void ParseEnvInfo(XmlElement element, 
             Dictionary<int, Type> typeMap, 
             Dictionary<int, Env> envMap,
-            Dictionary<int, Channel> channelMap)
+            Dictionary<int, Channel> channelMap,
+            Dictionary<int, Attribute> attrMap)
         {
             int id = int.Parse(element.GetAttribute(nameof(id)));
             Env env = envMap[id];
@@ -1120,7 +1145,7 @@ namespace Plat._C
                 switch (subElement.Name)
                 {
                     case nameof(VisAttr):
-                        env.Attributes.Add((VisAttr)ParseAttribute(subElement, typeMap));
+                        env.Attributes.Add((VisAttr)ParseAttribute(subElement, typeMap, attrMap));
                         break;
                     case nameof(Channel):
                         env.Channels.Add(ParseChannel(subElement, channelMap));
@@ -1180,7 +1205,8 @@ namespace Plat._C
         private static void ParseProcInfo(XmlElement element,
             Dictionary<int, Type> typeMap,
             Dictionary<int, Port> portMap,
-            Dictionary<int, Proc> procMap)
+            Dictionary<int, Proc> procMap,
+            Dictionary<int, Attribute> attrMap)
         {
             int id = int.Parse(element.GetAttribute(nameof(id)));
             Proc proc = procMap[id];
@@ -1197,7 +1223,7 @@ namespace Plat._C
                 switch (subElement.Name)
                 {
                     case nameof(VisAttr):
-                        proc.Attributes.Add((VisAttr)ParseAttribute(subElement, typeMap));
+                        proc.Attributes.Add((VisAttr)ParseAttribute(subElement, typeMap, attrMap));
                         break;
                     case "Method":
                         proc.Methods.Add(ParseCaller(subElement, typeMap));
@@ -1230,6 +1256,127 @@ namespace Plat._C
             portMap[id] = port;
 
             return port;
+        }
+
+        /// <summary>
+        /// 解析IK
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="ikMap"></param>
+        /// <param name="attrPairMap"></param>
+        private static void ParseIK(XmlElement element,
+            Dictionary<int, Type> typeMap,
+            Dictionary<int, Proc> procMap,
+            Dictionary<int, Env> envMap,
+            Dictionary<int, IK> ikMap,
+            Dictionary<int, AttrPair> attrPairMap,
+            Dictionary<int, Attribute> attrMap)
+        {
+            Debug.Assert(element.Name == nameof(IK));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string identifier = element.GetAttribute(nameof(identifier));
+            string description = element.GetAttribute(nameof(description));
+            IK ik = new IK(identifier, description) { Id = id };
+
+            ikMap[id] = ik;
+            ResourceManager.iks.Add(ik);
+
+            foreach (XmlNode subNode in element.ChildNodes)
+            {
+                XmlElement subElement = (XmlElement)subNode;
+                switch (subElement.Name)
+                {
+                    case nameof(ValAttr):
+                        ik.Attributes.Add((ValAttr)ParseAttribute(subElement, typeMap, attrMap));
+                        break;
+                    case nameof(AttrPair):
+                        ik.AttrPairs.Add(ParseAttrPair(subElement, procMap, envMap, attrMap, attrPairMap));
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 解析AttrPair
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="procMap"></param>
+        /// <param name="envMap"></param>
+        /// <param name="attrMap"></param>
+        /// <param name="attrPairMap"></param>
+        /// <returns></returns>
+        private static AttrPair ParseAttrPair(XmlElement element,
+            Dictionary<int, Proc> procMap,
+            Dictionary<int, Env> envMap,
+            Dictionary<int, Attribute> attrMap,
+            Dictionary<int, AttrPair> attrPairMap)
+        {
+            Debug.Assert(element.Name == nameof(AttrPair));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            int? procAId = ParseIntNullAttr(element, "procA-Ref");
+            int? procAttrAId = ParseIntNullAttr(element, "procAttrA-Ref");
+            int? procBId = ParseIntNullAttr(element, "procB-Ref");
+            int? procAttrBId = ParseIntNullAttr(element, "procAttrB-Ref");
+            int? envAId = ParseIntNullAttr(element, "envA-Ref");
+            int? envAttrAId = ParseIntNullAttr(element, "envAttrA-Ref");
+            int? envBId = ParseIntNullAttr(element, "envB-Ref");
+            int? envAttrBId = ParseIntNullAttr(element, "envAttrB-Ref");
+            AttrPair attrPair;
+            if (procAId is not null &&
+                procAttrAId is not null &&
+                procBId is not null &&
+                procAttrBId is not null) // P-P型
+            {
+                attrPair = new AttrPair(
+                    procMap[(int)procAId],
+                    (VisAttr)attrMap[(int)procAttrAId],
+                    procMap[(int)procBId],
+                    (VisAttr)attrMap[(int)procAttrBId])
+                {
+                    Id = id
+                };
+            }
+            else if (procAId is not null &&
+                procAttrAId is not null &&
+                envBId is not null &&
+                envAttrBId is not null) // P-E型
+            {
+                attrPair = new AttrPair(
+                    procMap[(int)procAId],
+                    (VisAttr)attrMap[(int)procAttrAId],
+                    envMap[(int)envBId],
+                    (VisAttr)attrMap[(int)envAttrBId]
+                    )
+                {
+                    Id = id
+                };
+            }
+            else if (envAId is not null &&
+                envAttrAId is not null &&
+                envBId is not null &&
+                envAttrBId is not null) // E-E型
+            {
+                attrPair = new AttrPair(
+                    envMap[(int)envAId],
+                    (VisAttr)attrMap[(int)envAttrAId],
+                    envMap[(int)envBId],
+                    (VisAttr)attrMap[(int)envAttrBId]
+                    )
+                {
+                    Id = id
+                };
+            }
+            else
+            {
+                throw new System.NotImplementedException();
+            }
+
+            attrPairMap[id] = attrPair;
+            return attrPair;
         }
 
         #endregion

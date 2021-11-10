@@ -863,7 +863,7 @@ namespace Plat._C
             ResourceManager.ClearAllResource();
 
             // id -> 模型 映射表
-            Dictionary<int, Axiom> axiomMap = new Dictionary<int, Axiom>();
+            // Dictionary<int, Axiom> axiomMap = new Dictionary<int, Axiom>();
             Dictionary<int, Channel> channelMap = new Dictionary<int, Channel>();
             Dictionary<int, Env> envMap = new Dictionary<int, Env>();
             Dictionary<int, AttrPair> attrPairMap = new Dictionary<int, AttrPair>();
@@ -878,7 +878,7 @@ namespace Plat._C
             Dictionary<int, Type> typeMap = new Dictionary<int, Type>();
             Dictionary<int, Attribute> attrMap = new Dictionary<int, Attribute>();
             Dictionary<int, Caller> callerMap = new Dictionary<int, Caller>();
-            Dictionary<int, Formula> formulaMap = new Dictionary<int, Formula>();
+            // Dictionary<int, Formula> formulaMap = new Dictionary<int, Formula>();
 
             //
             // 数据类型
@@ -963,6 +963,24 @@ namespace Plat._C
             {
                 XmlElement ikElement = (XmlElement)ikNode;
                 ParseIK(ikElement, typeMap, procMap, envMap, ikMap, attrPairMap, attrMap);
+            }
+
+            #endregion
+
+            //
+            // 公理
+            //
+            #region MetaInfo-Axioms
+
+            XmlNode? axiomsRoot = doc.SelectSingleNode($"SharpMS/MetaInfo-{nameof(Axiom)}s");
+            if (axiomsRoot is null)
+            {
+                return false;
+            }
+            foreach (XmlNode axiomNode in axiomsRoot.ChildNodes)
+            {
+                XmlElement axiomElement = (XmlElement)axiomNode;
+                ParseAxiom(axiomElement);
             }
 
             #endregion
@@ -1377,6 +1395,44 @@ namespace Plat._C
 
             attrPairMap[id] = attrPair;
             return attrPair;
+        }
+
+        /// <summary>
+        /// 解析Axiom
+        /// </summary>
+        /// <param name="element"></param>
+        private static void ParseAxiom(XmlElement element)
+        {
+            Debug.Assert(element.Name == nameof(Axiom));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string identifier = element.GetAttribute(nameof(identifier));
+            string description = element.GetAttribute(nameof(description));
+            Axiom axiom = new Axiom(identifier, description) { Id = id };
+
+            ResourceManager.axioms.Add(axiom);
+
+            foreach (XmlNode subNode in element.ChildNodes)
+            {
+                XmlElement subElement = (XmlElement)subNode;
+                axiom.Formulas.Add(ParseFormula(subElement));
+            }
+        }
+
+        /// <summary>
+        /// 解析Formula
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private static Formula ParseFormula(XmlElement element)
+        {
+            Debug.Assert(element.Name == nameof(Formula));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string content = element.GetAttribute(nameof(content));
+            string description = element.GetAttribute(nameof(description));
+
+            return new Formula(content, description) { Id = id };
         }
 
         #endregion

@@ -863,7 +863,7 @@ namespace Plat._C
             ResourceManager.ClearAllResource();
 
             // id -> 模型 映射表
-            // Dictionary<int, Axiom> axiomMap = new Dictionary<int, Axiom>();
+            Dictionary<int, Axiom> axiomMap = new Dictionary<int, Axiom>();
             Dictionary<int, Channel> channelMap = new Dictionary<int, Channel>();
             Dictionary<int, Env> envMap = new Dictionary<int, Env>();
             Dictionary<int, AttrPair> attrPairMap = new Dictionary<int, AttrPair>();
@@ -879,6 +879,8 @@ namespace Plat._C
             Dictionary<int, Attribute> attrMap = new Dictionary<int, Attribute>();
             Dictionary<int, Caller> callerMap = new Dictionary<int, Caller>();
             // Dictionary<int, Formula> formulaMap = new Dictionary<int, Formula>();
+            Dictionary<int, Anchor_VM> anchorMap = new Dictionary<int, Anchor_VM>();
+            Dictionary<int, Linker_VM> linkerMap = new Dictionary<int, Linker_VM>();
 
             //
             // 数据类型
@@ -980,7 +982,50 @@ namespace Plat._C
             foreach (XmlNode axiomNode in axiomsRoot.ChildNodes)
             {
                 XmlElement axiomElement = (XmlElement)axiomNode;
-                ParseAxiom(axiomElement);
+                ParseAxiom(axiomElement, axiomMap);
+            }
+
+            #endregion
+
+            //
+            // 类图
+            //
+            #region Class Diagram
+
+            XmlNode? classDiagRoot = doc.SelectSingleNode($"SharpMS/ClassDiagram");
+            if (classDiagRoot is null)
+            {
+                return false;
+            }
+            foreach (XmlNode vmNode in classDiagRoot.ChildNodes)
+            {
+                XmlElement vmElement = (XmlElement)vmNode;
+                switch (vmElement.Name)
+                {
+                    case nameof(Type_VM):
+                        ParseType_VM(vmElement, typeMap, anchorMap);
+                        break;
+                    case nameof(Axiom_VM):
+                        ParseAxiom_VM(vmElement, axiomMap);
+                        break;
+                    case nameof(Env_VM):
+                        ParseEnv_VM(vmElement, envMap, anchorMap);
+                        break;
+                    case nameof(Proc_VM):
+                        ParseProc_VM(vmElement, procMap, anchorMap);
+                        break;
+                    case nameof(IK_VM):
+                        ParseIK_VM(vmElement, ikMap);
+                        break;
+                    case nameof(Linker_VM):
+                        ResourceManager.mainWindow_VM.ClassDiagram_P_VM.DragDrop_VMs.Add
+                            (
+                            ParseLinkerObj(vmElement, anchorMap, linkerMap, ResourceManager.mainWindow_VM.ClassDiagram_P_VM)
+                            );
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
             }
 
             #endregion
@@ -1401,7 +1446,8 @@ namespace Plat._C
         /// 解析Axiom
         /// </summary>
         /// <param name="element"></param>
-        private static void ParseAxiom(XmlElement element)
+        /// <param name="axiomMap"></param>
+        private static void ParseAxiom(XmlElement element, Dictionary<int, Axiom> axiomMap)
         {
             Debug.Assert(element.Name == nameof(Axiom));
 
@@ -1410,6 +1456,7 @@ namespace Plat._C
             string description = element.GetAttribute(nameof(description));
             Axiom axiom = new Axiom(identifier, description) { Id = id };
 
+            axiomMap[id] = axiom;
             ResourceManager.axioms.Add(axiom);
 
             foreach (XmlNode subNode in element.ChildNodes)
@@ -1433,6 +1480,195 @@ namespace Plat._C
             string description = element.GetAttribute(nameof(description));
 
             return new Formula(content, description) { Id = id };
+        }
+
+        /// <summary>
+        /// 解析Type_VM
+        /// </summary>
+        /// <param name="element"></param>
+        private static void ParseType_VM(XmlElement element,
+            Dictionary<int, Type> typeMap,
+            Dictionary<int, Anchor_VM> anchorMap)
+        {
+            int typeId = int.Parse(element.GetAttribute("type-Ref"));
+            double x = double.Parse(element.GetAttribute("x"));
+            double y = double.Parse(element.GetAttribute("y"));
+            Type_VM type_VM = new Type_VM(x, y, ResourceManager.mainWindow_VM.ClassDiagram_P_VM, typeMap[typeId]);
+
+            type_VM.Anchor_VMs.Clear();
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                type_VM.Anchor_VMs.Add(ParseAnchorObj(subElement, type_VM, anchorMap));
+            }
+            ResourceManager.mainWindow_VM.ClassDiagram_P_VM.DragDrop_VMs.Add(type_VM);
+        }
+
+        /// <summary>
+        /// 解析Anchor_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="axiomMap"></param>
+        private static void ParseAxiom_VM(XmlElement element, Dictionary<int, Axiom> axiomMap)
+        {
+            int axiomId = int.Parse(element.GetAttribute("axiom-Ref"));
+            double x = double.Parse(element.GetAttribute("x"));
+            double y = double.Parse(element.GetAttribute("y"));
+            Axiom_VM axiom_VM = new Axiom_VM(x, y, ResourceManager.mainWindow_VM.ClassDiagram_P_VM, axiomMap[axiomId]);
+
+            ResourceManager.mainWindow_VM.ClassDiagram_P_VM.DragDrop_VMs.Add(axiom_VM);
+        }
+
+        /// <summary>
+        /// 解析Env_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="envMap"></param>
+        /// <param name="anchorMap"></param>
+        private static void ParseEnv_VM(XmlElement element,
+            Dictionary<int, Env> envMap,
+            Dictionary<int, Anchor_VM> anchorMap)
+        {
+            int envId = int.Parse(element.GetAttribute("env-Ref"));
+            double x = double.Parse(element.GetAttribute("x"));
+            double y = double.Parse(element.GetAttribute("y"));
+            Env_VM env_VM = new Env_VM(x, y, ResourceManager.mainWindow_VM.ClassDiagram_P_VM, envMap[envId]);
+
+            env_VM.Anchor_VMs.Clear();
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                env_VM.Anchor_VMs.Add(ParseAnchorObj(subElement, env_VM, anchorMap));
+            }
+            ResourceManager.mainWindow_VM.ClassDiagram_P_VM.DragDrop_VMs.Add(env_VM);
+        }
+
+        /// <summary>
+        /// 解析Proc_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="procMap"></param>
+        /// <param name="anchorMap"></param>
+        private static void ParseProc_VM(XmlElement element,
+            Dictionary<int, Proc> procMap,
+            Dictionary<int, Anchor_VM> anchorMap)
+        {
+            int procId = int.Parse(element.GetAttribute("proc-Ref"));
+            double x = double.Parse(element.GetAttribute("x"));
+            double y = double.Parse(element.GetAttribute("y"));
+            Proc_VM proc_VM = new Proc_VM(x, y, ResourceManager.mainWindow_VM.ClassDiagram_P_VM, procMap[procId]);
+
+            proc_VM.Anchor_VMs.Clear();
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                proc_VM.Anchor_VMs.Add(ParseAnchorObj(subElement, proc_VM, anchorMap));
+            }
+            ResourceManager.mainWindow_VM.ClassDiagram_P_VM.DragDrop_VMs.Add(proc_VM);
+        }
+
+        /// <summary>
+        /// 解析IK_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="ikMap"></param>
+        private static void ParseIK_VM(XmlElement element,
+            Dictionary<int, IK> ikMap)
+        {
+            int ikId = int.Parse(element.GetAttribute("ik-Ref"));
+            double x = double.Parse(element.GetAttribute("x"));
+            double y = double.Parse(element.GetAttribute("y"));
+            IK_VM ik_VM = new IK_VM(x, y, ResourceManager.mainWindow_VM.ClassDiagram_P_VM, ikMap[ikId]);
+
+            ResourceManager.mainWindow_VM.ClassDiagram_P_VM.DragDrop_VMs.Add(ik_VM);
+        }
+
+        /// <summary>
+        /// 解析锚点（仅对象，不考虑其维护的Linker引用
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="hostVM"></param>
+        /// <param name="anchorMap"></param>
+        /// <returns></returns>
+        private static Anchor_VM ParseAnchorObj(XmlElement element,
+            DragDrop_VM hostVM,
+            Dictionary<int, Anchor_VM> anchorMap)
+        {
+            Debug.Assert(element.Name == nameof(Anchor_VM)
+                || element.Name == nameof(TopAnchor_VM)
+                || element.Name == nameof(BotAnchor_VM));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            double x = double.Parse(element.GetAttribute("x"));
+            double y = double.Parse(element.GetAttribute("y"));
+
+            switch (element.Name)
+            {
+                case nameof(Anchor_VM):
+                    Anchor_VM anchor_VM = new Anchor_VM(x, y, hostVM) { Id = id };
+                    return anchorMap[id] = anchor_VM;
+                case nameof(TopAnchor_VM):
+                    TopAnchor_VM topAnchor_VM = new TopAnchor_VM(x, y, hostVM) { Id = id };
+                    return anchorMap[id] = topAnchor_VM;
+                case nameof(BotAnchor_VM):
+                    BotAnchor_VM botAnchor_VM = new BotAnchor_VM(x, y, hostVM) { Id = id };
+                    return anchorMap[id] = botAnchor_VM;
+                default:
+                    throw new System.NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// 解析连线
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="anchorMap"></param>
+        /// <param name="linkerMap"></param>
+        /// <returns></returns>
+        private static Linker_VM ParseLinkerObj(XmlElement element,
+            Dictionary<int, Anchor_VM> anchorMap,
+            Dictionary<int, Linker_VM> linkerMap,
+            DragDrop_P_VM dragDrop_P_VM)
+        {
+            Debug.Assert(element.Name == nameof(Linker_VM)
+                || element.Name == nameof(Arrow_VM));
+
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            int srcId = int.Parse(element.GetAttribute("source-Ref"));
+            int destId = int.Parse(element.GetAttribute("dest-Ref"));
+
+            switch (element.Name)
+            {
+                case nameof(Linker_VM):
+                    Linker_VM linker_VM = new Linker_VM(anchorMap[srcId], anchorMap[destId], dragDrop_P_VM) { Id = id };
+                    linkerMap[id] = linker_VM;
+                    ReBuildAnchorLinkerRelation(linker_VM, anchorMap[srcId]);
+                    ReBuildAnchorLinkerRelation(linker_VM, anchorMap[destId]);
+                    return linker_VM;
+                case nameof(Arrow_VM):
+                    Arrow_VM arrow_VM = new Arrow_VM(anchorMap[srcId], anchorMap[destId], dragDrop_P_VM) { Id = id };
+                    linkerMap[id] = arrow_VM;
+                    ReBuildAnchorLinkerRelation(arrow_VM, anchorMap[srcId]);
+                    ReBuildAnchorLinkerRelation(arrow_VM, anchorMap[destId]);
+                    return arrow_VM;
+                default:
+                    throw new System.NotImplementedException();
+            }
+        }
+        
+        /// <summary>
+        /// 为Linker_VM和Anchor_VM重建互引关系
+        /// </summary>
+        /// <param name="linker_VM"></param>
+        /// <param name="anchor_VM"></param>
+        private static void ReBuildAnchorLinkerRelation(Linker_VM linker_VM, Anchor_VM anchor_VM)
+        {
+            if (anchor_VM is BotAnchor_VM)
+            {
+                BotAnchor_VM botAnchor_VM = (BotAnchor_VM)anchor_VM;
+                botAnchor_VM.AddLinker(linker_VM);
+            }
+            else
+            {
+                anchor_VM.LinkerVM = linker_VM;
+            }
         }
 
         #endregion

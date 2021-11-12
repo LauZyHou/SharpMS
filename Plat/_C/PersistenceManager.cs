@@ -628,6 +628,18 @@ namespace Plat._C
         }
 
         /// <summary>
+        /// Debug用
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="log"></param>
+        private static void XmlWriteDebug(XmlTextWriter xmlWriter, string log = "None")
+        {
+            xmlWriter.WriteStartElement("Debug");
+            xmlWriter.WriteAttributeString("log", log);
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
         /// XML持久化进程图中的DD VM
         /// </summary>
         /// <param name="xmlWriter"></param>
@@ -871,7 +883,8 @@ namespace Plat._C
             Dictionary<int, Port> portMap = new Dictionary<int, Port>();
             Dictionary<int, Proc> procMap = new Dictionary<int, Proc>();
             Dictionary<int, State> stateMap = new Dictionary<int, State>();
-            Dictionary<int, LocTrans> locTransMap = new Dictionary<int, LocTrans>();
+            //Dictionary<int, LocTrans> locTransMap = new Dictionary<int, LocTrans>();
+            Dictionary<int, TransNode_VM> transNode_VMMap = new Dictionary<int, TransNode_VM>();
             Dictionary<int, PortChanInst> portChanInstMap = new Dictionary<int, PortChanInst>();
             Dictionary<int, ProcEnvInst> procEnvInstMap = new Dictionary<int, ProcEnvInst>();
             Dictionary<int, TopoInst> topoInstMap = new Dictionary<int, TopoInst>();
@@ -1026,6 +1039,62 @@ namespace Plat._C
                     default:
                         throw new System.NotImplementedException();
                 }
+            }
+
+            #endregion
+
+            //
+            // 进程图状态机
+            //
+            #region Process Graph
+
+            XmlNode? procGraphsRoot = doc.SelectSingleNode($"SharpMS/ProcGraphs");
+            if (procGraphsRoot is null)
+            {
+                return false;
+            }
+            foreach (XmlElement procGraphElement in procGraphsRoot.ChildNodes)
+            {
+                Debug.Assert(procGraphElement.Name == nameof(ProcGraph));
+                int procId = int.Parse(procGraphElement.GetAttribute("proc-Ref"));
+                ProcGraph procGraph = new ProcGraph(procMap[procId]);
+                ProcGraph_P_VM procGraph_P_VM = new ProcGraph_P_VM(procGraph);
+                foreach (XmlElement subElement in procGraphElement.ChildNodes)
+                {
+                    switch (subElement.Name)
+                    {
+                        case nameof(InitState_VM):
+                            ParseInitState_VM(subElement, procGraph_P_VM, anchorMap);
+                            break;
+                        case nameof(TinyState_VM):
+                            ParseTinyState_VM(subElement, procGraph_P_VM, anchorMap);
+                            break;
+                        case nameof(FinalState_VM):
+                            ParseFinalState_VM(subElement, procGraph_P_VM, anchorMap);
+                            break;
+                        case nameof(Arrow_VM):
+                            procGraph_P_VM.DragDrop_VMs.Add(
+                                ParseLinkerObj(subElement, anchorMap, linkerMap, procGraph_P_VM)
+                                );
+                            break;
+                        case nameof(TransNode_VM):
+                            ParseTransNode_VM(subElement, procGraph_P_VM, linkerMap, transNode_VMMap);
+                            break;
+                        default:
+                            throw new System.NotImplementedException();
+                    }
+                }
+                foreach (XmlElement subElement in procGraphElement.ChildNodes) // 单独处理extMsg-Ref
+                {
+                    if (subElement.Name == nameof(Arrow_VM))
+                    {
+                        int id = int.Parse(subElement.GetAttribute(nameof(id)));
+                        int extMsgId = int.Parse(subElement.GetAttribute("extMsg-Ref"));
+                        Arrow_VM arrow_VM = (Arrow_VM)linkerMap[id];
+                        arrow_VM.ExtMsg = transNode_VMMap[extMsgId];
+                    }
+                }
+                ResourceManager.mainWindow_VM.ProcGraph_PG_VM.ProcGraph_P_VMs.Add(procGraph_P_VM);
             }
 
             #endregion
@@ -1473,7 +1542,9 @@ namespace Plat._C
         /// <returns></returns>
         private static Formula ParseFormula(XmlElement element)
         {
-            Debug.Assert(element.Name == nameof(Formula));
+            Debug.Assert(element.Name == nameof(Formula)
+                || element.Name == "Guard"
+                || element.Name == "Action");
 
             int id = int.Parse(element.GetAttribute(nameof(id)));
             string content = element.GetAttribute(nameof(content));
@@ -1669,6 +1740,118 @@ namespace Plat._C
             {
                 anchor_VM.LinkerVM = linker_VM;
             }
+        }
+
+
+        /// <summary>
+        /// 解析InitState_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="procGraph_P_VM"></param>
+        private static void ParseInitState_VM(XmlElement element,
+            ProcGraph_P_VM procGraph_P_VM,
+            Dictionary<int, Anchor_VM> anchorMap)
+        {
+            double x = double.Parse(element.GetAttribute(nameof(x)));
+            double y = double.Parse(element.GetAttribute(nameof(y)));
+            InitState_VM initState_VM = new InitState_VM(x, y, procGraph_P_VM);
+
+            initState_VM.Anchor_VMs.Clear();
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                initState_VM.Anchor_VMs.Add(ParseAnchorObj(subElement, initState_VM, anchorMap));
+            }
+
+            procGraph_P_VM.DragDrop_VMs.Add(initState_VM);
+        }
+
+        /// <summary>
+        /// 解析TinyState_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="procGraph_P_VM"></param>
+        /// <param name="anchorMap"></param>
+        private static void ParseTinyState_VM(XmlElement element,
+            ProcGraph_P_VM procGraph_P_VM,
+            Dictionary<int, Anchor_VM> anchorMap)
+        {
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            string name = element.GetAttribute(nameof(name));
+            double x = double.Parse(element.GetAttribute(nameof(x)));
+            double y = double.Parse(element.GetAttribute(nameof(y)));
+            TinyState_VM tinyState_VM = new TinyState_VM(x, y, procGraph_P_VM);
+            tinyState_VM.State.Name = name;
+            tinyState_VM.State.Id = id;
+
+            tinyState_VM.Anchor_VMs.Clear();
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                tinyState_VM.Anchor_VMs.Add(ParseAnchorObj(subElement, tinyState_VM, anchorMap));
+            }
+
+            procGraph_P_VM.DragDrop_VMs.Add(tinyState_VM);
+        }
+
+        /// <summary>
+        /// 解析FinalState_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="procGraph_P_VM"></param>
+        /// <param name="anchorMap"></param>
+        private static void ParseFinalState_VM(XmlElement element,
+            ProcGraph_P_VM procGraph_P_VM,
+            Dictionary<int, Anchor_VM> anchorMap)
+        {
+            double x = double.Parse(element.GetAttribute(nameof(x)));
+            double y = double.Parse(element.GetAttribute(nameof(y)));
+            FinalState_VM finalState_VM = new FinalState_VM(x, y, procGraph_P_VM);
+
+            finalState_VM.Anchor_VMs.Clear();
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                finalState_VM.Anchor_VMs.Add(ParseAnchorObj(subElement, finalState_VM, anchorMap));
+            }
+
+            procGraph_P_VM.DragDrop_VMs.Add(finalState_VM);
+        }
+
+        /// <summary>
+        /// 解析TransNode_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="procGraph_P_VM"></param>
+        /// <param name="linkerMap"></param>
+        /// <param name="transNode_VMMap"></param>
+        private static void ParseTransNode_VM(XmlElement element,
+            ProcGraph_P_VM procGraph_P_VM,
+            Dictionary<int, Linker_VM> linkerMap,
+            Dictionary<int, TransNode_VM> transNode_VMMap)
+        {
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            int attachedLinkerId = int.Parse(element.GetAttribute("attachedLinker-Ref"));
+            double x = double.Parse(element.GetAttribute(nameof(x)));
+            double y = double.Parse(element.GetAttribute(nameof(y)));
+
+            TransNode_VM transNode_VM = new TransNode_VM(x, y, procGraph_P_VM, linkerMap[attachedLinkerId]);
+            transNode_VM.LocTrans.Id = id;
+
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                switch (subElement.Name)
+                {
+                    case "Guard":
+                        transNode_VM.LocTrans.Guard = ParseFormula(subElement);
+                        break;
+                    case "Action":
+                        transNode_VM.LocTrans.Actions.Add(ParseFormula(subElement));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            transNode_VMMap[id] = transNode_VM;
+            procGraph_P_VM.DragDrop_VMs.Add(transNode_VM);
         }
 
         #endregion

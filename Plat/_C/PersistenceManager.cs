@@ -712,6 +712,7 @@ namespace Plat._C
                 ProcInst_VM procInst_VM = (ProcInst_VM)dragDrop_VM;
                 xmlWriter.WriteStartElement(nameof(ProcInst_VM));
                 xmlWriter.WriteAttributeString("id", procInst_VM.ProcInst.Id.ToString());
+                xmlWriter.WriteAttributeString("proc-Ref", procInst_VM.ProcInst.Proc?.Id.ToString());
                 XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
                 foreach (Instance instance in procInst_VM.ProcInst.Properties)
                 {
@@ -729,6 +730,7 @@ namespace Plat._C
                 EnvInst_VM envInst_VM = (EnvInst_VM)dragDrop_VM;
                 xmlWriter.WriteStartElement(nameof(EnvInst_VM));
                 xmlWriter.WriteAttributeString("id", envInst_VM.EnvInst.Id.ToString());
+                xmlWriter.WriteAttributeString("env-Ref", envInst_VM.EnvInst.Env?.Id.ToString());
                 XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
                 foreach (Instance instance in envInst_VM.EnvInst.Properties)
                 {
@@ -746,8 +748,9 @@ namespace Plat._C
                 ProcEnvInst_CT_VM procEnvInst_CT_VM = (ProcEnvInst_CT_VM)dragDrop_VM;
                 xmlWriter.WriteStartElement(nameof(ProcEnvInst_CT_VM));
                 xmlWriter.WriteAttributeString("id", procEnvInst_CT_VM.ProcEnvInst.Id.ToString());
-                xmlWriter.WriteAttributeString("procInst-Ref", procEnvInst_CT_VM.ProcEnvInst.ProcInst.Id.ToString());
-                xmlWriter.WriteAttributeString("envInst-Ref", procEnvInst_CT_VM.ProcEnvInst.EnvInst.Id.ToString());
+                //xmlWriter.WriteAttributeString("procInst-Ref", procEnvInst_CT_VM.ProcEnvInst.ProcInst.Id.ToString());
+                //xmlWriter.WriteAttributeString("envInst-Ref", procEnvInst_CT_VM.ProcEnvInst.EnvInst.Id.ToString());
+                xmlWriter.WriteAttributeString("attachedLinker-Ref", procEnvInst_CT_VM.AttachedLinker.Id.ToString());
                 XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
                 foreach (PortChanInst portChanInst in procEnvInst_CT_VM.ProcEnvInst.PortChanInsts)
                 {
@@ -771,7 +774,7 @@ namespace Plat._C
             {
                 ProcInst_NT_VM procInst_NT_VM = (ProcInst_NT_VM)dragDrop_VM;
                 xmlWriter.WriteStartElement(nameof(ProcInst_NT_VM));
-                xmlWriter.WriteAttributeString("proc-Ref", procInst_NT_VM.ProcInst.Id.ToString());
+                xmlWriter.WriteAttributeString("procInst-Ref", procInst_NT_VM.ProcInst.Id.ToString());
                 XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
                 xmlWriter.WriteEndElement();
                 return;
@@ -780,7 +783,7 @@ namespace Plat._C
             {
                 EnvInst_NT_VM envInst_NT_VM = (EnvInst_NT_VM)dragDrop_VM;
                 xmlWriter.WriteStartElement(nameof(EnvInst_NT_VM));
-                xmlWriter.WriteAttributeString("env-Ref", envInst_NT_VM.EnvInst.Id.ToString());
+                xmlWriter.WriteAttributeString("envInst-Ref", envInst_NT_VM.EnvInst.Id.ToString());
                 XmlWriteDragDropPos(xmlWriter, dragDrop_VM);
                 xmlWriter.WriteEndElement();
                 return;
@@ -894,6 +897,8 @@ namespace Plat._C
             // Dictionary<int, Formula> formulaMap = new Dictionary<int, Formula>();
             Dictionary<int, Anchor_VM> anchorMap = new Dictionary<int, Anchor_VM>();
             Dictionary<int, Linker_VM> linkerMap = new Dictionary<int, Linker_VM>();
+            Dictionary<int, ProcInst_VM> procInst_VMMap = new Dictionary<int, ProcInst_VM>();
+            Dictionary<int, EnvInst_VM> envInst_VMMap = new Dictionary<int, EnvInst_VM>();
 
             //
             // 数据类型
@@ -1095,6 +1100,47 @@ namespace Plat._C
                     }
                 }
                 ResourceManager.mainWindow_VM.ProcGraph_PG_VM.ProcGraph_P_VMs.Add(procGraph_P_VM);
+            }
+
+            #endregion
+
+            //
+            // 拓扑图
+            //
+            #region Topology Graph
+
+            XmlNode? topoGraphNode = doc.SelectSingleNode($"SharpMS/TopoGraph");
+            if (topoGraphNode is null)
+            {
+                return false;
+            }
+            foreach (XmlElement subElement in topoGraphNode.ChildNodes)
+            {
+                switch (subElement.Name)
+                {
+                    case nameof(ProcInst_VM):
+                        ParseProcInst_VM(subElement, procInst_VMMap, procMap, anchorMap, typeMap);
+                        break;
+                    case nameof(ProcInst_NT_VM):
+                        ParseProcInst_NT_VM(subElement, procInst_VMMap);
+                        break;
+                    case nameof(EnvInst_VM):
+                        ParseEnvInst_VM(subElement, envInst_VMMap, envMap, anchorMap, typeMap);
+                        break;
+                    case nameof(EnvInst_NT_VM):
+                        ParseEnvInst_NT_VM(subElement, envInst_VMMap);
+                        break;
+                    case nameof(Linker_VM):
+                        ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs.Add(
+                            ParseLinkerObj(subElement, anchorMap, linkerMap, ResourceManager.mainWindow_VM.TopoGraph_P_VM)
+                            );
+                        break;
+                    case nameof(ProcEnvInst_CT_VM):
+                        ParseProcEnvInst_CT_VM(subElement, linkerMap, portMap, channelMap);
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
             }
 
             #endregion
@@ -1742,7 +1788,6 @@ namespace Plat._C
             }
         }
 
-
         /// <summary>
         /// 解析InitState_VM
         /// </summary>
@@ -1852,6 +1897,257 @@ namespace Plat._C
 
             transNode_VMMap[id] = transNode_VM;
             procGraph_P_VM.DragDrop_VMs.Add(transNode_VM);
+        }
+
+        /// <summary>
+        /// 解析ProcInst_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="procInst_VMMap"></param>
+        private static void ParseProcInst_VM(XmlElement element,
+            Dictionary<int, ProcInst_VM> procInst_VMMap,
+            Dictionary<int, Proc> procMap,
+            Dictionary<int, Anchor_VM> anchorMap,
+            Dictionary<int, Type> typeMap)
+        {
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            int? procId = ParseIntNullAttr(element, "proc-Ref");
+            double x = double.Parse(element.GetAttribute(nameof(x)));
+            double y = double.Parse(element.GetAttribute(nameof(y)));
+            ProcInst_VM procInst_VM = new ProcInst_VM(x, y, ResourceManager.mainWindow_VM.TopoGraph_P_VM);
+            procInst_VM.Anchor_VMs.Clear();
+            procInst_VM.ProcInst.Id = id;
+            if (procId is not null)
+            {
+                procInst_VM.ProcInst.Proc = procMap[(int)procId];
+            }
+            procInst_VM.ProcInst.Properties.Clear();
+
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                switch (subElement.Name)
+                {
+                    case nameof(ArrayInstance):
+                        procInst_VM.ProcInst.Properties.Add(ParseArrayInstance(subElement, typeMap));
+                        break;
+                    case nameof(ReferenceInstance):
+                        procInst_VM.ProcInst.Properties.Add(ParseReferenceInstance(subElement, typeMap));
+                        break;
+                    case nameof(ValueInstance):
+                        procInst_VM.ProcInst.Properties.Add(ParseValueInstance(subElement, typeMap));
+                        break;
+                    case nameof(TopAnchor_VM):
+                        procInst_VM.Anchor_VMs.Add(ParseAnchorObj(subElement, procInst_VM, anchorMap));
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+
+            procInst_VMMap[id] = procInst_VM;
+            ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs.Add(procInst_VM);
+        }
+
+        /// <summary>
+        /// 解析ProcInst_NT_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="procInst_VMMap"></param>
+        private static void ParseProcInst_NT_VM(XmlElement element,
+            Dictionary<int, ProcInst_VM> procInst_VMMap)
+        {
+            int procInstId = int.Parse(element.GetAttribute("procInst-Ref"));
+            ProcInst_VM procInst_VM = procInst_VMMap[procInstId];
+            double x = double.Parse(element.GetAttribute(nameof(x)));
+            double y = double.Parse(element.GetAttribute(nameof(y)));
+            ProcInst_NT_VM procInst_NT_VM = new ProcInst_NT_VM(x, y, ResourceManager.mainWindow_VM.TopoGraph_P_VM, procInst_VM.ProcInst);
+            procInst_VM.ExtMsg = procInst_NT_VM;
+            ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs.Add(procInst_NT_VM);
+        }
+
+        /// <summary>
+        /// 解析EnvInst_NT_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="envInst_VMMap"></param>
+        private static void ParseEnvInst_NT_VM(XmlElement element,
+            Dictionary<int, EnvInst_VM> envInst_VMMap)
+        {
+            int envInstId = int.Parse(element.GetAttribute("envInst-Ref"));
+            EnvInst_VM envInst_VM = envInst_VMMap[envInstId];
+            double x = double.Parse(element.GetAttribute(nameof(x)));
+            double y = double.Parse(element.GetAttribute(nameof(y)));
+            EnvInst_NT_VM envInst_NT_VM = new EnvInst_NT_VM(x, y, ResourceManager.mainWindow_VM.TopoGraph_P_VM, envInst_VM.EnvInst);
+            envInst_VM.ExtMsg = envInst_NT_VM;
+            ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs.Add(envInst_NT_VM);
+        }
+
+        /// <summary>
+        /// 解析EnvInst_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="envInst_VMMap"></param>
+        /// <param name="envMap"></param>
+        /// <param name="anchorMap"></param>
+        /// <param name="typeMap"></param>
+        private static void ParseEnvInst_VM(XmlElement element,
+            Dictionary<int, EnvInst_VM> envInst_VMMap,
+            Dictionary<int, Env> envMap,
+            Dictionary<int, Anchor_VM> anchorMap,
+            Dictionary<int, Type> typeMap)
+        {
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            int? envId = ParseIntNullAttr(element, "env-Ref");
+            double x = double.Parse(element.GetAttribute(nameof(x)));
+            double y = double.Parse(element.GetAttribute(nameof(y)));
+            EnvInst_VM envInst_VM = new EnvInst_VM(x, y, ResourceManager.mainWindow_VM.TopoGraph_P_VM);
+            envInst_VM.Anchor_VMs.Clear();
+            envInst_VM.EnvInst.Id = id;
+            if (envId is not null)
+            {
+                envInst_VM.EnvInst.Env = envMap[(int)envId];
+            }
+            envInst_VM.EnvInst.Properties.Clear();
+
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                switch (subElement.Name)
+                {
+                    case nameof(ArrayInstance):
+                        envInst_VM.EnvInst.Properties.Add(ParseArrayInstance(subElement, typeMap));
+                        break;
+                    case nameof(ReferenceInstance):
+                        envInst_VM.EnvInst.Properties.Add(ParseReferenceInstance(subElement, typeMap));
+                        break;
+                    case nameof(ValueInstance):
+                        envInst_VM.EnvInst.Properties.Add(ParseValueInstance(subElement, typeMap));
+                        break;
+                    case nameof(BotAnchor_VM):
+                        envInst_VM.Anchor_VMs.Add(ParseAnchorObj(subElement, envInst_VM, anchorMap));
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+
+            envInst_VMMap[id] = envInst_VM;
+            ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs.Add(envInst_VM);
+        }
+
+        /// <summary>
+        /// 解析ArrayInstance
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="typeMap"></param>
+        /// <returns></returns>
+        private static ArrayInstance ParseArrayInstance(XmlElement element, Dictionary<int, Type> typeMap)
+        {
+            int typeId = int.Parse(element.GetAttribute("type-Ref"));
+            string identifier = element.GetAttribute(nameof(identifier));
+            ArrayInstance arrayInstance = new ArrayInstance(typeMap[typeId], identifier, true);
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                switch (subElement.Name)
+                {
+                    case nameof(ReferenceInstance):
+                        arrayInstance.ArrayItems.Add(ParseReferenceInstance(subElement, typeMap));
+                        break;
+                    case nameof(ValueInstance):
+                        arrayInstance.ArrayItems.Add(ParseValueInstance(subElement, typeMap));
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+            return arrayInstance;
+        }
+
+        /// <summary>
+        /// 解析ReferenceInstance
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="typeMap"></param>
+        /// <returns></returns>
+        private static ReferenceInstance ParseReferenceInstance(XmlElement element, Dictionary<int, Type> typeMap)
+        {
+            int typeId = int.Parse(element.GetAttribute("type-Ref"));
+            string identifier = element.GetAttribute(nameof(identifier));
+            ReferenceInstance referenceInstance = new ReferenceInstance(typeMap[typeId], identifier, false);
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                switch (subElement.Name)
+                {
+                    case nameof(ReferenceInstance):
+                        referenceInstance.Properties.Add(ParseReferenceInstance(subElement, typeMap));
+                        break;
+                    case nameof(ValueInstance):
+                        referenceInstance.Properties.Add(ParseValueInstance(subElement, typeMap));
+                        break;
+                    case nameof(ArrayInstance):
+                        referenceInstance.Properties.Add(ParseArrayInstance(subElement, typeMap));
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+            return referenceInstance;
+        }
+
+        /// <summary>
+        /// 解析ValueInstance
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="typeMap"></param>
+        /// <returns></returns>
+        private static ValueInstance ParseValueInstance(XmlElement element, Dictionary<int, Type> typeMap)
+        {
+            int typeId = int.Parse(element.GetAttribute("type-Ref"));
+            string identifier = element.GetAttribute(nameof(identifier));
+            string value = element.GetAttribute(nameof(value));
+            ValueInstance valueInstance = new ValueInstance(typeMap[typeId], identifier, false) { Value = value };
+            return valueInstance;
+        }
+
+        /// <summary>
+        /// 解析ProcEnvInst_CT_VM
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="linkerMap"></param>
+        /// <param name="portMap"></param>
+        /// <param name="channelMap"></param>
+        private static void ParseProcEnvInst_CT_VM(XmlElement element,
+            Dictionary<int, Linker_VM> linkerMap,
+            Dictionary<int, Port> portMap,
+            Dictionary<int, Channel> channelMap)
+        {
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            double x = double.Parse(element.GetAttribute(nameof(x)));
+            double y = double.Parse(element.GetAttribute(nameof(y)));
+            int attachedLinkerId = int.Parse(element.GetAttribute("attachedLinker-Ref"));
+            ProcEnvInst_CT_VM procEnvInst_CT_VM = new ProcEnvInst_CT_VM(x, y, ResourceManager.mainWindow_VM.TopoGraph_P_VM, linkerMap[attachedLinkerId]);
+            procEnvInst_CT_VM.ProcEnvInst.Id = id;
+            foreach (XmlElement subElement in element.ChildNodes)
+            {
+                procEnvInst_CT_VM.ProcEnvInst.PortChanInsts.Add(ParsePortChanInst(subElement, portMap, channelMap));
+            }
+            ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs.Add(procEnvInst_CT_VM);
+        }
+
+        /// <summary>
+        /// 解析PortChanInst
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="portMap"></param>
+        /// <param name="channelMap"></param>
+        /// <returns></returns>
+        private static PortChanInst ParsePortChanInst(XmlElement element,
+            Dictionary<int, Port> portMap,
+            Dictionary<int, Channel> channelMap)
+        {
+            int id = int.Parse(element.GetAttribute(nameof(id)));
+            int portId = int.Parse(element.GetAttribute("port-Ref"));
+            int chanId = int.Parse(element.GetAttribute("chan-Ref"));
+            return new PortChanInst() { Port = portMap[portId], Chan = channelMap[chanId], Id = id };
         }
 
         #endregion

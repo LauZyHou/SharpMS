@@ -15,12 +15,13 @@ namespace Plat._M
         private readonly List<Instance> properties;
 
         /// <summary>
-        /// 构造器私有化，由build工厂方法提供构造
+        /// 对于从内存构建的模型，由build工厂方法提供构造
+        /// 对于读取的模型，可以使用此构造
         /// </summary>
         /// <param name="type">引用数据类型</param>
         /// <param name="identifier">实例标识</param>
         /// <param name="isArray">一定为false，表示非数组</param>
-        private ReferenceInstance(Type type, string identifier, bool isArray)
+        public ReferenceInstance(Type type, string identifier, bool isArray)
             :base(type, identifier, isArray)
         {
             // 只有非基本、非数组类型才构造引用类型，需要由使用方保障

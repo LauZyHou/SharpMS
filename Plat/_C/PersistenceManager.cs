@@ -91,8 +91,6 @@ namespace Plat._C
             XmlWriteStaticId(xmlWriter, nameof(Formula), Formula._id);
             XmlWriteStaticId(xmlWriter, nameof(Anchor_VM), Anchor_VM._id);
             XmlWriteStaticId(xmlWriter, nameof(Linker_VM), Linker_VM._id);
-            XmlWriteStaticId(xmlWriter, nameof(State), State._id);
-            XmlWriteStaticId(xmlWriter, nameof(LocTrans), LocTrans._id);
 
             xmlWriter.WriteEndElement();
 
@@ -1145,6 +1143,23 @@ namespace Plat._C
 
             #endregion
 
+            //
+            // 全局_id
+            //
+            #region Global Id
+
+            XmlNode? sidsNode = doc.SelectSingleNode($"SharpMS/Static-Ids");
+            if (sidsNode is null)
+            {
+                return false;
+            }
+            foreach (XmlElement sidElement in sidsNode.ChildNodes)
+            {
+                ParseSID(sidElement);
+            }
+
+            #endregion
+
             return true;
         }
 
@@ -2148,6 +2163,75 @@ namespace Plat._C
             int portId = int.Parse(element.GetAttribute("port-Ref"));
             int chanId = int.Parse(element.GetAttribute("chan-Ref"));
             return new PortChanInst() { Port = portMap[portId], Chan = channelMap[chanId], Id = id };
+        }
+
+        /// <summary>
+        /// 解析全局_id
+        /// </summary>
+        /// <param name="element"></param>
+        private static void ParseSID(XmlElement element)
+        {
+            string className = element.GetAttribute(nameof(className));
+            int _id = int.Parse(element.GetAttribute(nameof(_id)));
+            switch (className)
+            {
+                case nameof(Axiom):
+                    Axiom._id = _id;
+                    break;
+                case nameof(Channel):
+                    Channel._id = _id;
+                    break;
+                case nameof(Env):
+                    Env._id = _id;
+                    break;
+                case nameof(AttrPair):
+                    AttrPair._id = _id;
+                    break;
+                case nameof(IK):
+                    IK._id = _id;
+                    break;
+                case nameof(Port):
+                    Port._id = _id;
+                    break;
+                case nameof(Proc):
+                    Proc._id = _id;
+                    break;
+                case nameof(State):
+                    State._id = _id;
+                    break;
+                case nameof(LocTrans):
+                    LocTrans._id = _id;
+                    break;
+                case nameof(PortChanInst):
+                    PortChanInst._id = _id;
+                    break;
+                case nameof(ProcEnvInst):
+                    ProcEnvInst._id = _id;
+                    break;
+                case nameof(TopoInst):
+                    TopoInst._id = _id;
+                    break;
+                case nameof(Type):
+                    Type._id = _id;
+                    break;
+                case nameof(Attribute):
+                    Attribute._id = _id;
+                    break;
+                case nameof(Caller):
+                    Caller._id = _id;
+                    break;
+                case nameof(Formula):
+                    Formula._id = _id;
+                    break;
+                case nameof(Anchor_VM):
+                    Anchor_VM._id = _id;
+                    break;
+                case nameof(Linker_VM):
+                    Linker_VM._id = _id;
+                    break;
+                default:
+                    throw new System.NotImplementedException();
+            }
         }
 
         #endregion

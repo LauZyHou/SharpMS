@@ -30,6 +30,10 @@
       <MenuItem Header="Help">
         <MenuItem Header="About SharpMS" Command="{Binding OnAboutSharpMS}"/>
       </MenuItem>
+      <MenuItem Header="Translate">
+        <MenuItem Header="To UPPAAL" Command="{Binding OnTransToUPPAAL}"/>
+        <MenuItem Header="To ProVerif" Command="{Binding OnTransToProVerif}"/>
+      </MenuItem>
     </Menu>
 
     <TabControl Grid.Row="1">

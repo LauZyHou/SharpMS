@@ -110,6 +110,22 @@ namespace Plat._VM
             ResourceManager.UpdateTip("Get more info at https://github.com/LauZyHou/SharpMS");
         }
 
+        /// <summary>
+        /// µã»÷ Translate -> To UPPAAL
+        /// </summary>
+        private void OnTransToUPPAAL()
+        {
+
+        }
+
+        /// <summary>
+        /// µã»÷ Translate -> To ProVerif
+        /// </summary>
+        private void OnTransToProVerif()
+        {
+
+        }
+
         #endregion
     }
 }

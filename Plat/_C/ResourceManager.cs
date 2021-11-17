@@ -44,6 +44,10 @@ namespace Plat._C
         /// Tip的刷新次数，每次刷新都+1
         /// </summary>
         public static uint tipFlushNum = 0;
+        /// <summary>
+        /// 转换时需要指定的路径
+        /// </summary>
+        public static string transPath = "";
 
         /// <summary>
         /// 更新主页最下方的提示内容

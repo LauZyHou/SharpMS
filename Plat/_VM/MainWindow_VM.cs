@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Plat._C;
+using Plat._V;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -108,6 +109,19 @@ namespace Plat._VM
         private void OnAboutSharpMS()
         {
             ResourceManager.UpdateTip("Get more info at https://github.com/LauZyHou/SharpMS");
+        }
+
+        /// <summary>
+        /// µã»÷ Options -> Settings
+        /// </summary>
+        private void OnOpenSettings()
+        {
+            SettingsWindow_V settingsWindow_V = new SettingsWindow_V()
+            {
+                DataContext = new SettingsWindow_VM()
+            };
+            settingsWindow_V.ShowDialog(ResourceManager.mainWindow_V);
+            ResourceManager.UpdateTip("Open SharpMS settings window.");
         }
 
         /// <summary>

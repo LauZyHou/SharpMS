@@ -1,4 +1,6 @@
-﻿using Plat._M;
+﻿using Plat._C;
+using Plat._M;
+using Plat._V;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,7 @@ namespace Plat._VM
         public TinyState_VM()
             :base(0, 0, null)
         {
-            this.state = new State("NewState");
+            this.state = new State();
             this.init_anchor();
         }
 
@@ -33,7 +35,7 @@ namespace Plat._VM
         public TinyState_VM(double x, double y, DragDrop_P_VM panelVM)
             : base(x, y, panelVM)
         {
-            this.state = new State("NewState");
+            this.state = new State();
             this.init_anchor();
         }
 
@@ -76,6 +78,16 @@ namespace Plat._VM
         private void OnDelete()
         {
             this.PanelVM.DeleteDragDropItem(this);
+        }
+
+        private void OnEdit()
+        {
+            State_EW_V state_EW_V = new State_EW_V()
+            {
+                DataContext = new State_EW_VM(this.state)
+            };
+            state_EW_V.ShowDialog(ResourceManager.mainWindow_V);
+            ResourceManager.UpdateTip("Open state edit window.");
         }
 
         #endregion

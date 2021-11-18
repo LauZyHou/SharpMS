@@ -1,0 +1,14 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Width="800" Height="90"
+        x:Class="Plat._V.State_EW_V"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Edit state on process graph"
+        WindowStartupLocation="CenterOwner">
+	<StackPanel Margin="10">
+		<TextBlock Text="State Name:" FontSize="20"/>
+		<TextBox Text="{Binding State.Name}" FontSize="20"/>
+	</StackPanel>
+</Window>

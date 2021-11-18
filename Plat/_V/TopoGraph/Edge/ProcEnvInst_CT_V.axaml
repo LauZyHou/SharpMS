@@ -17,14 +17,14 @@
   </UserControl.Resources>
 
   <Grid RowDefinitions="20,*">
-    <TextBlock Grid.Row="0" Text="Proc->Env" Background="#99CC99" HorizontalAlignment="Center"/>
+    <TextBlock Grid.Row="0" Text="P-E" Background="#99CC99" HorizontalAlignment="Center"/>
     <ListBox Grid.Row="1" Items="{Binding ProcEnvInst.PortChanInsts}" Background="{StaticResource OutColor}">
       <ListBox.ItemTemplate>
         <DataTemplate>
           <StackPanel Orientation="Horizontal" Background="Transparent" Margin="0" HorizontalAlignment="Center">
             <TextBlock Text=" "/>
             <TextBlock Text="{Binding Port.Identifier}"/>
-            <TextBlock Text="->"/>
+            <TextBlock Text="="/>
             <TextBlock Text="{Binding Chan.Identifier}"/>
             <TextBlock Text=" "/>
           </StackPanel>

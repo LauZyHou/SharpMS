@@ -32,5 +32,8 @@
     <Compile Update="_V\ProcGraph\ProcGraph_P_V.axaml.cs">
       <DependentUpon>ProcGraph_P_V.axaml</DependentUpon>
     </Compile>
+    <Compile Update="_V\ProcGraph\State\State_EW_V.axaml.cs">
+      <DependentUpon>State_EW_V.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

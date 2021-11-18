@@ -17,6 +17,7 @@
     </Grid>
     <Grid.ContextMenu>
       <ContextMenu>
+        <MenuItem Header="Edit" Command="{Binding OnEdit}"/>
         <MenuItem Header="Delete" Command="{Binding OnDelete}"/>
       </ContextMenu>
     </Grid.ContextMenu>

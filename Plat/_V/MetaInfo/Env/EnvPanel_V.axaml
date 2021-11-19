@@ -57,7 +57,7 @@
     <!--Env Detail-->
     <TabControl Grid.Column="2">
       <TabItem Header="Desc/Attrs">
-        <Grid RowDefinitions="8*, 8*, 8*, 36*, 8*, 8*, 8*, 8*, 8*">
+        <Grid RowDefinitions="8*, 8*, 8*, 28*, 8*, 8*, 8*, 8*, 8*, 8*">
           <Grid Grid.Row="0" ColumnDefinitions="30*, 70*" Margin="6,0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Env Name:" FontSize="16"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentEnv.Identifier, Mode=TwoWay}"/>
@@ -94,6 +94,7 @@
                   <TextBlock Text=": "/>
                   <TextBlock Text="[]" IsVisible="{Binding IsArray}"/>
                   <TextBlock Text="{Binding Type.Identifier}"/>
+				  <TextBlock Text="{Binding EncryptStr}"/>
                   <TextBlock Text=" // "/>
                   <TextBlock Text="{Binding Description}"/>
                   <TextBlock Text=" "/>
@@ -131,7 +132,15 @@
             <CheckBox Grid.Column="3" IsThreeState="False"
                       IsChecked="{Binding #AttrList.SelectedItem.IsArray, Mode=TwoWay}"/>
           </Grid>
-          <Grid Grid.Row="8" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
+		  <Grid Grid.Row="8" ColumnDefinitions="30*,20*,30*,20*" Classes="ABBox">
+			<TextBlock Grid.Column="0" Text="Is Encrypted:"/>
+			<CheckBox Grid.Column="1" IsThreeState="False" IsChecked="{Binding #AttrList.SelectedItem.IsEncrypted, Mode=TwoWay}"
+					  HorizontalAlignment="Center"/>
+			<TextBlock Grid.Column="2" Text="Is Asymmetric:"/>
+			<CheckBox Grid.Column="3" IsThreeState="False" IsChecked="{Binding #AttrList.SelectedItem.IsAsymmetric, Mode=TwoWay}"
+					  HorizontalAlignment="Center"/>
+		  </Grid>
+          <Grid Grid.Row="9" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Desc:"/>
             <TextBox Grid.Column="1" Text="{Binding #AttrList.SelectedItem.Description, Mode=TwoWay}"/>
           </Grid>

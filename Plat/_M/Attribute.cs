@@ -19,6 +19,8 @@ namespace Plat._M
         private Type type;
         private bool isArray;
         private string description;
+        private bool isEncrypted;
+        private bool isAsymmetric;
 
         /// <summary>
         /// 无参构造
@@ -29,6 +31,7 @@ namespace Plat._M
             this.type = Type.TYPE_INT;
             this.isArray = false;
             this.description = "";
+            this.isEncrypted = this.isAsymmetric = false;
         }
 
         /// <summary>
@@ -45,11 +48,36 @@ namespace Plat._M
             this.type = type;
             this.isArray = isArray;
             this.description = description;
+            this.isEncrypted = this.isAsymmetric = false;
         }
 
         public int Id { get => id; set => id = value; }
         public Type Type { get => type; set => this.RaiseAndSetIfChanged(ref type, value); }
         public string Identifier { get => identifier; set => this.RaiseAndSetIfChanged(ref identifier, value); }
+        /// <summary>
+        /// 是加密的
+        /// </summary>
+        public bool IsEncrypted
+        {
+            get => isEncrypted;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref isEncrypted, value);
+                this.RaisePropertyChanged(nameof(EncryptStr));
+            }
+        }
+        /// <summary>
+        /// 是非对称的（仅当 IsEncrypted 为 true 时有效
+        /// </summary>
+        public bool IsAsymmetric
+        {
+            get => isAsymmetric;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref isAsymmetric, value);
+                this.RaisePropertyChanged(nameof(EncryptStr));
+            }
+        }
         public bool IsArray
         {
             get => isArray;
@@ -68,6 +96,22 @@ namespace Plat._M
             get
             {
                 return this.isArray ? "[]" : "";
+            }
+        }
+
+        public string EncryptStr
+        {
+            get
+            {
+                if (this.isEncrypted)
+                {
+                    if (this.isAsymmetric)
+                    {
+                        return "?"; // 表示 非对称加密后的类型字段
+                    }
+                    return "^"; // 表示 对称加密后的类型字段
+                }
+                return ""; // 表示 不加密（原生）的类型字段
             }
         }
 

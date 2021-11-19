@@ -57,7 +57,7 @@
     <TabControl Grid.Column="2">
       <!--GlbIni-->
       <TabItem Header="Desc/For Global">
-        <Grid RowDefinitions="8*,8*,36*,8*,8*,8*,8*,8*,8*">
+        <Grid RowDefinitions="8*,8*,28*,8*,8*,8*,8*,8*,8*,8*">
           <Grid Grid.Row="0" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="IK Name:"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentIK.Identifier, Mode=TwoWay}"/>
@@ -75,6 +75,7 @@
                   <TextBlock Text=": "/>
                   <TextBlock Text="[]" IsVisible="{Binding IsArray}"/>
                   <TextBlock Text="{Binding Type.Identifier}"/>
+				  <TextBlock Text="{Binding EncryptStr}"/>
                   <TextBlock Text=" = "/>
                   <TextBlock Text="{Binding Value}"/>
                   <TextBlock Text=" // "/>
@@ -108,11 +109,19 @@
             <TextBlock Grid.Column="0" Text="Is Array:"/>
             <CheckBox Grid.Column="1" IsThreeState="False" IsChecked="{Binding CurrentAttr.IsArray, Mode=TwoWay}"/>
           </Grid>
-          <Grid Grid.Row="7" ColumnDefinitions="30*,70*" Classes="ABBox">
-            <TextBlock Grid.Column="0" Text="Value:"/>
-            <TextBox Grid.Column="1" Text="{Binding CurrentAttr.Value, Mode=TwoWay}"/>
-          </Grid>
-          <Grid Grid.Row="8" ColumnDefinitions="30*,70*" Classes="ABBox">
+		  <Grid Grid.Row="7" ColumnDefinitions="30*,20*,30*,20*" Classes="ABBox">
+			<TextBlock Grid.Column="0" Text="Is Encrypted:"/>
+			<CheckBox Grid.Column="1" IsThreeState="False" IsChecked="{Binding CurrentAttr.IsEncrypted, Mode=TwoWay}"
+					  HorizontalAlignment="Center"/>
+			<TextBlock Grid.Column="2" Text="Is Asymmetric:"/>
+			<CheckBox Grid.Column="3" IsThreeState="False" IsChecked="{Binding CurrentAttr.IsAsymmetric, Mode=TwoWay}"
+					  HorizontalAlignment="Center"/>
+		  </Grid>
+		  <Grid Grid.Row="8" ColumnDefinitions="30*,70*" Classes="ABBox">
+			<TextBlock Grid.Column="0" Text="Value:"/>
+			<TextBox Grid.Column="1" Text="{Binding CurrentAttr.Value, Mode=TwoWay}"/>
+		  </Grid>
+          <Grid Grid.Row="9" ColumnDefinitions="30*,70*" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Desc:"/>
             <TextBox Grid.Column="1" Text="{Binding CurrentAttr.Description, Mode=TwoWay}"/>
           </Grid>

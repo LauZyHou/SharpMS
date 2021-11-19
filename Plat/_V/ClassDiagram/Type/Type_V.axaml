@@ -57,6 +57,7 @@
             <TextBlock Text=": "/>
             <TextBlock Text="[]" IsVisible="{Binding IsArray}"/>
             <TextBlock Text="{Binding Type.Identifier}"/>
+			<TextBlock Text="{Binding EncryptStr}"/>
             <TextBlock Text=" "/>
           </StackPanel>
         </DataTemplate>

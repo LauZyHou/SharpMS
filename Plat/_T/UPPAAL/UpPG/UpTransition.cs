@@ -18,6 +18,7 @@ namespace Plat._T
         private UpGuard? upGurad;
         private UpSynchronisation? upSync;
         private UpAssignment? upAssign;
+        private List<UpAssignment> upAssignments;
 
         private int x;
         private int y;
@@ -28,6 +29,7 @@ namespace Plat._T
             this.target = target;
             this.x = (source.X + target.X) / 2;
             this.y = (source.Y + target.Y) / 2;
+            this.UpAssignments = new List<UpAssignment>();
         }
 
         public UpLocation Source => source;
@@ -36,7 +38,9 @@ namespace Plat._T
         public UpSelect? UpSelect { get => upSelect; set => upSelect = value; }
         public UpGuard? UpGurad { get => upGurad; set => upGurad = value; }
         public UpSynchronisation? UpSync { get => upSync; set => upSync = value; }
+        // deprecated
         public UpAssignment? UpAssign { get => upAssign; set => upAssign = value; }
+        public List<UpAssignment> UpAssignments { get => upAssignments; set => upAssignments = value; }
 
         public int X { get => x; set => x = value; }
         public int Y { get => y; set => y = value; }
@@ -65,11 +69,17 @@ namespace Plat._T
                 res += $"\t\t\t<label kind=\"synchronisation\" x=\"{x}\" y=\"{y + yBias}\">{upSync}</label>\n";
                 yBias += 20;
             }
+            // deprecated
             // 可能存在的assignment label
             if (upAssign is not null)
             {
                 res += $"\t\t\t<label kind=\"assignment\" x=\"{x}\" y=\"{y + yBias}\">{upAssign}</label>\n";
                 //yBias += 20;
+            }
+            // 新模式，允许多条assignment label
+            if (upAssignments.Count > 0)
+            {
+                res += $"\t\t\t<label kind=\"assignment\" x=\"{x}\" y=\"{y + yBias}\">{string.Join(",\n", upAssignments)}</label>\n";
             }
             // 如果是自己连自己的，考虑加上nail
             if (source == target)

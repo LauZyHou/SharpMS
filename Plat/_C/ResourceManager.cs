@@ -47,7 +47,7 @@ namespace Plat._C
         /// <summary>
         /// 转换时需要指定的路径
         /// </summary>
-        public static string transPath = "";
+        public static string transPath = "D:\\Data\\SharpMS\\";
 
         /// <summary>
         /// 更新主页最下方的提示内容

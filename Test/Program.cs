@@ -7,7 +7,8 @@ namespace Test
         static void Main(string[] args)
         {
             //TestUPPAAL.BuildSimpleChannelSyncAndClockControlModel();
-            TestProVerif.BuildHandshakeProtocolModel();
+            //TestProVerif.BuildHandshakeProtocolModel();
+            TestUPPAAL.Build5GAKAModel();
         }
     }
 }

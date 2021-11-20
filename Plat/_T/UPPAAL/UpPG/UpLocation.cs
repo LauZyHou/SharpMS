@@ -14,16 +14,24 @@ namespace Plat._T
     {
         public static int _id = 0;
         private readonly int id;
-        private string name;
+        private string? name;
+        private bool isCommitted;
         private bool isInit;
         private string? invariant;
         private int x;
         private int y;
 
-        public UpLocation(string name, bool isInit = false)
+        /// <summary>
+        /// 自动计算坐标位置的构造
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="isCommitted"></param>
+        /// <param name="isInit"></param>
+        public UpLocation(string? name, bool isCommitted = false, bool isInit = false)
         {
             this.id = _id++;
             this.name = name;
+            this.isCommitted = isCommitted;
             this.isInit = isInit;
             // 计算Z字形绘制时，Location具体应放在哪个位置
             // id / rowNum 即是放在的行号，从0开始
@@ -47,7 +55,26 @@ namespace Plat._T
             }
         }
 
-        public string Name { get => name; set => name = value; }
+        /// <summary>
+        /// 带坐标位置的构造
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="isCommitted"></param>
+        /// <param name="isInit"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public UpLocation(string name, bool isCommitted, bool isInit, int x, int y)
+        {
+            this.id = _id++;
+            this.name = name;
+            this.isCommitted = isCommitted;
+            this.isInit = isInit;
+            this.x = x;
+            this.y = y;
+        }
+
+        public string? Name { get => name; set => name = value; }
+        public bool IsCommitted { get => isCommitted; set => isCommitted = value; }
         public bool IsInit { get => isInit; set => isInit = value; }
         public int Id => id;
         public string? Invariant { get => invariant; set => invariant = value; }
@@ -56,15 +83,10 @@ namespace Plat._T
 
         public override string ToString()
         {
-            if (invariant is null)
-            {
-                return $"\t\t<location id=\"id{id}\" x=\"{x}\" y=\"{y}\">\n" +
-                       $"\t\t\t<name x=\"{x}\" y=\"{y + 40}\">{name}</name>\n" +
-                       "\t\t</location>\n";
-            }
             return $"\t\t<location id=\"id{id}\" x=\"{x}\" y=\"{y}\">\n" +
-                   $"\t\t\t<name x=\"{x}\" y=\"{y + 40}\">{name}</name>\n" +
-                   $"\t\t\t<label kind=\"invariant\" x=\"{x}\" y=\"{y + 80}\">{invariant}</label>\n" +
+                   (name is not null ? $"\t\t\t<name x=\"{x}\" y=\"{y + 40}\">{name}</name>\n" : "") +
+                   (invariant is not null ? $"\t\t\t<label kind=\"invariant\" x=\"{x}\" y=\"{y + 80}\">{invariant}</label>\n" : "") +
+                   (isCommitted ? "\t\t\t<committed/>\n" : "") +
                    "\t\t</location>\n";
         }
     }

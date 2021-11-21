@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Plat._C;
+using Plat._T;
 using Plat._V;
 using ReactiveUI;
 using System;
@@ -129,7 +130,12 @@ namespace Plat._VM
         /// </summary>
         private void OnTransToUPPAAL()
         {
-
+            string path = ResourceManager.transPath + "auto-trans.xml"; // fixme: use timestamp
+            UpDumpManager.OutUppalXml(
+                UppaalAlignMachine.Run(),
+                path
+            );
+            ResourceManager.UpdateTip($"Successfully translate to UPPAAL, path = {path}");
         }
 
         /// <summary>

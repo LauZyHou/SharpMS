@@ -82,27 +82,49 @@ namespace Plat._M
         /// <summary>
         /// Int类型，可以表达整数、枚举
         /// </summary>
-        public static readonly Type TYPE_INT = new Type("Int", "integer number", true);
+        public static readonly Type TYPE_INT = new Type("Int", "Integer Number", true);
         /// <summary>
         /// Bool类型，逻辑量
         /// </summary>
-        public static readonly Type TYPE_BOOL = new Type("Bool", "logical type", true);
+        public static readonly Type TYPE_BOOL = new Type("Bool", "Logical Type", true);
         /// <summary>
         /// Msg类型，可以表达网络中传输的消息，当一个消息需要被传输时，一定直接或间接继承Msg
         /// </summary>
-        public static readonly Type TYPE_MSG = new Type("Msg", "message in network", true);
+        public static readonly Type TYPE_MSG = new Type("Msg", "Message In Network", true);
         /// <summary>
         /// 对称密钥
         /// </summary>
-        public static readonly Type TYPE_KEY = new Type("Key", "symmetric key", true) { parent = TYPE_MSG };
+        public static readonly Type TYPE_KEY = new Type("Key", "Symmetric Key", true) { parent = TYPE_MSG };
         /// <summary>
         /// 非对称公钥
         /// </summary>
-        public static readonly Type TYPE_PUB_KEY = new Type("PubKey", "asymmetirc public key", true) { parent = TYPE_MSG };
+        public static readonly Type TYPE_PUB_KEY = new Type("PubKey", "Asymmetirc Public Key", true) { parent = TYPE_MSG };
         /// <summary>
         /// 非对称私钥
         /// </summary>
-        public static readonly Type TYPE_PVT_KEY = new Type("PvtKey", "asymmetirc private key", true) { parent = TYPE_MSG };
+        public static readonly Type TYPE_PVT_KEY = new Type("PvtKey", "Asymmetirc Private Key", true) { parent = TYPE_MSG };
+
+
+        #region Method
+
+        /// <summary>
+        /// 判定当前类型是否继承自类型t
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public bool InheritFrom(Type t)
+        {
+            Type? p = this;
+            while (p is not null)
+            {
+                if (p == t) return true;
+                p = p.parent;
+            }
+            return false;
+        }
+
+        #endregion
+
 
         #region Have xxx 字段
 

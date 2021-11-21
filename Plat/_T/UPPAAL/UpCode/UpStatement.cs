@@ -128,9 +128,14 @@ namespace Plat._T
 
         public override string ToString()
         {
+            string descPrefix = "";
+            if (!string.IsNullOrEmpty(type.Description))
+            {
+                descPrefix = $"// {type.Description}\n";
+            }
             if (type.FromType is null)
             {
-                string res = "typedef struct\n{\n";
+                string res = descPrefix + "typedef struct\n{\n";
                 foreach (UpParam prop in type.Props)
                 {
                     res += $"\t{prop};\n";
@@ -138,7 +143,7 @@ namespace Plat._T
                 res += "} " + type.Name;
                 return res;
             }
-            return $"typedef {type.FromType.Name} {type.Name}";
+            return $"{descPrefix}typedef {type.FromType.Name} {type.Name}";
         }
     }
 

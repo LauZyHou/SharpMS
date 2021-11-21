@@ -1176,7 +1176,46 @@ namespace Plat._C
             string identifier = element.GetAttribute(nameof(identifier));
             string description = element.GetAttribute(nameof(description));
             bool isBase = bool.Parse(element.GetAttribute(nameof(isBase)));
-            Type type = new Type(identifier, description, isBase) { Id = id };
+            // bugfix：基本类型的单例引用需和parse出的基本类型保持一致
+            // 这里的做法是沿用既存的基本类型，但是需要把Id改成一致的
+            // 如果用户正常操作id一定是一致的，但不能排除手动改.sharpms文件的用户行为
+            Type type;
+            if (isBase)
+            {
+                switch (identifier)
+                {
+                    case "Int":
+                        type = Type.TYPE_INT;
+                        type.Id = id;
+                        break;
+                    case "Bool":
+                        type = Type.TYPE_BOOL;
+                        type.Id = id;
+                        break;
+                    case "Msg":
+                        type = Type.TYPE_MSG;
+                        type.Id = id;
+                        break;
+                    case "Key":
+                        type = Type.TYPE_KEY;
+                        type.Id = id;
+                        break;
+                    case "PubKey":
+                        type = Type.TYPE_PUB_KEY;
+                        type.Id = id;
+                        break;
+                    case "PvtKey":
+                        type = Type.TYPE_PVT_KEY;
+                        type.Id = id;
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+            else
+            {
+                type = new Type(identifier, description, isBase) { Id = id };
+            }
 
             typeMap[id] = type;
             ResourceManager.types.Add(type);

@@ -131,10 +131,9 @@ namespace Plat._VM
         private void OnTransToUPPAAL()
         {
             string path = ResourceManager.transPath + "auto-trans.xml"; // fixme: use timestamp
-            UpDumpManager.OutUppalXml(
-                UppaalAlignMachine.Run(),
-                path
-            );
+            UpProject? upProject = UppaalAlignMachine.Run();
+            if (upProject is null) return;
+            UpDumpManager.OutUppalXml(upProject, path);
             ResourceManager.UpdateTip($"Successfully translate to UPPAAL, path = {path}");
         }
 

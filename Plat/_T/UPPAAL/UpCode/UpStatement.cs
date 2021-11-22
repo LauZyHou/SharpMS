@@ -96,18 +96,22 @@ namespace Plat._T
     {
         private readonly UpType type;
         private readonly string name;
+        private readonly bool isMeta;
 
-        public UpNewVar(UpType type, string name)
+        public UpNewVar(UpType type, string name, bool isMeta = false)
         {
             this.type = type;
             this.name = name;
+            this.isMeta = isMeta;
         }
 
         public UpType Type => type;
         public string Name => name;
+        public bool IsMeta => isMeta;
 
         public override string ToString()
         {
+            if (isMeta) return $"meta {type.Name} {name}";
             return $"{type.Name} {name}";
         }
     }

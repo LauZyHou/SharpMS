@@ -15,7 +15,7 @@ namespace Plat._T
         private readonly string name;
         private readonly UpDeclaration localDeclaration;
         private readonly UpPG progGraph;
-        private readonly List<UpParam> parameters;
+        private List<UpParam> parameters;
 
         public UpProcess(string name, UpDeclaration localDeclaration, UpPG progGraph)
         {
@@ -27,7 +27,7 @@ namespace Plat._T
         }
 
         public string Name => name;
-        public List<UpParam> Params => parameters;
+        public List<UpParam> Params { get => parameters; set => parameters = value; }
         public UpDeclaration LocalDeclaration => localDeclaration;
         public UpPG ProgGraph => progGraph;
 

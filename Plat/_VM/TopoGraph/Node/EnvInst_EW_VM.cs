@@ -1,6 +1,5 @@
 ﻿using Plat._C;
 using Plat._M;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -25,6 +24,7 @@ namespace Plat._VM
 
         public EnvInst EnvInst => envInst;
         public ObservableCollection<Env> EnvList => envList;
+        public ObservableCollection<Type> Types => ResourceManager.types;
 
         #region Command
 
@@ -35,6 +35,26 @@ namespace Plat._VM
         {
             this.envInst.Env = null;
             ResourceManager.UpdateTip($"Clear the template of environment instance.");
+        }
+
+        /// <summary>
+        /// 添加ChanInst
+        /// </summary>
+        private void AddChanInst()
+        {
+            ChanInst chanInst = new ChanInst();
+            this.envInst.ChanInsts.Add(chanInst);
+            ResourceManager.UpdateTip("Add new channel instance for env inst.");
+        }
+
+        /// <summary>
+        /// 删除选中的ChanInst
+        /// </summary>
+        private void RemoveChanInst(ChanInst? chanInst)
+        {
+            if (chanInst is null) return;
+            this.envInst.ChanInsts.Remove(chanInst);
+            ResourceManager.UpdateTip($"Remove channel instance [{chanInst.ShowStr}] for env inst.");
         }
 
         #endregion

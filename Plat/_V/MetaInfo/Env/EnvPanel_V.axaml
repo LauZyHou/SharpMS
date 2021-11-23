@@ -133,12 +133,12 @@
                       IsChecked="{Binding #AttrList.SelectedItem.IsArray, Mode=TwoWay}"/>
           </Grid>
 		  <Grid Grid.Row="8" ColumnDefinitions="30*,20*,30*,20*" Classes="ABBox">
-			<TextBlock Grid.Column="0" Text="Is Encrypted:"/>
-			<CheckBox Grid.Column="1" IsThreeState="False" IsChecked="{Binding #AttrList.SelectedItem.IsEncrypted, Mode=TwoWay}"
-					  HorizontalAlignment="Center"/>
-			<TextBlock Grid.Column="2" Text="Is Asymmetric:"/>
-			<CheckBox Grid.Column="3" IsThreeState="False" IsChecked="{Binding #AttrList.SelectedItem.IsAsymmetric, Mode=TwoWay}"
-					  HorizontalAlignment="Center"/>
+			  <TextBlock Grid.Column="0" Text="Is Encrypted:"/>
+			  <CheckBox Grid.Column="1" IsThreeState="False" IsChecked="{Binding #AttrList.SelectedItem.IsEncrypted, Mode=TwoWay}"
+					    HorizontalAlignment="Center"/>
+			  <TextBlock Grid.Column="2" Text="Is Asymmetric:"/>
+			  <CheckBox Grid.Column="3" IsThreeState="False" IsChecked="{Binding #AttrList.SelectedItem.IsAsymmetric, Mode=TwoWay}"
+					    HorizontalAlignment="Center"/>
 		  </Grid>
           <Grid Grid.Row="9" ColumnDefinitions="30*, 70*" Margin="6, 0" Classes="ABBox">
             <TextBlock Grid.Column="0" Text="Attr Desc:"/>

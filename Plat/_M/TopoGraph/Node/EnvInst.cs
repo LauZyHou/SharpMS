@@ -11,11 +11,13 @@ namespace Plat._M
     {
         private Env? env;
         private readonly ObservableCollection<Instance> properties;
+        private readonly ObservableCollection<ChanInst> chanInsts;
 
         public EnvInst()
             : base()
         {
             this.properties = new ObservableCollection<Instance>();
+            this.chanInsts = new ObservableCollection<ChanInst>();
         }
 
         /// <summary>
@@ -72,5 +74,9 @@ namespace Plat._M
         /// 由Attributes例化而来的参数表
         /// </summary>
         public ObservableCollection<Instance> Properties => properties;
+        /// <summary>
+        /// 信道实例表
+        /// </summary>
+        public ObservableCollection<ChanInst> ChanInsts => chanInsts;
     }
 }

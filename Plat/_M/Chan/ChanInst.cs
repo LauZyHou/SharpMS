@@ -22,7 +22,7 @@ namespace Plat._M
             this.isEncrypted = this.isAsymmetric = false;
         }
 
-        public ChanInst(Channel channel, Type type)
+        public ChanInst(Channel? channel, Type? type)
         {
             this.channel = channel;
             this.type = type;

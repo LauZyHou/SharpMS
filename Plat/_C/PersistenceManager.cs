@@ -734,6 +734,10 @@ namespace Plat._C
                 {
                     XmlWriteInstance(xmlWriter, instance);
                 }
+                foreach (ChanInst chanInst in envInst_VM.EnvInst.ChanInsts)
+                {
+                    XmlWriteChanInst(xmlWriter, chanInst);
+                }
                 foreach (Anchor_VM anchor_VM in dragDrop_VM.Anchor_VMs)
                 {
                     XmlWriteAnchor(xmlWriter, anchor_VM);
@@ -833,6 +837,23 @@ namespace Plat._C
             xmlWriter.WriteEndElement();
         }
         
+        /// <summary>
+        /// XML持久化环境实例中的信道实例
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="chanInst"></param>
+        private static void XmlWriteChanInst(XmlTextWriter xmlWriter, ChanInst chanInst)
+        {
+            xmlWriter.WriteStartElement(nameof(ChanInst));
+
+            xmlWriter.WriteAttributeString("channel-Ref", chanInst.Channel?.Id.ToString());
+            xmlWriter.WriteAttributeString("type-Ref", chanInst.Type?.Id.ToString());
+            xmlWriter.WriteAttributeString("isEnc-Ref", chanInst.IsEncrypted.ToString());
+            xmlWriter.WriteAttributeString("isAsym-Ref", chanInst.IsAsymmetric.ToString());
+
+            xmlWriter.WriteEndElement();
+        }
+
         /// <summary>
         /// XML持久化Instance这个父类的共用信息
         /// </summary>
@@ -1123,7 +1144,7 @@ namespace Plat._C
                         ParseProcInst_NT_VM(subElement, procInst_VMMap);
                         break;
                     case nameof(EnvInst_VM):
-                        ParseEnvInst_VM(subElement, envInst_VMMap, envMap, anchorMap, typeMap);
+                        ParseEnvInst_VM(subElement, envInst_VMMap, envMap, anchorMap, typeMap, channelMap);
                         break;
                     case nameof(EnvInst_NT_VM):
                         ParseEnvInst_NT_VM(subElement, envInst_VMMap);
@@ -2048,7 +2069,8 @@ namespace Plat._C
             Dictionary<int, EnvInst_VM> envInst_VMMap,
             Dictionary<int, Env> envMap,
             Dictionary<int, Anchor_VM> anchorMap,
-            Dictionary<int, Type> typeMap)
+            Dictionary<int, Type> typeMap,
+            Dictionary<int, Channel> chanMap)
         {
             int id = int.Parse(element.GetAttribute(nameof(id)));
             int? envId = ParseIntNullAttr(element, "env-Ref");
@@ -2075,6 +2097,9 @@ namespace Plat._C
                         break;
                     case nameof(ValueInstance):
                         envInst_VM.EnvInst.Properties.Add(ParseValueInstance(subElement, typeMap));
+                        break;
+                    case nameof(ChanInst):
+                        envInst_VM.EnvInst.ChanInsts.Add(ParseChanInst(subElement, chanMap, typeMap));
                         break;
                     case nameof(BotAnchor_VM):
                         envInst_VM.Anchor_VMs.Add(ParseAnchorObj(subElement, envInst_VM, anchorMap));
@@ -2161,6 +2186,32 @@ namespace Plat._C
             ValueInstance valueInstance = new ValueInstance(typeMap[typeId], identifier, false) { Value = value };
             return valueInstance;
         }
+
+        /// <summary>
+        /// 解析ChanInst
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="chanMap"></param>
+        /// <param name="typeMap"></param>
+        /// <returns></returns>
+        private static ChanInst ParseChanInst(XmlElement element,
+            Dictionary<int, Channel> chanMap,
+            Dictionary<int, Type> typeMap)
+        {
+            Channel? chan = null;
+            Type? type = null;
+            int? chanId = ParseIntNullAttr(element, "channel-Ref");
+            if (chanId is not null) chan = chanMap[(int)chanId];
+            int? typeId = ParseIntNullAttr(element, "type-Ref");
+            if (typeId is not null) type = typeMap[(int)typeId];
+            bool isEnc = bool.Parse(element.GetAttribute($"{nameof(isEnc)}-Ref"));
+            bool isAsym = bool.Parse(element.GetAttribute($"{nameof(isAsym)}-Ref"));
+            return new ChanInst(chan, type)
+            {
+                IsEncrypted = isEnc,
+                IsAsymmetric = isAsym
+            };
+        } 
 
         /// <summary>
         /// 解析ProcEnvInst_CT_VM

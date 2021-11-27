@@ -335,6 +335,8 @@ namespace Plat._C
             xmlWriter.WriteAttributeString("identifier", attribute.Identifier);
             xmlWriter.WriteAttributeString("type-Ref", attribute.Type.Id.ToString());
             xmlWriter.WriteAttributeString("isArray", attribute.IsArray.ToString());
+            xmlWriter.WriteAttributeString("isEnc", attribute.IsEncrypted.ToString());
+            xmlWriter.WriteAttributeString("isAsym", attribute.IsAsymmetric.ToString());
             xmlWriter.WriteAttributeString("description", attribute.Description);
             if (attribute is VisAttr)
             {
@@ -848,8 +850,8 @@ namespace Plat._C
 
             xmlWriter.WriteAttributeString("channel-Ref", chanInst.Channel?.Id.ToString());
             xmlWriter.WriteAttributeString("type-Ref", chanInst.Type?.Id.ToString());
-            xmlWriter.WriteAttributeString("isEnc-Ref", chanInst.IsEncrypted.ToString());
-            xmlWriter.WriteAttributeString("isAsym-Ref", chanInst.IsAsymmetric.ToString());
+            xmlWriter.WriteAttributeString("isEnc", chanInst.IsEncrypted.ToString());
+            xmlWriter.WriteAttributeString("isAsym", chanInst.IsAsymmetric.ToString());
 
             xmlWriter.WriteEndElement();
         }
@@ -1309,21 +1311,38 @@ namespace Plat._C
             string identifier = element.GetAttribute(nameof(identifier));
             int typeId = int.Parse(element.GetAttribute("type-Ref"));
             bool isArray = bool.Parse(element.GetAttribute(nameof(isArray)));
+            bool isEnc = bool.Parse(element.GetAttribute(nameof(isEnc)));
+            bool isAsym = bool.Parse(element.GetAttribute(nameof(isAsym)));
             string description = element.GetAttribute(nameof(description));
             switch (element.Name)
             {
                 case nameof(Attribute):
-                    Attribute attribute = new Attribute(identifier, typeMap[typeId], isArray, description) { Id = id };
+                    Attribute attribute = new Attribute(identifier, typeMap[typeId], isArray, description)
+                    {
+                        Id = id,
+                        IsEncrypted = isEnc,
+                        IsAsymmetric = isAsym
+                    };
                     attrMap[id] = attribute;
                     return attribute;
                 case nameof(VisAttr):
                     bool pub = bool.Parse(element.GetAttribute(nameof(pub)));
-                    VisAttr visAttr = new VisAttr(identifier, typeMap[typeId], isArray, pub, description) { Id = id };
+                    VisAttr visAttr = new VisAttr(identifier, typeMap[typeId], isArray, pub, description)
+                    {
+                        Id = id,
+                        IsEncrypted = isEnc,
+                        IsAsymmetric = isAsym
+                    };
                     attrMap[id] = visAttr;
                     return visAttr;
                 case nameof(ValAttr):
                     string value = element.GetAttribute(nameof(value));
-                    ValAttr valAttr = new ValAttr(identifier, typeMap[typeId], isArray, value, description) { Id = id };
+                    ValAttr valAttr = new ValAttr(identifier, typeMap[typeId], isArray, value, description)
+                    {
+                        Id = id,
+                        IsEncrypted = isEnc,
+                        IsAsymmetric = isAsym
+                    };
                     attrMap[id] = valAttr;
                     return valAttr;
                 default:
@@ -2204,8 +2223,8 @@ namespace Plat._C
             if (chanId is not null) chan = chanMap[(int)chanId];
             int? typeId = ParseIntNullAttr(element, "type-Ref");
             if (typeId is not null) type = typeMap[(int)typeId];
-            bool isEnc = bool.Parse(element.GetAttribute($"{nameof(isEnc)}-Ref"));
-            bool isAsym = bool.Parse(element.GetAttribute($"{nameof(isAsym)}-Ref"));
+            bool isEnc = bool.Parse(element.GetAttribute(nameof(isEnc)));
+            bool isAsym = bool.Parse(element.GetAttribute(nameof(isAsym)));
             return new ChanInst(chan, type)
             {
                 IsEncrypted = isEnc,

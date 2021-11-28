@@ -34,6 +34,10 @@ namespace Plat._T
                 {
                     res += "\n";
                 }
+                else if (statement is UpComment)
+                {
+                    res += $"{statement}\n";
+                }
                 else
                 {
                     res += $"{statement};\n";

@@ -219,21 +219,24 @@ namespace Plat._T
             }
 
             //
+            // 生成所有的信道同步定义
             // 解析拓扑图中的Port-Chan
             // 获取每个拓扑结点的例化进程，每个例化边上的端口-信道实例映射
             // 后期将为每个拓扑结点生成单独的进程模板
             //
+            globalDec.Statements.Add(UpPass.Me);
+            globalDec.Statements.Add(new UpComment($"{splitLine} ChannelSync {splitLine}"));
             // 【UP表】所有的UPPAAL进程模板
             List<UpProcess> upProcessList = new List<UpProcess>();
             // 【PI-PORT-CI表】ProcInst -> Port -> ChanInst 的映射
             // 其中ChanInst 由 Channel.Identifier 组合 EnvInst的Id形成
             Dictionary<ProcInst, Dictionary<Port, string>> procInstToPortToChanInstMap = new Dictionary<ProcInst, Dictionary<Port, string>>();
-            // 【CI-SYNC表】从ChanInst字符串到同步信号chan的映射
-            Dictionary<string, string> chanInstToSyncStrMap = new Dictionary<string, string>();
             // 【PI表】所有需要转换的ProcInst（没连线也就没ProcEnvInst_CT_VM，也就不用考虑）
             HashSet<ProcInst> procInstList = new HashSet<ProcInst>();
             // 【PORT_S-PORT表】端口名到端口引用的映射
             Dictionary<string, Port> portNameToPortMap = new Dictionary<string, Port>();
+            // 信道生成去重表
+            HashSet<string> chanPairSet = new HashSet<string>();
             foreach (DragDrop_VM dragDrop_VM in ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs)
             {
                 if (dragDrop_VM is ProcEnvInst_CT_VM)
@@ -253,19 +256,34 @@ namespace Plat._T
                         // 加入PORT_S-PORT表中
                         portNameToPortMap[port.Identifier] = port;
                         // 加入PI-PORT-CI表中
-                        string chanInst = $"{chan.Identifier}_{envInst.Id}";
+                        string chanInst = $"{chan.Identifier}_EnvInst{envInst.Id}";
                         if (!procInstToPortToChanInstMap.ContainsKey(procInst))
                         {
                             procInstToPortToChanInstMap.Add(procInst, new Dictionary<Port, string>());
                         }
                         // 填充PI-PORT-CI表
                         procInstToPortToChanInstMap[procInst].Add(port, chanInst);
-                        // 填充CI-SYNC表
-                        string syncInst = $"sync_{chanInst}";
-                        if (!chanInstToSyncStrMap.ContainsKey(chanInst))
+
+                        // 去重
+                        if (chanPairSet.Contains(chanInst)) continue;
+                        chanPairSet.Add(chanInst);
+                        // 要生成信道同步定义，需要找到在这个信道实例上传递的参数类型
+                        // 也就是要到EnvInst上找这个信道被例化成传递哪种类型的ChanInst
+                        Type? chanType = null;
+                        foreach (ChanInst ci in envInst.ChanInsts)
                         {
-                            chanInstToSyncStrMap.Add(chanInst, syncInst);
+                            if (ci.Channel == chan)
+                            {
+                                chanType = ci.Type;
+                                break;
+                            }
                         }
+                        // 如果没有类型就跳过
+                        if (chanType is null) continue;
+                        // 否则，就生成相应的UPPAAL chan用来同步，生成相应的meta swap变量
+                        globalDec.Statements.Add(UpPass.Me);
+                        globalDec.Statements.Add(new UpNewVar(UpType.CHAN, $"sync_{chanInst}"));
+                        globalDec.Statements.Add(new UpNewVar(typeMap[chanType], $"swap_{chanInst}", true));
                     }
                 }
                 // dimiss ProcInst_VM / EnvInst_VM / Linker / ProcInst_NT_VM / EnvInst_NT_VM

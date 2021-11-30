@@ -27,8 +27,8 @@ namespace Plat._T
         {
             this.source = source;
             this.target = target;
-            this.x = (source.X + target.X) / 2;
-            this.y = (source.Y + target.Y) / 2;
+            this.x = (source.X + target.X) / 2 - 60;
+            this.y = (source.Y + target.Y) / 2 - 40;
             this.UpAssignments = new List<UpAssignment>();
         }
 

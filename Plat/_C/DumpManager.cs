@@ -57,7 +57,7 @@ namespace Plat._C
         /// <summary>
         /// X方向的步进（最大可延展点受baseX和rowNum限制）
         /// </summary>
-        public static int deltaX = 150;
+        public static int deltaX = 300;
 
         /// <summary>
         /// 一行有多少个Location
@@ -67,7 +67,7 @@ namespace Plat._C
         /// <summary>
         /// Y方向的步进（最大可延展点无限制）
         /// </summary>
-        public static int deltaY = 100;
+        public static int deltaY = 300;
 
         /// <summary>
         /// 将UPPAAL内存模型dump到磁盘上

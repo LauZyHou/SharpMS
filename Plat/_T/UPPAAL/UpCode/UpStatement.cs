@@ -230,4 +230,35 @@ namespace Plat._T
             return $"{instName} = {proc.Name}({string.Join(", ", values)})";
         }
     }
+
+    /// <summary>
+    /// 类型实例化语句
+    /// </summary>
+    public class UpInstType : UpStatement
+    {
+        private readonly string instName;
+        private readonly UpType type;
+        private readonly List<string> values;
+        private readonly bool isMeta;
+
+        public UpInstType(string instName, UpType type, bool isMeta = false)
+        {
+            this.instName = instName;
+            this.type = type;
+            this.values = new List<string>();
+            this.isMeta = isMeta;
+        }
+
+        public string InstName => instName;
+        public UpType Type => type;
+        public List<string> Values => values;
+        public bool IsMeta => isMeta;
+
+        public override string ToString()
+        {
+            string prefix = "";
+            if (isMeta) prefix = "meta ";
+            return $"{prefix}{type.Name} {instName} = {{ {string.Join(", ", values)} }}";
+        }
+    }
 }

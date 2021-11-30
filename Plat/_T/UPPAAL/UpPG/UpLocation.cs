@@ -84,7 +84,7 @@ namespace Plat._T
         public override string ToString()
         {
             return $"\t\t<location id=\"id{id}\" x=\"{x}\" y=\"{y}\">\n" +
-                   (name is not null ? $"\t\t\t<name x=\"{x}\" y=\"{y + 40}\">{name}</name>\n" : "") +
+                   (name is not null ? $"\t\t\t<name x=\"{x - 8}\" y=\"{y + 10}\">{name}</name>\n" : "") +
                    (invariant is not null ? $"\t\t\t<label kind=\"invariant\" x=\"{x}\" y=\"{y + 80}\">{invariant}</label>\n" : "") +
                    (isCommitted ? "\t\t\t<committed/>\n" : "") +
                    "\t\t</location>\n";

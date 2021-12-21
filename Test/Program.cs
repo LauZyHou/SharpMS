@@ -8,7 +8,8 @@ namespace Test
         {
             //TestUPPAAL.BuildSimpleChannelSyncAndClockControlModel();
             //TestProVerif.BuildHandshakeProtocolModel();
-            TestUPPAAL.Build5GAKAModel();
+            //TestUPPAAL.Build5GAKAModel();
+            TestProVerif.Build5GAKAModel();
         }
     }
 }

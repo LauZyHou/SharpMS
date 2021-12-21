@@ -140,7 +140,11 @@ namespace Test
 
             globalDec.Statements.Add(new PvTypeDeclaration(key));
 
-            globalDec.Statements.Add(new PvFuncDeclaration("senc", new List<PvType> { PvType.BITSTRING, key }, PvType.BITSTRING));
+            globalDec.Statements.Add(
+                new PvFuncDeclaration(
+                    new PvFun("senc", new List<PvType> { PvType.BITSTRING, key }, PvType.BITSTRING)
+                    )
+                );
             globalDec.Statements.Add(new PvReducDeclaration(
                 new List<PvParam>
                 {
@@ -157,8 +161,16 @@ namespace Test
             globalDec.Statements.Add(new PvTypeDeclaration(skey));
             globalDec.Statements.Add(new PvTypeDeclaration(pkey));
 
-            globalDec.Statements.Add(new PvFuncDeclaration("pk", new List<PvType> { skey }, pkey));
-            globalDec.Statements.Add(new PvFuncDeclaration("aenc", new List<PvType> { PvType.BITSTRING, pkey }, PvType.BITSTRING));
+            globalDec.Statements.Add(
+                new PvFuncDeclaration(
+                    new PvFun("pk", new List<PvType> { skey }, pkey)
+                    )
+                );
+            globalDec.Statements.Add(
+                new PvFuncDeclaration(
+                    new PvFun("aenc", new List<PvType> { PvType.BITSTRING, pkey }, PvType.BITSTRING)
+                    )
+                );
             globalDec.Statements.Add(new PvReducDeclaration(
                 new List<PvParam>
                 {
@@ -175,8 +187,16 @@ namespace Test
             globalDec.Statements.Add(new PvTypeDeclaration(sskey));
             globalDec.Statements.Add(new PvTypeDeclaration(spkey));
 
-            globalDec.Statements.Add(new PvFuncDeclaration("spk", new List<PvType> { sskey }, spkey));
-            globalDec.Statements.Add(new PvFuncDeclaration("sign", new List<PvType> { PvType.BITSTRING, sskey }, PvType.BITSTRING));
+            globalDec.Statements.Add(
+                new PvFuncDeclaration(
+                    new PvFun("spk", new List<PvType> { sskey }, spkey)
+                    )
+                );
+            globalDec.Statements.Add(
+                new PvFuncDeclaration(
+                    new PvFun("sign", new List<PvType> { PvType.BITSTRING, sskey }, PvType.BITSTRING)
+                    )
+                );
             globalDec.Statements.Add(new PvReducDeclaration(
                 new List<PvParam>
                 {
@@ -257,6 +277,199 @@ namespace Test
 
             // dump到磁盘
             PvDumpManager.OutProVerifPv(pvProject, "D:\\Code\\Mix\\CMSS-Case\\proverif-gen\\handshake-protocol.pv");
+        }
+
+        /// <summary>
+        /// 构建5G-AKA模型（测试Trans用
+        /// </summary>
+        public static void Build5GAKAModel()
+        {
+            //
+            // Type
+            //
+            List<PvType> pvTypes = new List<PvType>();
+            PvType pvInt = PvType.INT;
+            pvTypes.Add(pvInt);
+            PvType pvBool = PvType.BOOL;
+            pvTypes.Add(pvBool);
+            PvType pvMsg = PvType.MSG;
+            pvTypes.Add(pvMsg);
+            PvType pvKey = PvType.KEY;
+            pvTypes.Add(pvKey);
+            PvType pvPubKey = PvType.PUBKEY;
+            pvTypes.Add(pvPubKey);
+            PvType pvPvtKey = PvType.PVTKEY;
+            pvTypes.Add(pvPvtKey);
+
+            //
+            // Global Declaration
+            //
+            PvDeclaration globalDec = new PvDeclaration();
+            // For Type
+            globalDec.Statements.Add(new PvCommentForDec("Type Declaration"));
+            foreach (PvType pvType in pvTypes)
+            {
+                globalDec.Statements.Add(new PvTypeDeclaration(pvType));
+            }
+            globalDec.Statements.Add(new PvNewLineForDec());
+            // For Function
+            globalDec.Statements.Add(new PvCommentForDec("Fun Declaration"));
+            globalDec.Statements.Add(new PvFuncDeclaration(PvFun.PK));
+            globalDec.Statements.Add(new PvFuncDeclaration(PvFun.ASYMENC));
+            globalDec.Statements.Add(new PvFuncDeclaration(PvFun.ASYMDEC));
+            globalDec.Statements.Add(new PvNewLineForDec());
+            // For Equation
+            globalDec.Statements.Add(new PvCommentForDec("Equation Declaration"));
+            globalDec.Statements.Add(new PvEquationDeclaration(PvEquation.ASYM_ENC_DEC));
+            globalDec.Statements.Add(new PvNewLineForDec());
+            // For Event
+            globalDec.Statements.Add(new PvCommentForDec("Event Declaration"));
+            PvEvent UE_Sended = new PvEvent(nameof(UE_Sended), new List<PvType> { PvType.INT });
+            globalDec.Statements.Add(new PvEventDeclaration(UE_Sended));
+            PvEvent HN_Recved = new PvEvent(nameof(HN_Recved), new List<PvType> { PvType.INT });
+            globalDec.Statements.Add(new PvEventDeclaration(HN_Recved));
+            globalDec.Statements.Add(new PvNewLineForDec());
+            // For Channel
+            globalDec.Statements.Add(new PvCommentForDec("Channel Declaration"));
+            PvChannel uesn = new PvChannel(nameof(uesn));
+            globalDec.Statements.Add(new PvChannelDeclaration(uesn));
+            PvChannel snhn = new PvChannel(nameof(snhn));
+            globalDec.Statements.Add(new PvChannelDeclaration(snhn));
+            globalDec.Statements.Add(new PvNewLineForDec());
+            // For Var
+            globalDec.Statements.Add(new PvCommentForDec("Var Declaration"));
+            List<PvGlobalVar> pvGlobalVars = new List<PvGlobalVar>()
+            {
+                new PvGlobalVar(PvType.INT, "i2", true),
+                new PvGlobalVar(PvType.INT, "i3", true),
+                new PvGlobalVar(PvType.INT, "i5", true),
+                new PvGlobalVar(PvType.PUBKEY, "pk6", true),
+                new PvGlobalVar(PvType.PVTKEY, "sk6", true)
+            };
+            foreach (PvGlobalVar pvGlobalVar in pvGlobalVars)
+            {
+                globalDec.Statements.Add(new PvGlobalVarDeclaration(pvGlobalVar));
+            }
+            globalDec.Statements.Add(new PvNewLineForDec());
+
+            //
+            // Process
+            //
+            PvProcess UE = new PvProcess(nameof(UE));
+            UE.Params.Add(new PvParam(PvType.INT, "supi_idUE"));
+            UE.Params.Add(new PvParam(PvType.INT, "supi_idHN"));
+            UE.Params.Add(new PvParam(PvType.PUBKEY, "pkHN"));
+            PvChannel t_SN = new PvChannel(nameof(t_SN));
+            UE.Params.Add(new PvParam(PvType.CHANNEL, "t_SN"));
+            UE.RootStmt.SubStmts.Add(new PvLetStmt("supi: bitstring", "(supi_idUE, supi_idHN)"));
+            UE.RootStmt.SubStmts.Add(new PvLetStmt("t: bitstring", "(supi, 123)"));
+            UE.RootStmt.SubStmts.Add(new PvLetStmt("bv: bitstring", "AsymEnc(t, pkHN)"));
+            UE.RootStmt.SubStmts.Add(new PvLetStmt("suci: bitstring", "(bv, supi_idHN)"));
+            UE.RootStmt.SubStmts.Add(new PvSendMsg(t_SN, new List<string> { "suci" }));
+            UE.RootStmt.SubStmts.Add(new PvEventPoint(UE_Sended, new List<string> { "supi_idUE" }));
+
+            PvProcess SN = new PvProcess(nameof(SN))
+            {
+                Params = new List<PvParam>()
+                {
+                    new PvParam(PvType.INT, "idSN"),
+                    new PvParam(PvType.CHANNEL, "f_UE"),
+                    new PvParam(PvType.CHANNEL, "t_HN")
+                }
+            };
+            PvChannel f_UE = new PvChannel(nameof(f_UE));
+            PvChannel t_HN = new PvChannel(nameof(t_HN));
+            SN.RootStmt.SubStmts.Add(
+                new PvRecvMsg(
+                    f_UE, 
+                    new List<PvParam> {
+                        new PvParam(PvType.BITSTRING, "suci")
+                    }
+                )
+            );
+            SN.RootStmt.SubStmts.Add(new PvLetStmt("(bv: bitstring, idHN: Int)", "suci"));
+            SN.RootStmt.SubStmts.Add(new PvLetStmt("suci", "(bv, idSN)"));
+            SN.RootStmt.SubStmts.Add(new PvSendMsg(t_HN, new List<string>() { "suci" }));
+
+            PvProcess HN = new PvProcess(nameof(HN))
+            {
+                Params = new List<PvParam>
+                {
+                    new PvParam(PvType.PVTKEY, "sk"),
+                    new PvParam(PvType.CHANNEL, "f_SN")
+                }
+            };
+            PvChannel f_SN = new PvChannel(nameof(f_SN));
+            HN.RootStmt.SubStmts.Add(
+                new PvRecvMsg(
+                    f_SN,
+                    new List<PvParam>
+                    {
+                        new PvParam(PvType.BITSTRING, "suci")
+                    }
+                )
+            );
+            HN.RootStmt.SubStmts.Add(new PvLetStmt("(bv: bitstring, idSN: Int)", "suci"));
+            HN.RootStmt.SubStmts.Add(new PvLetStmt("t: bitstring", "AsymDec(bv, sk)"));
+            HN.RootStmt.SubStmts.Add(new PvLetStmt("(supi: bitstring, rs: Int)", "t"));
+            HN.RootStmt.SubStmts.Add(new PvLetStmt("(idUE: Int, idHN: Int)", "supi"));
+            HN.RootStmt.SubStmts.Add(new PvEventPoint(HN_Recved, new List<string> { "idUE" }));
+
+            //
+            // Instantiation
+            //
+            PvInstantiation inst = new PvInstantiation();
+            inst.RootStmt.SubStmts.Add(
+                new PvConcurrency()
+                {
+                    ProcInsts = new List<PvProcInst>
+                    {
+                        new PvProcInst(UE)
+                        {
+                            Params = new List<string>
+                            {
+                                "i3", "i5", "pk6", "uesn"
+                            }
+                        },
+                        new PvProcInst(SN)
+                        {
+                            Params = new List<string>
+                            {
+                                "i2", "uesn", "snhn"
+                            }
+                        },
+                        new PvProcInst(HN)
+                        {
+                            Params = new List<string>
+                            {
+                                "sk6", "snhn"
+                            }
+                        }
+                    }
+                }
+            );
+
+            //
+            // Root
+            //
+            PvProject pvProject = new PvProject()
+            {
+                GlobalDeclaration = globalDec,
+                Processes = new List<PvProcess>
+                {
+                    UE, SN, HN
+                },
+                Queries = new List<PvQuery>
+                {
+                    new PvAuthentication(HN_Recved, UE_Sended),
+                    new PvConfidentiality("i2"),
+                    new PvConfidentiality("i3"),
+                    new PvConfidentiality("i5")
+                },
+                Instantiation = inst
+            };
+
+            PvDumpManager.OutProVerifPv(pvProject, "D:\\Code\\Mix\\CMSS-Case\\proverif-gen\\5g-aka-test.pv");
         }
     }
 }

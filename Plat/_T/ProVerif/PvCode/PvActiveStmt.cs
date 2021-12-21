@@ -357,17 +357,28 @@ namespace Plat._T
     public class PvEventPoint : PvActiveStmt
     {
         private PvEvent pvEvent;
+        private List<string> @params;
 
         public PvEventPoint(PvEvent pvEvent)
         {
             this.pvEvent = pvEvent;
+            this.@params = new List<string>();
+        }
+
+        public PvEventPoint(PvEvent pvEvent, List<string> @params)
+            :this(pvEvent)
+        {
+            this.@params = @params;
         }
 
         public PvEvent PvEvent { get => pvEvent; set => pvEvent = value; }
+        public List<string> Params { get => @params; set => @params = value; }
 
         public override string ToString()
         {
-            return $"{TabSuffix}event {pvEvent.Name}";
+            if (@params.Count == 0)
+                return $"{TabSuffix}event {pvEvent.Name}";
+            return $"{TabSuffix}event {pvEvent.Name}({string.Join(", ", @params)})";
         }
     }
 

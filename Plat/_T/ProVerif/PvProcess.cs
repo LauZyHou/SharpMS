@@ -23,7 +23,7 @@ namespace Plat._T
         {
             this.name = name;
             this.@params = new List<PvParam>();
-            this.rootStmt = new PvSeqStmt();
+            this.rootStmt = new PvSeqStmt() { SubStmts = new List<PvActiveStmt>() };
         }
 
         /// <summary>

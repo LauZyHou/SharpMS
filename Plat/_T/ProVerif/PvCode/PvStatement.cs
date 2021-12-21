@@ -42,24 +42,18 @@ namespace Plat._T
     /// </summary>
     public class PvFuncDeclaration : PvStatement
     {
-        private readonly string name;
-        private readonly List<PvType> paramTypes;
-        private readonly PvType returnType;
+        private readonly PvFun pvFun;
 
-        public PvFuncDeclaration(string name, List<PvType> paramTypes, PvType returnType)
+        public PvFuncDeclaration(PvFun pvFun)
         {
-            this.name = name;
-            this.paramTypes = paramTypes;
-            this.returnType = returnType;
+            this.pvFun = pvFun;
         }
 
-        public string Name => name;
-        public List<PvType> ParamTypes => paramTypes;
-        public PvType ReturnType => returnType;
+        public PvFun PvFun => pvFun;
 
         public override string ToString()
         {
-            return $"fun {name}({string.Join(", ", paramTypes)}): {returnType}.";
+            return $"fun {pvFun.Name}({string.Join(", ", pvFun.ParamTypes)}): {pvFun.ReturnType}.";
         }
     }
 
@@ -89,6 +83,26 @@ namespace Plat._T
         public override string ToString()
         {
             return $"reduc forall {string.Join(", ", parameters)}; {formula}.";
+        }
+    }
+
+    /// <summary>
+    /// ProVerif axiom equation declaration statement.
+    /// </summary>
+    public class PvEquationDeclaration : PvStatement
+    {
+        private readonly PvEquation pvEquation;
+
+        public PvEquationDeclaration(PvEquation pvEquation)
+        {
+            this.pvEquation = pvEquation;
+        }
+
+        public PvEquation PvEquation => pvEquation;
+
+        public override string ToString()
+        {
+            return $"equation forall {string.Join(", ", pvEquation.Params)}; {pvEquation.Formula}.";
         }
     }
 
@@ -156,6 +170,33 @@ namespace Plat._T
                 return $"event {@event.Name}.";
             }
             return $"event {@event.Name}({(string.Join(", ", @event.ParamTypes))}).";
+        }
+    }
+    
+    /// <summary>
+    /// ProVerif空行
+    /// </summary>
+    public class PvNewLineForDec : PvStatement
+    {
+    }
+
+    /// <summary>
+    /// ProVerif注释
+    /// </summary>
+    public class PvCommentForDec : PvStatement
+    {
+        private string comment;
+
+        public PvCommentForDec(string comment)
+        {
+            this.comment = comment;
+        }
+
+        public string Comment { get => comment; set => comment = value; }
+
+        public override string ToString()
+        {
+            return $"(* {this.comment} *)";
         }
     }
 }

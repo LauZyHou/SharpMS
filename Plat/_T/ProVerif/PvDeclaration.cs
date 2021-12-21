@@ -30,7 +30,10 @@ namespace Plat._T
             string res = "";
             foreach (PvStatement statement in Statements)
             {
-                res += $"{statement}\n";
+                if (statement is PvNewLineForDec)
+                    res += "\n";
+                else
+                    res += $"{statement}\n";
             }
             return res;
         }

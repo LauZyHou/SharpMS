@@ -15,7 +15,7 @@ namespace Plat._T
 
         public PvInstantiation()
         {
-            this.rootStmt = new PvSeqStmt();
+            this.rootStmt = new PvSeqStmt() { SubStmts = new List<PvActiveStmt>() };
         }
 
         public PvInstantiation(PvSeqStmt rootStmt)

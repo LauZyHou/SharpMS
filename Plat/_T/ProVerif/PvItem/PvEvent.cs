@@ -14,6 +14,12 @@ namespace Plat._T
         private readonly string name;
         private readonly List<PvType> paramTypes;
 
+        public PvEvent(string name)
+        {
+            this.name = name;
+            this.paramTypes = new List<PvType>();
+        }
+
         public PvEvent(string name, List<PvType> paramTypes)
         {
             this.name = name;

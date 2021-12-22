@@ -142,7 +142,11 @@ namespace Plat._VM
         /// </summary>
         private void OnTransToProVerif()
         {
-
+            string path = ResourceManager.transPath + "auto-trans.pv"; // fixme: use timestamp
+            PvProject? pvProject = ProVerifAlignMachine.Run();
+            if (pvProject is null) return;
+            PvDumpManager.OutProVerifPv(pvProject, path);
+            ResourceManager.UpdateTip($"Successfully translate to ProVerif, path = {path}");
         }
 
         #endregion

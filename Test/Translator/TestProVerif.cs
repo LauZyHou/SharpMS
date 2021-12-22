@@ -117,7 +117,6 @@ namespace Test
             PvDumpManager.OutProVerifPv(pvProject, "D:\\Code\\Mix\\CMSS-Case\\proverif-gen\\correspondence-assertion.pv");
         }
 
-
         /// <summary>
         /// 构建一个简单的握手协议模型
         /// case见 https://lauzyhou.blog.csdn.net/article/details/107937590 第3部分

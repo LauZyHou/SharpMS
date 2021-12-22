@@ -29,7 +29,7 @@ namespace Plat._T
         public static PvType CHANNEL = new PvType("channel"); // just for port
         public static PvType INT = new PvType("Int");
         public static PvType BOOL = new PvType("Bool");
-        public static PvType MSG = new PvType("Msg");
+        public static PvType MSG = new PvType("Msg"); // unused type (use bitstring
         public static PvType KEY = new PvType("Key");
         public static PvType PUBKEY = new PvType("PubKey");
         public static PvType PVTKEY = new PvType("PvtKey");

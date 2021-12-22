@@ -49,5 +49,25 @@ namespace Plat._T
             }
             return $"let {name}({string.Join(", ", @params)}) = \n{rootStmt}.";
         }
+
+        /// <summary>
+        /// 当前PvProcess的适宜拷贝
+        /// 用于给PvProcess加新活动语句不影响之前的
+        /// </summary>
+        /// <returns></returns>
+        public PvProcess SuitableCopy()
+        {
+            PvProcess res = new PvProcess(this.name)
+            {
+                Params = this.@params,
+            };
+            if (this.rootStmt.SubStmts is null) return res;
+            // 实际上只有rootStmt.SubStmts这个容器需要拷贝新地址，利用PvProcess的构造中的新创建
+            foreach (PvActiveStmt pvActiveStmt in this.rootStmt.SubStmts)
+            {
+                res.rootStmt.SubStmts?.Add(pvActiveStmt);
+            }
+            return res;
+        }
     }
 }

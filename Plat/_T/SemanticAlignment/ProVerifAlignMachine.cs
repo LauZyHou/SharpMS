@@ -62,7 +62,7 @@ namespace Plat._T
                 PvFun.PK, PvFun.ASYMENC, PvFun.ASYMDEC
             };
             // 函数声明生成
-            globalDec.Statements.Add(new PvCommentForDec("Fun Declaration"));
+            globalDec.Statements.Add(new PvCommentForDec("Function Declaration"));
             foreach (PvFun pvFun in pvFunList)
             {
                 globalDec.Statements.Add(new PvFuncDeclaration(pvFun));
@@ -157,7 +157,7 @@ namespace Plat._T
                 }
             }
             // 遍历全局变量名变生成全局变量声明
-            globalDec.Statements.Add(new PvCommentForDec("Channel Declaration"));
+            globalDec.Statements.Add(new PvCommentForDec("Global Var Declaration"));
             foreach (string s in constNameSet)
             {
                 PvType? pvType = null;
@@ -185,6 +185,8 @@ namespace Plat._T
             Dictionary<Proc, PvProcess> procMap = new Dictionary<Proc, PvProcess>();
             // 【Proc -> List<List<PvActiveStmt>>】这里是每个进程的所有执行Path
             Dictionary<Proc, List<List<PvActiveStmt>>> allPathMap = new Dictionary<Proc, List<List<PvActiveStmt>>>();
+            // 每个进程模板对应的状态机中变量名到类型的映射
+            Dictionary<Proc, Dictionary<string, TypeWithCrypto>> varTypeMap = IdentifierMapper.MapPGVarToType();
             // 遍历所有的进程模板及对应的进程图状态机生成声明
             foreach (ProcGraph_P_VM procGraph_P_VM in ResourceManager.procGraph_P_VMs)
             {
@@ -199,19 +201,24 @@ namespace Plat._T
                 // 参数表 1 -- 属性参数
                 foreach (VisAttr attr in proc.Attributes)
                 {
-                    // 递归展平属性，得到参数表、构成表
+                    // 递归展平属性，得到参数表、构成表，同时更新varTypeMap中此proc的部分
                     List<PvParam> paramList = new List<PvParam>();
                     List<PvLetStmt> constList = new List<PvLetStmt>();
-                    FlattenAttribute(attr, paramList, typeMap, "", constList);
+                    FlattenAttribute(attr, paramList, typeMap, "", constList, varTypeMap[proc]);
                     // 遍历参数表，加到当前的PvProcess的参数表中
                     foreach (PvParam pvParam in paramList)
                     {
                         pvProcess.Params.Add(pvParam);
                     }
-                    // 反向遍历构成表，加到当前的PvProcess的语句中
-                    for (int i = constList.Count - 1; i >= 0; i -- )
+                    // 只要构成表非空，就说明有对参数的flatten操作
+                    if (constList.Count != 0)
                     {
-                        pvProcess.RootStmt.SubStmts?.Add(constList[i]);
+                        pvProcess.RootStmt.SubStmts?.Add(new PvCommentForAct("Param Flatten"));
+                        // 反向遍历构成表，加到当前的PvProcess的语句中
+                        for (int i = constList.Count - 1; i >= 0; i--)
+                        {
+                            pvProcess.RootStmt.SubStmts?.Add(constList[i]);
+                        }
                     }
                 }
                 // 参数表 2 -- 端口参数（建立相应的临时信道变量
@@ -245,7 +252,9 @@ namespace Plat._T
                         startAnchor,
                         new HashSet<DragDrop_VM>(){ initState_VM },
                         new List<PvActiveStmt>(),
-                        allPath
+                        allPath,
+                        varTypeMap[proc],
+                        typeMap
                     );
                 }
                 // 加入allPath表中
@@ -322,6 +331,8 @@ namespace Plat._T
                     {
                         usePvProc.RootStmt.SubStmts?.Add(pvActiveStmt);
                     }
+                    // 注意最后总要加个PvPass，否则若是空的，或是let结尾的这种就有语法错误
+                    usePvProc.RootStmt.SubStmts?.Add(PvPass.Me);
                     // 构造好的PvProcess加到当前PvProject里
                     pvProject.Processes.Add(usePvProc);
                 }
@@ -387,17 +398,21 @@ namespace Plat._T
         /// <param name="typeMap">类型映射表</param>
         /// <param name="prefix">递归时的参数名前缀</param>
         /// <param name="consList">构成表</param>
+        /// <param name="varTypeMap">变量名到类型的映射表</param>
         public static void FlattenAttribute(
             Attribute attribute,
             List<PvParam> returnList,
             Dictionary<Type, PvType> typeMap,
             string prefix,
-            List<PvLetStmt> consList)
+            List<PvLetStmt> consList,
+            Dictionary<string, TypeWithCrypto> varTypeMap)
         {
-            // 更新Prefix
+            // 更新Prefix（到叶子时即为变量名）
             string newPrefix = attribute.Identifier;
             if (!string.IsNullOrEmpty(prefix))
                 newPrefix = $"{prefix}_{newPrefix}";
+            // 更新varTypeMap（放在递归结束时也可以，不用Add是因为有一些可能已经加到这个表里过）
+            varTypeMap[newPrefix] = BuildTypeWithCryptoFromAttr(attribute);
             // 按属性类型区分
             if (attribute.IsArray) // 数组类型
             {
@@ -421,7 +436,7 @@ namespace Plat._T
                 // 遍历参数表中的每个下级属性做递归处理
                 foreach (Attribute attr in attribute.Type.Attributes)
                 {
-                    FlattenAttribute(attr, returnList, typeMap, newPrefix, consList);
+                    FlattenAttribute(attr, returnList, typeMap, newPrefix, consList, varTypeMap);
                 }
             }
         }
@@ -433,12 +448,14 @@ namespace Plat._T
         /// <param name="histLoc">已经搜过的历史状态</param>
         /// <param name="curPath">当前正在构造的路径</param>
         /// <param name="allPath">所有路径，每条构造好后加入其中</param>
-
+        /// <param name="strTypeMap">类型名到类型的映射表</param>
         public static void DfsFindActivePath(
             Anchor_VM curAnchor,
             HashSet<DragDrop_VM> histLoc,
             List<PvActiveStmt> curPath,
-            List<List<PvActiveStmt>> allPath)
+            List<List<PvActiveStmt>> allPath,
+            Dictionary<string, TypeWithCrypto> varTypeMap,
+            Dictionary<Type, PvType> typeMap)
         {
             // 检查当前是Source锚点
             Linker_VM? linker_VM = curAnchor.LinkerVM;
@@ -478,19 +495,133 @@ namespace Plat._T
                     {
                         PvChannel sendChan = new PvChannel(portName);
                         List<string> varList = new List<string> { varName };
+                        curPath.Add(new PvCommentForAct($"Send to [{sendChan.Name}]"));
                         curPath.Add(new PvSendMsg(sendChan, varList));
                     }
                     else
                     {
                         PvChannel recvChan = new PvChannel(portName);
                         List<PvParam> paramList = new List<PvParam>() { new PvParam(PvType.BITSTRING, varName) };
+                        curPath.Add(new PvCommentForAct($"Receive from [{recvChan.Name}]"));
                         curPath.Add(new PvRecvMsg(recvChan, paramList));
                     }
                 }
                 // 赋值语句
                 else if (action.Content.Contains("="))
                 {
-                    // todo
+                    string[] lhAndRhPair = action.Content.Split("=");
+                    Debug.Assert(lhAndRhPair.Length == 2);
+                    // 左值变量名
+                    string lh = lhAndRhPair[0].Trim().Split(":")[0].Trim();
+                    // 左值如果有":"，需要取一下类型名
+                    string? lhTypeName = null;
+                    if (lhAndRhPair[0].Trim().Contains(":"))
+                        lhTypeName = lhAndRhPair[0].Trim().Split(":")[1].Trim();
+                    // 右值表达式
+                    string rh = lhAndRhPair[1].Trim();
+                    // 构造型操作步
+                    if (rh.Contains("&"))
+                    {
+                        // 取出&后的类型名
+                        string typeName = rh.Split("&")[1].Trim().Split("{")[0].Trim();
+                        // 该变量的原生类型
+                        TypeWithCrypto twc = varTypeMap[lh];
+                        // 取出实参列表，每个flatten一下，然后把'.'换成'_'
+                        string[] paramList = rh.Split("{")[1].Trim().Split("}")[0].Split(",");
+                        int len = paramList.Length;
+                        Debug.Assert(len == twc.Type.Attributes.Count);
+                        for (int i = 0; i < len; i++)
+                        {
+                            paramList[i] = paramList[i].Trim();
+                            FlattenDotVar_OneShot(paramList[i], typeMap, varTypeMap, curPath);
+                            paramList[i] = paramList[i].Replace(".", "_");
+                        }
+                        // 生成Let语句
+                        PvType pvType = PvType.BITSTRING;
+                        if (typeMap.ContainsKey(twc.Type)) // 构造型无法构造加密类型，所以不用判断是不是加密类型
+                        {
+                            pvType = typeMap[twc.Type];
+                        }
+                        string letLH = lh;
+                        if (lhTypeName is not null) // 首次声明
+                        {
+                            letLH = $"{lh}: {pvType.Name}";
+                            curPath.Add(new PvCommentForAct($"Construct [{lh}]"));
+                        }
+                        else
+                        {
+                            curPath.Add(new PvCommentForAct($"Reconstruct [{lh}]"));
+                        }
+                        string letRH = $"({string.Join(", ", paramList)})";
+                        curPath.Add(new PvLetStmt(letLH, letRH));
+                    }
+                    // 对称加密
+                    else if (rh.Contains("SymEnc") ||
+                        rh.Contains("AsymEnc") ||
+                        rh.Contains("SymDec") ||
+                        rh.Contains("AsymDec"))
+                    {
+                        // 生成Let语句
+                        // 左值就是这个变量
+                        string letLH = lh;
+                        // 该变量的原生类型
+                        TypeWithCrypto twc = varTypeMap[lh];
+                        if (lhTypeName is not null) // 首次声明
+                        {
+                            letLH = $"{lh}: bitstring";
+                            if (twc.Crypto == Crypto.None && typeMap.ContainsKey(twc.Type)) // 原生且有映射的类型
+                            {
+                                letLH = $"{lh}: {typeMap[twc.Type].Name}";
+                            }
+                            curPath.Add(new PvCommentForAct($"New var [{lh}]"));
+                        }
+                        else
+                        {
+                            curPath.Add(new PvCommentForAct($"Set var [{lh}]"));
+                        }
+                        // 取出实参列表，每个flatten一下
+                        string[] paramList = rh.Split("(")[1].Trim().Split(")")[0].Split(",");
+                        int len = paramList.Length;
+                        Debug.Assert(len == twc.Type.Attributes.Count);
+                        for (int i = 0; i < len; i++)
+                        {
+                            paramList[i] = paramList[i].Trim();
+                            FlattenDotVar_OneShot(paramList[i], typeMap, varTypeMap, curPath);
+                        }
+                        // 然后整个右值'.'换成'_'即可
+                        string letRH = rh.Replace(".", "_");
+                        curPath.Add(new PvLetStmt(letLH, letRH));
+                    }
+                    // 普通赋值
+                    else
+                    {
+                        // 要生成Let语句
+
+                        // 右值先flatten一下
+                        FlattenDotVar_OneShot(rh, typeMap, varTypeMap, curPath);
+                        // '.'换成'_'做下Let赋值
+                        string letRH = rh.Replace(".", "_");
+
+                        // 左值
+                        string letLH = lh;
+                        // 该变量的原生类型
+                        TypeWithCrypto twc = varTypeMap[lh];
+                        if (lhTypeName is not null) // 首次声明
+                        {
+                            letLH = $"{lh}: bitstring";
+                            if (twc.Crypto == Crypto.None && typeMap.ContainsKey(twc.Type)) // 原生且有映射的类型
+                            {
+                                letLH = $"{lh}: {typeMap[twc.Type].Name}";
+                            }
+                            curPath.Add(new PvCommentForAct($"New var [{lh}]"));
+                        }
+                        else
+                        {
+                            curPath.Add(new PvCommentForAct($"Set var [{lh}]"));
+                        }
+
+                        curPath.Add(new PvLetStmt(letLH, letRH));
+                    }
                 }
             }
             
@@ -504,7 +635,15 @@ namespace Plat._T
                     !histLoc.Contains(anchor_VM.LinkerVM.Dest.HostVM))
                 {
                     // 注意这里往下级传的是curPath的拷贝，就不用手动退栈了
-                    DfsFindActivePath(anchor_VM, histLoc, new List<PvActiveStmt>(curPath.ToArray()), allPath);
+                    // varTypeMap同理，由于不能让递归后的变量定义状态影响到当前层，所以也要加拷贝
+                    DfsFindActivePath(
+                        anchor_VM,
+                        histLoc,
+                        new List<PvActiveStmt>(curPath),
+                        allPath,
+                        new Dictionary<string, TypeWithCrypto>(varTypeMap),
+                        typeMap
+                    );
                     pathOver = false;
                 }
             }
@@ -512,7 +651,7 @@ namespace Plat._T
             // 若链路已经结束，浅拷贝curPath加入到allPath
             if (pathOver)
             {
-                allPath.Add(new List<PvActiveStmt>(curPath.ToArray()));
+                allPath.Add(new List<PvActiveStmt>(curPath));
             }
 
             //
@@ -520,6 +659,86 @@ namespace Plat._T
             //
             // 对端状态移出搜索过的集合
             histLoc.Remove(hostStateVM);
+        }
+
+        /// <summary>
+        /// 从Attribute构建相应的TypeWithCrypto
+        /// </summary>
+        /// <param name="attribute"></param>
+        /// <returns></returns>
+        public static TypeWithCrypto BuildTypeWithCryptoFromAttr(Attribute attribute)
+        {
+            Crypto crypto = Crypto.None;
+            if (attribute.IsEncrypted)
+            {
+                crypto = Crypto.Sym;
+                if (attribute.IsAsymmetric)
+                {
+                    crypto = Crypto.Asym;
+                }
+            }
+            return new TypeWithCrypto(attribute.Type, crypto);
+        }
+
+        /// <summary>
+        /// 对x.y式的变量，展平一级
+        /// </summary>
+        /// <param name="dotVar">x.y式变量</param>
+        /// <param name="typeMap">类型映射表</param>
+        /// <param name="varTypeMap">已定义的临时变量表</param>
+        /// <param name="curPath">当前活动语句表</param>
+        public static void FlattenDotVar_OneShot(
+            string dotVar,
+            Dictionary<Type, PvType> typeMap,
+            Dictionary<string, TypeWithCrypto> varTypeMap,
+            List<PvActiveStmt> curPath)
+        {
+            // 不是dot var直接结束
+            if (!dotVar.Contains(".")) return;
+            // 当前dot var变成pv识别的形式
+            string pvDotVar = dotVar.Replace(".", "_");
+            // 检查一下如果有过就不用做flatten了
+            if (varTypeMap.ContainsKey(pvDotVar)) return;
+            // 目前只允许索引一级dot，所以直接取第一块就是root var
+            // fixme 后续做多级的flatten工作，需要改一下
+            string rootVar = dotVar.Split(".")[0];
+            // 如果root var都没def过，直接报错
+            if (!varTypeMap.ContainsKey(rootVar)) throw new System.NotImplementedException();
+            // 接下来要对root var做一下flatten（仅flatten一级）
+            // 对应原生数据类型
+            Type type = varTypeMap[rootVar].Type;
+            // 左值参数容器（Let解构）
+            List<PvParam> lhList = new List<PvParam>();
+            // 遍历下一级的每个属性得到左值表
+            foreach (Attribute attr in type.Attributes)
+            {
+                // 加密的一定当bitstring处理
+                PvType pvType = PvType.BITSTRING;
+                // 没加密的可以映射一下
+                if (!attr.IsEncrypted)
+                    pvType = ToPvType(attr.Type, typeMap);
+                // 构造左值参数
+                PvParam pvParam = new PvParam(pvType, $"{rootVar}_{attr.Identifier}");
+                // 加入左值参数表里
+                lhList.Add(pvParam);
+                // 同时还要补充一下varTypeMap
+                varTypeMap.Add(pvParam.Name, BuildTypeWithCryptoFromAttr(attr));
+            }
+            // 构造相应的语句加到path里
+            curPath.Add(new PvCommentForAct($"Flatten [{rootVar}]"));
+            curPath.Add(new PvLetStmt($"({string.Join(", ", lhList)})", rootVar));
+        }
+
+        /// <summary>
+        /// 原生类型转ProVerif类型
+        /// </summary>
+        /// <param name="type">原生类型</param>
+        /// <param name="typeMap">映射表</param>
+        /// <returns></returns>
+        public static PvType ToPvType(Type type, Dictionary<Type, PvType> typeMap)
+        {
+            if (typeMap.ContainsKey(type)) return typeMap[type];
+            return PvType.BITSTRING;
         }
     }
 }

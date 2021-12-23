@@ -132,7 +132,7 @@ namespace Plat._T
             }
             for (int i = 0; i < len - 1; i++) // 前n-1个带顺序连接符';'，如果是let就不带
             {
-                res += $"{subStmts[i]}{(subStmts[i] is PvLetStmt ? "" : ";")}\n";
+                res += $"{subStmts[i]}{(subStmts[i] is PvLetStmt or PvCommentForAct ? "" : ";")}\n";
             }
             res += $"{subStmts[len - 1]}"; // 最后一个不带
             return res;
@@ -238,6 +238,26 @@ namespace Plat._T
         public override string ToString()
         {
             return $"{TabSuffix}let {lh} = {rh} in";
+        }
+    }
+
+    /// <summary>
+    /// 适用于活动语句中的ProVerif注释
+    /// </summary>
+    public class PvCommentForAct : PvActiveStmt
+    {
+        private string comment;
+
+        public PvCommentForAct(string comment)
+        {
+            this.comment = comment;
+        }
+
+        public string Comment { get => comment; set => comment = value; }
+
+        public override string ToString()
+        {
+            return $"{TabSuffix}(* {comment} *)";
         }
     }
 
@@ -396,6 +416,8 @@ namespace Plat._T
         {
             return $"{TabSuffix}0";
         }
+
+        public static PvPass Me = new PvPass();
     }
 
 }

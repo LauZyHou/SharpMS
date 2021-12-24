@@ -1,6 +1,4 @@
-﻿
-
-using Plat._C;
+﻿using Plat._C;
 using Plat._M;
 using Plat._VM;
 using System.Collections.Generic;
@@ -267,7 +265,77 @@ namespace Plat._T
 
             #region 例化生成
 
+            // 【ProcInst -> Port -> ChanInst】
+            Dictionary<ProcInst, Dictionary<Port, string>> portChanMap = new Dictionary<ProcInst, Dictionary<Port, string>>();
+            foreach (DragDrop_VM dragDrop_VM in ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs)
+            {
+                if (dragDrop_VM is ProcEnvInst_CT_VM)
+                {
+                    ProcEnvInst_CT_VM procEnvInst_CT_VM = (ProcEnvInst_CT_VM)dragDrop_VM;
+                    ProcInst procInst = procEnvInst_CT_VM.ProcEnvInst.ProcInst;
+                    if (!portChanMap.ContainsKey(procInst))
+                    {
+                        portChanMap.Add(procInst, new Dictionary<Port, string>());
+                    }
+                    EnvInst envInst = procEnvInst_CT_VM.ProcEnvInst.EnvInst;
+                    foreach (PortChanInst portChanInst in procEnvInst_CT_VM.ProcEnvInst.PortChanInsts)
+                    {
+                        Port? port = portChanInst.Port;
+                        Debug.Assert(port is not null);
+                        Channel? chan = portChanInst.Chan;
+                        Debug.Assert(chan is not null);
+                        portChanMap[procInst].Add(port, $"E{envInst.Id}_{chan.Identifier}");
+                    }
+                }
+            }
+            // 并行语句容器
+            PvConcurrency pvConcurrency = new PvConcurrency();
+            // 【ProcInst -生成-> 实参表 + 实信道表】
+            foreach (DragDrop_VM dragDrop_VM in ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs)
+            {
+                if (dragDrop_VM is ProcInst_VM)
+                {
+                    ProcInst_VM procInst_VM = (ProcInst_VM)dragDrop_VM;
+                    ProcInst procInst = procInst_VM.ProcInst;
+                    Debug.Assert(procInst.Proc is not null);
+                    Proc proc = procInst.Proc;
+                    // 找到相应的Pv进程模板并生成相应的Pv进程实例
+                    PvProcess pvProcess = procMap[proc];
+                    PvProcInst pvProcInst = new PvProcInst(pvProcess);
+                    // Proc的每个属性参数是否是公有的
+                    List<bool> propPubList = new List<bool>();
+                    foreach (VisAttr visAttr in proc.Attributes)
+                    {
+                        propPubList.Add(visAttr.Pub);
+                    }
+                    // 例化的最外层实例数量一定和相应模板的属性参数的数量一致
+                    int len = propPubList.Count;
+                    Debug.Assert(len == procInst.Properties.Count);
+                    // 遍历当前原生进程实例的实参表，填充Pv进程的实参
+                    for (int i = 0; i < len; i ++ )
+                    {
+                        Instance inst = procInst.Properties[i];
+                        List<string> glbVarUsed = new List<string>();
+                        FlattenInstanceValue(inst, glbVarUsed, propPubList[i]);
+                        foreach (string varName in glbVarUsed)
+                        {
+                            pvProcInst.Params.Add(varName);
+                        }
+                    }
+                    // 遍历模板中的端口声明，借助端口-信道实例映射构建相应的信道实参
+                    Dictionary<Port, string> curPortChan = portChanMap[procInst];
+                    foreach (Port port in proc.Ports)
+                    {
+                        string chanInst = curPortChan[port];
+                        pvProcInst.Params.Add(chanInst);
+                    }
+                    // 将构建好的进程实例加入到例化容器中
+                    pvConcurrency.ProcInsts.Add(pvProcInst);
+                }
+            }
+            // 例化容器
             PvInstantiation pvInstantiation = new PvInstantiation();
+            pvInstantiation.RootStmt.SubStmts?.Add(pvConcurrency);
 
             #endregion
 
@@ -442,13 +510,69 @@ namespace Plat._T
         }
 
         /// <summary>
+        /// 展平属性实例中的数值为Pv全局常元
+        /// </summary>
+        /// <param name="instance">属性实例</param>
+        /// <param name="returnList">返回的全局常元名称表</param>
+        /// <param name="isPub">是否在模板中定义为公开的参数</param>
+        public static void FlattenInstanceValue(
+            Instance instance,
+            List<string> returnList,
+            bool isPub)
+        {
+            if (instance is ValueInstance) // 值类型
+            {
+                ValueInstance valueInstance = (ValueInstance)instance;
+                string prefix = "m";
+                Type type = valueInstance.Type;
+                if (type.IsBase)
+                {
+                    if (type == Type.TYPE_INT)
+                    {
+                        prefix = "i";
+                    }
+                    else if (type == Type.TYPE_BOOL)
+                    {
+                        prefix = "b";
+                    }
+                    else if (type == Type.TYPE_KEY)
+                    {
+                        prefix = "k";
+                    }
+                    else if (type == Type.TYPE_PUB_KEY)
+                    {
+                        prefix = "pk";
+                    }
+                    else if (type == Type.TYPE_PVT_KEY)
+                    {
+                        prefix = "sk";
+                    }
+                }
+                returnList.Add($"{prefix}{valueInstance.Value}{(isPub ? "_pub" : "")}");
+            }
+            else if (instance is ArrayInstance) // 数组类型
+            {
+                // todo fixme
+            }
+            else // 引用类型
+            {
+                ReferenceInstance referenceInstance = (ReferenceInstance)instance;
+                foreach (Instance subInst in referenceInstance.Properties)
+                {
+                    FlattenInstanceValue(subInst, returnList, isPub);
+                }
+            }
+        }
+
+        /// <summary>
         /// 深搜状态机，获取所有的活动路径
         /// </summary>
         /// <param name="curAnchor">当前搜索的出发锚点（只考虑Source锚点）</param>
         /// <param name="histLoc">已经搜过的历史状态</param>
         /// <param name="curPath">当前正在构造的路径</param>
         /// <param name="allPath">所有路径，每条构造好后加入其中</param>
-        /// <param name="strTypeMap">类型名到类型的映射表</param>
+        /// <param name="varTypeMap">变量到类型的映射表</param>
+        /// <param name="typeMap">原生类型到Pv类型的映射表</param>
         public static void DfsFindActivePath(
             Anchor_VM curAnchor,
             HashSet<DragDrop_VM> histLoc,

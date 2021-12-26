@@ -50,6 +50,8 @@ namespace Plat._T
             #region 调用器（函数和方法）的映射
 
             // 【Caller->PvFun】
+            // 这里的想法是Type.Fun或者Proc.Fun直接映射成Type_Fun或者Proc_Fun就行
+            // 然后语法检查器来保证所有Type和所有Proc不同名
             Dictionary<Caller, PvFun> funMap = new Dictionary<Caller, PvFun>()
             {
                 // todo
@@ -212,8 +214,8 @@ namespace Plat._T
                     if (constList.Count != 0)
                     {
                         pvProcess.RootStmt.SubStmts?.Add(new PvCommentForAct("Param Flatten"));
-                        // 反向遍历构成表，加到当前的PvProcess的语句中
-                        for (int i = constList.Count - 1; i >= 0; i--)
+                        // 构成表是由底层至高层排布的，正向遍历，加到当前的PvProcess的语句中
+                        for (int i = 0; i < constList.Count; i ++ )
                         {
                             pvProcess.RootStmt.SubStmts?.Add(constList[i]);
                         }
@@ -493,19 +495,19 @@ namespace Plat._T
             }
             else // 引用类型
             {
-                // 在进入递归前要先生成对应的Let语句构成
+                // Let构成语句的右值表
                 List<string> subVarNameList = new List<string>();
+                // 遍历参数表中的每个下级属性
                 foreach (Attribute attr in attribute.Type.Attributes)
                 {
+                    // 做递归处理
+                    FlattenAttribute(attr, returnList, typeMap, newPrefix, consList, varTypeMap);
+                    // 填充Let构成语句的右值表
                     subVarNameList.Add(newPrefix + "_" + attr.Identifier);
                 }
+                // 填充Let构成语句
                 PvLetStmt pvLetStmt = new PvLetStmt($"{newPrefix}: bitstring", $"({string.Join(", ", subVarNameList)})");
                 consList.Add(pvLetStmt);
-                // 遍历参数表中的每个下级属性做递归处理
-                foreach (Attribute attr in attribute.Type.Attributes)
-                {
-                    FlattenAttribute(attr, returnList, typeMap, newPrefix, consList, varTypeMap);
-                }
             }
         }
 

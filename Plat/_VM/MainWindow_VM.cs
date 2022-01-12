@@ -17,6 +17,7 @@ namespace Plat._VM
         private readonly ClassDiagram_P_VM classDiagram_P_VM = new ClassDiagram_P_VM();
         private readonly ProcGraph_PG_VM procGraph_PG_VM = new ProcGraph_PG_VM();
         private readonly TopoGraph_P_VM topoGraph_P_VM = new TopoGraph_P_VM();
+        private readonly PropVerify_P_VM propVerify_P_VM = new PropVerify_P_VM();
         private bool anchorVisible;
 
         public MainWindow_VM()
@@ -44,6 +45,7 @@ namespace Plat._VM
         /// TopoGraph面板
         /// </summary>
         public TopoGraph_P_VM TopoGraph_P_VM => topoGraph_P_VM;
+        public PropVerify_P_VM PropVerify_P_VM => propVerify_P_VM;
         /// <summary>
         /// 用于绑定主面板上的AnchorVisible的CheckBox的IsChecked属性
         /// 在变更时这里触发，然后去触发ResourceManager的anchorVisible的订阅
@@ -103,7 +105,7 @@ namespace Plat._VM
             }
             ResourceManager.UpdateTip($"Successfully save model with path = {savePath}");
         }
-        
+
         /// <summary>
         /// 点击 About SharpMS
         /// </summary>
@@ -146,7 +148,7 @@ namespace Plat._VM
             List<PvProject> pvProjectList = ProVerifAlignMachine.Run();
             int n = pvProjectList.Count;
             if (n == 0) return;
-            for (int i = 0; i < n; i ++ )
+            for (int i = 0; i < n; i++)
             {
                 PvDumpManager.OutProVerifPv(pvProjectList[i], $"{path}-{i + 1}.pv");
             }

@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Plat._V.PropVerify_P_V">
+  <UserControl.Styles>
+    <Style Selector="Grid.ABBox">
+      <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="Grid.ABBox > TextBlock">
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="16"/>
+    </Style>
+    <Style Selector="Grid.ABBox > ComboBox">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+    <Style Selector="Grid.ABBox > NumericUpDown">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+    <Style Selector="Grid.ABBox > CheckBox">
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="Grid.ABBox > Button">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+  </UserControl.Styles>
+  
+  <Grid RowDefinitions="70*,10*,10*,10*" Margin="10">
+    <ListBox Name="pList" Grid.Row="0" Items="{Binding Properties}" SelectedItem="{Binding CurProperty, Mode=OneWayToSource}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock>
+            <TextBlock.Text>
+              <MultiBinding StringFormat=" {0}: {1} // {2}">
+                <Binding Path="Prop"/>
+                <Binding Path="Content"/>
+                <Binding Path="Description"/>
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <Grid Grid.Row="1" ColumnDefinitions="30*,70*" Classes="ABBox">
+      <ComboBox Grid.Column="0" Items="{Binding PropList}" SelectedItem="{Binding CurProperty.Prop, Mode=TwoWay}"/>
+      <TextBox Grid.Column="1" Text="{Binding CurProperty.Content, Mode=TwoWay}"/>
+    </Grid>
+    <Grid Grid.Row="2" Classes="ABBox">
+      <TextBox Text="{Binding CurProperty.Description, Mode=TwoWay}"/>
+    </Grid>
+    <Grid Grid.Row="3" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
+      <Button Grid.Column="0" Content="Create New Property" Command="{Binding CreateNewProp}"/>
+      <Button Grid.Column="1" Content="Delete Selected Property" Command="{Binding DeleteSelectedProp}"/>
+      <Button Grid.Column="2" Content="🔼" Command="{Binding MoveUpProperty}" CommandParameter="{Binding #pList.SelectedIndex}"/>
+      <Button Grid.Column="3" Content="🔽" Command="{Binding MoveDownProperty}" CommandParameter="{Binding #pList.SelectedIndex}"/>
+    </Grid>
+  </Grid>
+</UserControl>

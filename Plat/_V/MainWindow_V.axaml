@@ -52,6 +52,9 @@
       <TabItem Header="Topo Graph">
         <v:TopoGraph_P_V DataContext="{Binding TopoGraph_P_VM}"/>
       </TabItem>
+      <TabItem Header="Prop Verify">
+        <v:PropVerify_P_V DataContext="{Binding PropVerify_P_VM}"/>
+      </TabItem>
     </TabControl>
 
     <Grid Grid.Row="2" ColumnDefinitions="*, 135, 20, 20">
@@ -62,7 +65,6 @@
       <CheckBox Name="anchorVisibleCheckBox" IsThreeState="False" IsChecked="{Binding AnchorVisible}" Grid.Column="2"/>
       <TextBlock Grid.Column="3" Background="Black"/>
     </Grid>
-
 
   </Grid>
 

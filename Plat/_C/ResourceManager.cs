@@ -36,6 +36,20 @@ namespace Plat._C
         public static ObservableCollection<ProcGraph_P_VM> procGraph_P_VMs = new ObservableCollection<ProcGraph_P_VM>();
         // 所有ProcEnvInst
         public static ObservableCollection<ProcEnvInst> procEnvInsts = new ObservableCollection<ProcEnvInst>();
+        // 所有的Properties
+        public static ObservableCollection<Property> props = new ObservableCollection<Property>();
+        // 所有的Prop枚举
+        public static List<Prop> propEnumList = new List<Prop>()
+        {
+            Prop.INVAR,
+            Prop.CTL,
+            Prop.SEC,
+            Prop.FSEC,
+            Prop.INTE,
+            Prop.IINTE,
+            Prop.AUTH,
+            Prop.IAUTH
+        };
         /// <summary>
         /// 锚点是否可见
         /// </summary>

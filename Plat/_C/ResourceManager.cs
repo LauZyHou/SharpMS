@@ -98,6 +98,8 @@ namespace Plat._C
             procs.Clear();
             iks.Clear();
             axioms.Clear();
+            // 安全性质
+            props.Clear();
             // 不需要做静态id归零的操作，在读取XML时直接读入进来即可
         }
     }

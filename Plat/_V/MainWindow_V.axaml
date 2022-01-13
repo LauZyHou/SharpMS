@@ -24,7 +24,7 @@
     <Menu Grid.Row="0" MinHeight="23" Background="LightGray">
       <MenuItem Header="File">
         <MenuItem Header="Load" Command="{Binding OnLoad}"/>
-        <MenuItem Header="Save"/>
+        <!--<MenuItem Header="Save"/>-->
         <MenuItem Header="Save As" Command="{Binding OnSaveAs}"/>
       </MenuItem>
       <MenuItem Header="Help">

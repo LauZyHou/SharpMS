@@ -46,7 +46,7 @@
         </DataTemplate>
       </ListBox.ItemTemplate>
     </ListBox>
-    <Grid Grid.Row="1" ColumnDefinitions="30*,70*" Classes="ABBox">
+    <Grid Grid.Row="1" ColumnDefinitions="20*,80*" Classes="ABBox">
       <ComboBox Grid.Column="0" Items="{Binding PropList}" SelectedItem="{Binding CurProperty.Prop, Mode=TwoWay}"/>
       <TextBox Grid.Column="1" Text="{Binding CurProperty.Content, Mode=TwoWay}"/>
     </Grid>
@@ -54,8 +54,8 @@
       <TextBox Text="{Binding CurProperty.Description, Mode=TwoWay}"/>
     </Grid>
     <Grid Grid.Row="3" ColumnDefinitions="40*,40*,10*,10*" Classes="ABBox">
-      <Button Grid.Column="0" Content="Create New Property" Command="{Binding CreateNewProp}"/>
-      <Button Grid.Column="1" Content="Delete Selected Property" Command="{Binding DeleteSelectedProp}"/>
+      <Button Grid.Column="0" Content="➕Create New Property" Command="{Binding CreateNewProp}"/>
+      <Button Grid.Column="1" Content="➖Delete Selected Property" Command="{Binding DeleteSelectedProp}"/>
       <Button Grid.Column="2" Content="🔼" Command="{Binding MoveUpProperty}" CommandParameter="{Binding #pList.SelectedIndex}"/>
       <Button Grid.Column="3" Content="🔽" Command="{Binding MoveDownProperty}" CommandParameter="{Binding #pList.SelectedIndex}"/>
     </Grid>

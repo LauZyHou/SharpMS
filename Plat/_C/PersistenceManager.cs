@@ -298,6 +298,22 @@ namespace Plat._C
 
             #endregion
 
+            //
+            // 安全性质
+            //
+            #region Properties
+
+            xmlWriter.WriteStartElement("Properties");
+
+            foreach (Property property in ResourceManager.props)
+            {
+                XmlWritePropertyItem(xmlWriter, property);
+            }
+
+            xmlWriter.WriteEndElement();
+
+            #endregion
+
             xmlWriter.WriteEndElement(); // Root结尾
             xmlWriter.Flush();
             xmlWriter.Close();
@@ -868,6 +884,22 @@ namespace Plat._C
             xmlWriter.WriteAttributeString("isArray", instance.IsArray.ToString());
         }
 
+        /// <summary>
+        /// XML持久化Property
+        /// </summary>
+        /// <param name="xmlWriter"></param>
+        /// <param name="property"></param>
+        private static void XmlWritePropertyItem(XmlTextWriter xmlWriter, Property property)
+        {
+            xmlWriter.WriteStartElement(nameof(Property));
+
+            xmlWriter.WriteAttributeString("prop", property.Prop.ToString());
+            xmlWriter.WriteAttributeString("content", property.Content);
+            xmlWriter.WriteAttributeString("description", property.Description);
+
+            xmlWriter.WriteEndElement();
+        }
+
         #endregion
 
         #region XML Parsing
@@ -1162,6 +1194,23 @@ namespace Plat._C
                     default:
                         throw new System.NotImplementedException();
                 }
+            }
+
+            #endregion
+
+            //
+            // 安全性质
+            //
+            #region Properties
+
+            XmlNode? propertyNode = doc.SelectSingleNode($"SharpMS/Properties");
+            if (propertyNode is null)
+            {
+                return false;
+            }
+            foreach (XmlElement subElement in propertyNode.ChildNodes)
+            {
+                ResourceManager.props.Add(ParsePropertyItem(subElement));
             }
 
             #endregion
@@ -2341,6 +2390,24 @@ namespace Plat._C
                 default:
                     throw new System.NotImplementedException();
             }
+        }
+
+        /// <summary>
+        /// 解析安全性质
+        /// </summary>
+        /// <param name="element"></param>
+        private static Property ParsePropertyItem(XmlElement element)
+        {
+            string propStr = element.GetAttribute("prop");
+            Prop prop = (Prop)System.Enum.Parse(typeof(Prop), propStr);
+            string content = element.GetAttribute(nameof(content));
+            string description = element.GetAttribute(nameof(description));
+            return new Property()
+            {
+                Prop = prop,
+                Content = content,
+                Description = description
+            };
         }
 
         #endregion

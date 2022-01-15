@@ -593,13 +593,112 @@ namespace Plat._T
 
             #endregion
 
+            #region 性质的转换
+
+            List<UpQuery> upQueryList = new List<UpQuery>();
+            foreach (Property property in ResourceManager.props)
+            {
+                string pStr = property.Content; // 映射前
+                string pTrans = ""; // 映射后
+                switch (property.Prop)
+                {
+                    case Prop.INVAR:
+                        break;
+                    case Prop.CTL:
+                        string lh = pStr.Substring(0, 2);
+                        char[] rh = pStr.Substring(3).ToCharArray();
+                        if (lh == "AG" || lh == "EG")
+                        {
+                            lh = lh.Replace("G", "[]");
+                        }
+                        else // AF, EF
+                        {
+                            lh = lh.Replace("F", "&lt;&gt;");
+                        }
+                        pTrans = lh + " ";
+                        int state = 0; // 0啥也没有，1敏感状态，2脱敏持续状态
+                        int rlen = rh.Length;
+                        string tmp = ""; // 存临时的敏感字符
+                        for (int i = 0; i < rlen; i ++ )
+                        {
+                            char c = rh[i];
+                            bool sens = (c == '.' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9');
+                            bool dot = c == '.';
+                            switch (state)
+                            {
+                                case 0:
+                                    if (sens)
+                                    {
+                                        tmp += c;
+                                        state = 1;
+                                    }
+                                    else
+                                    {
+                                        pTrans += c;
+                                    }
+                                    break;
+                                case 1:
+                                    if (dot)
+                                    {
+                                        pTrans += MappingProcInstName(tmp) + '.';
+                                        tmp = "";
+                                        state = 2;
+                                    }
+                                    else if (sens)
+                                    {
+                                        tmp += c;
+                                    }
+                                    else // not sens
+                                    {
+                                        pTrans += tmp + c;
+                                        state = 0;
+                                    }
+                                    break;
+                                case 2:
+                                    pTrans += c;
+                                    if (!sens)
+                                    {
+                                        state = 0;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(tmp))
+                        {
+                            pTrans += tmp;
+                        }
+                        pTrans = pTrans.Replace("->", "imply");
+                        break;
+                    case Prop.SEC:
+                        break;
+                    case Prop.FSEC:
+                        break;
+                    case Prop.INTE:
+                        break;
+                    case Prop.IINTE:
+                        break;
+                    case Prop.AUTH:
+                        break;
+                    case Prop.IAUTH:
+                        break;
+                    default:
+                        break;
+                }
+                if (string.IsNullOrEmpty(pTrans)) continue;
+                upQueryList.Add(new UpQuery(pTrans, property.Description));
+            }
+            
+            #endregion
+
             #region 填充并返回UPPAAL项目内存模型
 
             UpProject upProject = new UpProject()
             {
                 GlobalDeclaration = globalDec,
                 Processes = upProcList,
-                Queries = new List<UpQuery> { },
+                Queries = upQueryList,
                 UpInstantiation = upInstantiation
             };
 
@@ -612,5 +711,53 @@ namespace Plat._T
         /// 分割线
         /// </summary>
         private static string splitLine = "=======================";
+
+
+        /// <summary>
+        /// 将ProcInst名映射为UPPAAL所需的
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        private static string MappingProcInstName(string p)
+        {
+            char[] ch = p.ToCharArray();
+            int len = ch.Length;
+            int state = 0; // 0:纯数字区 1:另一区域
+            string res = "";
+            for (int i = len - 1; i >= 0; i -- )
+            {
+                char c = ch[i];
+                bool numerical = c >= '0' && c <= '9';
+                switch (state)
+                {
+                    case 0:
+                        if (numerical)
+                        {
+                            res = c + res;
+                        }
+                        else
+                        {
+                            res = ToLow(c) + "_p" + res;
+                            state = 1;
+                        }
+                        break;
+                    case 1:
+                        res = ToLow(c) + res;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return res;
+        }
+
+        private static char ToLow(char c)
+        {
+            if (c >= 'A' && c <= 'Z')
+            {
+                c = (char)(c - 'A' + 'a');
+            }
+            return c;
+        }
     }
 }

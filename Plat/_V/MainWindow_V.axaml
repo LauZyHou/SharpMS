@@ -52,7 +52,7 @@
       <TabItem Header="Topo Graph">
         <v:TopoGraph_P_V DataContext="{Binding TopoGraph_P_VM}"/>
       </TabItem>
-      <TabItem Header="Prop Verify">
+      <TabItem Header="Properties">
         <v:PropVerify_P_V DataContext="{Binding PropVerify_P_VM}"/>
       </TabItem>
     </TabControl>

@@ -341,6 +341,54 @@ namespace Plat._T
 
             #endregion
 
+            #region 性质的转换
+
+            List<PvQuery> pvQueryList = new List<PvQuery>();
+            foreach (Property property in ResourceManager.props)
+            {
+                string pStr = property.Content; // 映射前
+                List<PvConfidentiality> pConfs = null; // 映射后私密性表
+                List<PvAuthentication> pAuths = null; // 映射后认证性表
+                switch (property.Prop)
+                {
+                    case Prop.INVAR:
+                        break;
+                    case Prop.CTL:
+                        break;
+                    case Prop.SEC:
+                        pConfs = MappingSEC(pStr);
+                        break;
+                    case Prop.FSEC:
+                        break;
+                    case Prop.INTE:
+                        break;
+                    case Prop.IINTE:
+                        break;
+                    case Prop.AUTH:
+                        break;
+                    case Prop.IAUTH:
+                        break;
+                    default:
+                        break;
+                }
+                if (pConfs is not null)
+                {
+                    foreach (PvConfidentiality pConf in pConfs)
+                    {
+                        pvQueryList.Add(pConf);
+                    }
+                }
+                if (pAuths is not null)
+                {
+                    foreach (PvAuthentication pAuth in pAuths)
+                    {
+                        pvQueryList.Add(pAuth);
+                    }
+                }
+            }
+
+            #endregion
+
             #region 遍历所有的进程图的path组合，形成多个ProVerif项目
 
             // 待返回的模型列表
@@ -385,7 +433,7 @@ namespace Plat._T
                 {
                     GlobalDeclaration = globalDec,
                     Processes = new List<PvProcess>(),
-                    Queries = new List<PvQuery>(),
+                    Queries = pvQueryList,
                     Instantiation = pvInstantiation
                 };
                 // 遍历模式中每一位取用的path号，模式一定是processNum这么长的int表
@@ -866,5 +914,187 @@ namespace Plat._T
             if (typeMap.ContainsKey(type)) return typeMap[type];
             return PvType.BITSTRING;
         }
+
+        #region 性质翻译
+
+        /// <summary>
+        /// 将私密性质翻译成ProVerif的私密性质查询
+        /// </summary>
+        /// <param name="content">翻译前的私密性性质</param>
+        /// <returns>可能返回若干个私密性的查询</returns>
+        private static List<PvConfidentiality> MappingSEC(string content)
+        {
+            List<PvConfidentiality> res = new List<PvConfidentiality>();
+            // 按.分割出来
+            string[] itemList = content.Split('.');
+            int len = itemList.Length;
+            Debug.Assert(len >= 2);
+            // 第一个部分就是进程/环境实例字符串
+            string topoInstStr = itemList[0];
+            // 将其转换成TopoInst
+            TopoInst? topoInst = ToTopoInst(topoInstStr);
+            if (topoInst is null)
+            {
+                throw new System.NotImplementedException();
+            }
+            // 把TopoInst的属性表找出来，该表在一层层查询时也会动态更新
+            List<Instance> instList;
+            if (topoInst is ProcInst)
+            {
+                ProcInst procInst = (ProcInst)topoInst;
+                instList = new List<Instance>();
+                foreach (Instance inst in procInst.Properties)
+                {
+                    instList.Add(inst);
+                }
+            }
+            else
+            {
+                EnvInst envInst = (EnvInst)topoInst;
+                instList = new List<Instance>();
+                foreach (Instance inst in envInst.Properties)
+                {
+                    instList.Add(inst);
+                }
+            }
+            // 剩下的部分表示一层层向下索引，这里就这样找下去
+            for (int i = 1; i < len; i ++ )
+            {
+                string item = itemList[i];
+                Instance? findInst = null;
+                // 每次都在这一层的实例表中寻找
+                foreach (Instance inst in instList)
+                {
+                    if (inst.Identifier == item)
+                    {
+                        findInst = inst;
+                        break;
+                    }
+                }
+                if (findInst is null)
+                {
+                    throw new System.NotImplementedException();
+                }
+                // 找到最后时终止
+                if (i == len - 1)
+                {
+                    // 值类型实例直接取值
+                    if (findInst is ValueInstance)
+                    {
+                        ValueInstance valFindInst = (ValueInstance)findInst;
+                        string varName = ToTypeShorthand(valFindInst.Type) + valFindInst.Value;
+                        res.Add(new PvConfidentiality(varName));
+                    }
+                    // 否则要递归找所有子结点
+                    else
+                    {
+                        // todo
+                    }
+                    break;
+                }
+                // 不是最后，要继续往下找，这时候不可能是ValueInst
+                if (findInst is ValueInstance) // 不可能是值型，因为没法往下找
+                {
+                    throw new System.NotImplementedException();
+                }
+                else if (findInst is ReferenceInstance) // 引用型
+                {
+                    ReferenceInstance referenceInstance = (ReferenceInstance)findInst;
+                    instList = referenceInstance.Properties;
+                }
+                else // 数组型
+                {
+                    // todo
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 字符串形式的拓扑实例转引用形式的拓扑实例
+        /// </summary>
+        /// <param name="topoInstStr">字符串形式的拓扑实例名</param>
+        /// <returns></returns>
+        private static TopoInst? ToTopoInst(string topoInstStr)
+        {
+            char[] charArray = topoInstStr.ToCharArray();
+            int len = charArray.Length;
+            // 首先获取末尾的数字部分，即为拓扑图元素ID
+            string topoIdStr = "";
+            for (int i = len - 1; i >= 0; i--)
+            {
+                char c = charArray[i];
+                if (c >= '0' && c <= '9')
+                {
+                    topoIdStr = c + topoIdStr;
+                }
+                else break;
+            }
+            int topoId = int.Parse(topoIdStr);
+            // todo: 检查topo名称
+            // 到拓扑图里把这个结点找出来
+            foreach (DragDrop_VM ddvm in ResourceManager.mainWindow_VM.TopoGraph_P_VM.DragDrop_VMs)
+            {
+                TopoInst topoInst;
+                if (ddvm is ProcInst_VM)
+                {
+                    ProcInst_VM procInst_VM = (ProcInst_VM)ddvm;
+                    topoInst = procInst_VM.ProcInst;
+                }
+                else if (ddvm is EnvInst_VM)
+                {
+                    EnvInst_VM envInst_VM = (EnvInst_VM)ddvm;
+                    topoInst = envInst_VM.EnvInst;
+                }
+                else
+                {
+                    continue;
+                }
+                if (topoInst.Id == topoId)
+                {
+                    return topoInst;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 类型到单字简写的映射
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static string ToTypeShorthand(Type type)
+        {
+            if (type == Type.TYPE_INT)
+            {
+                return "i";
+            }
+            else if (type == Type.TYPE_BOOL)
+            {
+                return "b";
+            }
+            else if (type == Type.TYPE_PUB_KEY)
+            {
+                return "pk";
+            }
+            else if (type == Type.TYPE_PVT_KEY)
+            {
+                return "sk";
+            }
+            else if (type == Type.TYPE_MSG)
+            {
+                return "m";
+            }
+            else if (type == Type.TYPE_KEY)
+            {
+                return "k";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        #endregion
     }
 }

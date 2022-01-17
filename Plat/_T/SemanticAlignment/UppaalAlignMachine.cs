@@ -605,71 +605,7 @@ namespace Plat._T
                     case Prop.INVAR:
                         break;
                     case Prop.CTL:
-                        string lh = pStr.Substring(0, 2);
-                        char[] rh = pStr.Substring(3).ToCharArray();
-                        if (lh == "AG" || lh == "EG")
-                        {
-                            lh = lh.Replace("G", "[]");
-                        }
-                        else // AF, EF
-                        {
-                            lh = lh.Replace("F", "&lt;&gt;");
-                        }
-                        pTrans = lh + " ";
-                        int state = 0; // 0啥也没有，1敏感状态，2脱敏持续状态
-                        int rlen = rh.Length;
-                        string tmp = ""; // 存临时的敏感字符
-                        for (int i = 0; i < rlen; i ++ )
-                        {
-                            char c = rh[i];
-                            bool sens = (c == '.' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9');
-                            bool dot = c == '.';
-                            switch (state)
-                            {
-                                case 0:
-                                    if (sens)
-                                    {
-                                        tmp += c;
-                                        state = 1;
-                                    }
-                                    else
-                                    {
-                                        pTrans += c;
-                                    }
-                                    break;
-                                case 1:
-                                    if (dot)
-                                    {
-                                        pTrans += MappingProcInstName(tmp) + '.';
-                                        tmp = "";
-                                        state = 2;
-                                    }
-                                    else if (sens)
-                                    {
-                                        tmp += c;
-                                    }
-                                    else // not sens
-                                    {
-                                        pTrans += tmp + c;
-                                        state = 0;
-                                    }
-                                    break;
-                                case 2:
-                                    pTrans += c;
-                                    if (!sens)
-                                    {
-                                        state = 0;
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        if (!string.IsNullOrEmpty(tmp))
-                        {
-                            pTrans += tmp;
-                        }
-                        pTrans = pTrans.Replace("->", "imply");
+                        pTrans = MappingCTL(pStr);
                         break;
                     case Prop.SEC:
                         break;
@@ -712,6 +648,81 @@ namespace Plat._T
         /// </summary>
         private static string splitLine = "=======================";
 
+        /// <summary>
+        /// 将CTL公式映射为相应的形式
+        /// </summary>
+        /// <param name="content">公式原型</param>
+        /// <returns></returns>
+        private static string MappingCTL(string content)
+        {
+            string res = "";
+            string lh = content.Substring(0, 2); // CTL的路径时态算子
+            char[] rh = content.Substring(3).ToCharArray(); // 除了路径时态算子，后面的部分
+            if (lh == "AG" || lh == "EG")
+            {
+                lh = lh.Replace("G", "[]");
+            }
+            else // AF, EF
+            {
+                lh = lh.Replace("F", "&lt;&gt;");
+            }
+            res = lh + " ";
+            int state = 0; // 0啥也没有，1敏感状态，2脱敏持续状态
+            int rlen = rh.Length;
+            string tmp = ""; // 存临时的敏感字符
+            for (int i = 0; i < rlen; i++)
+            {
+                char c = rh[i];
+                bool sens = (c == '.' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9');
+                bool dot = c == '.';
+                switch (state)
+                {
+                    case 0:
+                        if (sens)
+                        {
+                            tmp += c;
+                            state = 1;
+                        }
+                        else
+                        {
+                            res += c;
+                        }
+                        break;
+                    case 1:
+                        if (dot)
+                        {
+                            res += MappingProcInstName(tmp) + '.';
+                            tmp = "";
+                            state = 2;
+                        }
+                        else if (sens)
+                        {
+                            tmp += c;
+                        }
+                        else // not sens
+                        {
+                            res += tmp + c;
+                            state = 0;
+                        }
+                        break;
+                    case 2:
+                        res += c;
+                        if (!sens)
+                        {
+                            state = 0;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (!string.IsNullOrEmpty(tmp))
+            {
+                res += tmp;
+            }
+            res = res.Replace("->", "imply");
+            return res;
+        }
 
         /// <summary>
         /// 将ProcInst名映射为UPPAAL所需的
@@ -751,6 +762,11 @@ namespace Plat._T
             return res;
         }
 
+        /// <summary>
+        /// 若输入为大写字母字符，转换为相应的小写字母字符
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         private static char ToLow(char c)
         {
             if (c >= 'A' && c <= 'Z')
